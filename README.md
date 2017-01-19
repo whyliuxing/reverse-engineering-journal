@@ -15,6 +15,7 @@ I put anything I find interesting regarding reverse engineering in this journal.
   a linked list of pointers to exception handler functions
 - debug registers 0 through 7 (DR0 - DR7) are used to control the use of hardware breakpoints. DR0 through DR3 are used to specify breakpoint addresses, while DR6 and DR7 are used to enable and disable specific hardware breakpoints
 
+
 ### 12/24/16 ([HARD TO REMEMBER] x86 Instructions With Side Effects) ###
 - IMUL reg/mem: register is multiplied with AL, AX, or EAX and the result is stored in AX, DX:AX, or EDX:EAX
 - IDIV reg/mem: takes one parameter (divisor). Depending on the divisor’s size, div will use either AX, DX:AX, or EDX:EAX as the dividend, and the resulting quotient/remainder pair are stored in AL/AH, AX/DX, or EAX/EDX
