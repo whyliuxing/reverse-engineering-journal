@@ -1,17 +1,23 @@
-# Reverse_Engineering_Journal
+Reverse_Engineering_Journal
+===========================
 I put anything I find interesting regarding reverse engineering in this journal. The date beside each heading denotes the start date that I added the topic, but most of the time I will still be adding bullets to that heading days later. 
 
-### Table of Contents 
+Table of Contents 
+=================
 * [General Knowledge](#121816-general-knowledge)
-* [12/24/16 ([HARD TO REMEMBER] x86 Instructions With Side Effects)](#12/24/16 ([HARD TO REMEMBER] x86 Instructions With Side Effects))
-* [11/17/16 (Anti-Disassembly)](#11/17/16 (Anti-Disassembly))
-* [11/17/16 (Anti-Debugging)](#11/17/16 (Anti-Debugging))
-* [12/5/16 (Breakpoints)](#12/5/16 (Breakpoints))
-* [12/12/16 (String Encoding)](#12/12/16 (String Encoding))
-* [12/13/16 (C++ Reversing)](#12/13/16 (C++ Reversing))
-* [12/14/16 (64-Bit)](#12/14/16 (64-Bit))
-* [12/15/16 (Data Encoding)](#12/15/16 (Data Encoding))
-* [12/15/16 (Base64)](#12/15/16 (Base64))
+* [[HARD TO REMEMBER] x86 Instructions With Side Effects](#122416-hard-to-remember-x86-instructions-with-side-effects)
+* [Anti-Disassembly](#111716-anti-disassembly)
+* [Anti-Debugging](#111716-anti-debugging)
+* [Breakpoints](#12516-breakpoints)
+* [String Encoding](#121216-string-encoding)
+* [C++ Reversing](#121316-c-reversing)
+* [64-Bit](#121416-64-bit)
+* [Data Encoding](#121516-data-encoding)
+* [Base64](#121516-base64)
+* [Stripped Binaries](#121616-stripped-binaries)
+* [LD_PRELOAD](#121616-ld_preload)
+* [Random Number Generator](#121716-random-number-generator)
+* [Useful Python for RCE](#122816-useful-python-for-rce)
 
 #### *12/18/16 General Knowledge*
 * A hash function is a mathematical process that takes in an arbitrary-sized input and produces a fixed-size result
@@ -155,11 +161,9 @@ I put anything I find interesting regarding reverse engineering in this journal.
 * LD_PRELOAD is an environment variable that says “whenever you look for a function name, look in me first”
 
 #### *12/17/16 (Random Number Generator)*
-* Randomness requires a source of entropy, which is a sequence of bits that is unpredictable. This source of entropy can be from OS observing this internal operations or ambient factors
-* Suppose the first input to our algorithm came from a legitimate source of entropy, such as the ones described in the previous section; we'll call this value the seed. Now suppose that our algorithm was designed in such a way that it generated a sequence that had the following properties:
-  + At each step, our seed value is used as input to a calculation. The result of that calculation is returned from our algorithm and it becomes our new seed value, so that it becomes the input to our next calculation
-  + If the algorithm is used to generate a long sequence of values, that sequence will satisfy statistical tests of randomness (i.e., it will demonstrably "appear" to be random) and will have a long periodicity (i.e., it will be a long time before the sequence begins to repeat)
-* Such algorithms are known as pseudorandom generators, because while their output isn't random, it nonetheless passes statistical tests of randomness. As long as you seed them with a legitimate source of entropy, they can generate fairly long sequences of random values without the sequence repeating
+* Randomness requires a source of entropy, which is a sequence of bits that is unpredictable. This source of entropy can be from OS observing its internal operations or ambient factors
+* This source of entropy is call the seed
+* Algorithms using OS's internal operations or ambient factors as seed are known as pseudorandom generators, because while their output isn't random, it nonetheless passes statistical tests of randomness. As long as you seed them with a legitimate source of entropy, they can generate fairly long sequences of random values without the sequence repeating
 
 #### *12/28/16 (Useful Python for RCE)*
 * chr: hex/int to ASCII
