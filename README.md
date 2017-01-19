@@ -1,4 +1,4 @@
-# Reverse-Engineering-Journal
+# Reverse_Engineering_Journal
 I put anything I find interesting regarding reverse engineering in this journal. The date beside each heading denotes the start date that I added the topic, but most of the time I will still be adding bullets to that heading days later. 
 
 #### *12/18/16 (General Knowledge)*
@@ -11,8 +11,8 @@ I put anything I find interesting regarding reverse engineering in this journal.
 * Set watchpoint in GDB: watch only break on write, rwatch break on read, awatch break on read/write
 * Thunk function: simple function that jumps to another function
 * ASLR is turned off by default in GDB. To turn it on: set disable-randomization off
-* (32 bits Windows exe) FS register points to the beginning of current thread's environment block (TEB). Offset zero in TEB is the head of 
-  a linked list of pointers to exception handler functions
+* (32 bits Windows exe) FS register points to the beginning of current thread's environment block (TEB). Offset zero in TEB is the head of a linked list of pointers to exception handler functions
+* Any function that calls another function is called a non-leaf function, and all other functions are leaf functions
 
 #### *12/24/16 ([HARD TO REMEMBER] x86 Instructions With Side Effects)*
 * IMUL reg/mem: register is multiplied with AL, AX, or EAX and the result is stored in AX, DX:AX, or EDX:EAX
@@ -75,3 +75,85 @@ I put anything I find interesting regarding reverse engineering in this journal.
 * When a debugger is setting a memory breakpoint, it is changing the permissions on a region, or page, of memory
 * Guard page: Any access to a guard page results in a one-time exception, and then the page returns to its original status. Memory breakpoint changes permission of the page to guard
 
+#### *12/12/16 (String Encoding)*
+* There are only 128 characters defined in ASCII and 95 of them are human-readable
+* ASCII only used 7 bits, but the extra bit is still not enough to encode all the other languages
+* Various encoding schemes were invented but none covered every languages until Unicode came along
+* Unicode is a large table mapping characters to numbers (or a table of code points for characters) and the different UTF encodings specify how these numbers are encoded as bits
+* Characters are referred to by their “Unicode code point”
+* The primary cause of garbled text is: Somebody is trying to read a byte sequence using the wrong encoding
+* All characters available in the ASCII encoding only take up a single byte in UTF-8 and they're the exact same bytes as are used in ASCII. In other words, ASCII maps 1:1 unto UTF-8. Any character not in ASCII takes up two or more bytes in UTF-8
+
+#### *12/13/16 (C++ Reversing)*
+* Ecx is used to stored the this pointer. Sometimes esi
+* Class member functions are called with the usual function parameters in the stack and with ecx pointing to the class’s object 
+* Class’s object in assembly only contains the vfptr (pointer to virtual functions table) and variables. Member functions are not part of it
+* Memory spaces for global objects are allocated at compile-time and placed in data segment of binary 
+* Use Name Mangling to support Method Overloading (multiple functions with same name but accept different parameters) since in PE format function is only labeled with its name 
+* Child class automatically has all functions and data from parent class
+* Execution for virtual function is determined at runtime. Function call is indirect (through a register)
+
+#### *12/14/16 (64-Bit)*
+* All addresses and pointers are 64 bits
+* All general-purpose registers have increased in size, tho 32-bit versions can still be accessed
+* Some general-purpose registers (RDI, RSI, RBP, and RSP) supports byte accesses
+* There are twice as many general-purpose registers. The new one are labeled R8 - R15
+* DWORD (32-bit) version can be accessed as R8D. WORD (16-bit) version are accessed with a W suffix like R8W. Byte version are accessed with an L suffix like R8L
+* Supports instruction pointer-relative addressing. Unlike x86, referencing data will not use absolute address but rather an offset from RIP
+* Calling conventions: first 4 parameters are placed in RCX, RDX, R8, and R9. Additional one are stored on stack
+* In 32-bit code, stack space can be allocated and unallocated in middle of the function using push or pop. However, in 64-bit code, functions cannot allocate any space in the middle of the function
+* Nonleaf functions are sometimes called frame functions because they require a stack frame. All nonleaf functions are required to allocate 0x20 bytes of stack space when they call a function. This allows the function being called to save the register parameters (RCX, RDX, R8, and R9) in that space. If a function has any local stack variables, it will allocate space for them in addition to the 0x20 bytes
+* Structured exception handling in x64 does not use the stack. In 32-bit code, the fs:[0] is used as a pointer to the current exception handler frame, which is stored on the stack so that each function can define its own exception handler
+* Easier in 64-bit code to differentiate between pointers and data values. The most common size for storing integers is 32 bits and pointers are always 64 bits
+
+#### *12/15/16 (Data Encoding)*
+* All forms of content modification for the purpose of hiding intent
+* Caesar cipher: formed by shifting the letters of alphabet #’s characters to the left or right
+* Single-byte XOR encoding: modifies each byte of plaintext by performing a logical XOR operation with a static byte value
+* Problem with Single-byte XOR is that if there are many null bytes then key will be easy to figure out since XOR-ing nulls with the key reveals the key. Solutions: 
+  + Null-preserving single-byte XOR encoding: if plaintext is NULL or key itself, then it will not be encoded via XOR
+  + Blum Blum Shub pseudo-random number generator: Produces a key stream which will be xor-ed with the data. Generic form: Value = (Value * Value) % M. M is a constant and an initial V needs to be given. Actual key being xor-ed with the data is the lowest byte of current PRNG value
+* Identifying XOR loop: looks for a small loop that contains the XOR function (where it is xor-ing a register and a constant or a register with another register)
+* Other Simple Encoding Scheme:
+  + ADD, SUB
+  + ROL, ROR: Instructions rotate the bits within a byte right or left
+  + Multibyte: XOR key is multibyte
+  + Chained or loopback: Use content itself as part of the key. EX: the original key is applied at one side of the plaintext, and the encoded output character is used as the key for the next characte
+* If outputs are suspected of containing encoded data, then the encoding function will occur prior to the output. Conversely, decoding will occur after an input
+
+#### *12/15/16 (Base64)*
+* Used to represent binary data in ASCII string format
+* It converts binary data into a limited character set of 64 characters
+* Most common character set is MIME’s Base64, which uses A-Z, a-z, and 0-9 for the first 62 values and + / for the last two
+* Bits are read in blocks of six. The number represented by the 6 bits is used as an index into a 64-byte long string
+* One padding character may be presented at the end of the encoded string (typically =). If padded, length of encoded string will be divisible by 4
+* One beautiful thing about Base64 is how easy it is to develop a custom substitution cipher since the only item that needs to be changed is the indexing string
+
+#### *12/16/16 (Stripped Binaries)*
+* nm command to list all symbols in the binary
+* With non-stripped, gdb can identify local function names and knows the bounds of all functions so we can do: disas "function name"
+* With stripped binary, gdb can’t even identify main. Can identify entry point using the command: info file. Also, can’t do disas since gdb does not know the bounds of the functions so it does not know which address range should be disassembled. Solution: use examine(x) command on address pointed by pc register like: x/14i $pc
+
+#### *12/16/16 (LD_PRELOAD)*
+* When you start a dynamically linked program, it doesn’t have all the code for the functions it needs. So this is what happened: 
+  + The program gets loaded into memory
+  + The dynamic linker figures out which other libraries that program needs to run (.so files)
+  + It loads them into memory 
+  + It connects everything up 
+* LD_PRELOAD is an environment variable that says “whenever you look for a function name, look in me first”
+
+#### *12/17/16 (Random Number Generator)*
+* Randomness requires a source of entropy, which is a sequence of bits that is unpredictable. This source of entropy can be from OS observing this internal operations or ambient factors
+* Suppose the first input to our algorithm came from a legitimate source of entropy, such as the ones described in the previous section; we'll call this value the seed. Now suppose that our algorithm was designed in such a way that it generated a sequence that had the following properties:
+  + At each step, our seed value is used as input to a calculation. The result of that calculation is returned from our algorithm and it becomes our new seed value, so that it becomes the input to our next calculation
+  + If the algorithm is used to generate a long sequence of values, that sequence will satisfy statistical tests of randomness (i.e., it will demonstrably "appear" to be random) and will have a long periodicity (i.e., it will be a long time before the sequence begins to repeat)
+* Such algorithms are known as pseudorandom generators, because while their output isn't random, it nonetheless passes statistical tests of randomness. As long as you seed them with a legitimate source of entropy, they can generate fairly long sequences of random values without the sequence repeating
+
+#### *12/28/16 (Useful Python for RCE)*
+* chr: hex/int to ASCII
+* ord: ASCII to hex
+* Struct module: pack python objects as contiguous chunk of bytes or disassemble a chunk of bytes to python structures
+* int.from_bytes(bytes, byteorder): return integer represented by the array of bytes
+* int.to_bytes(bytes, byteorder): return array of bytes representing an integer
+* hex() returns a string
+* bytes is an immutable sequence of bytes. bytearray is mutable
