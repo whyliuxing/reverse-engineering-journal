@@ -2,7 +2,7 @@
 I put anything I find interesting regarding reverse engineering in this journal. The date beside each heading denotes the start date that I added the topic, but most of the time I will still be adding bullets to that heading days later. 
 
 ## Table of Contents 
-* [12/18/16 (General Knowledge)](#12/18/16-(General-Knowledge))
+* [12/18/16 (General Knowledge)](#General-Knowledge)
 * [12/24/16 ([HARD TO REMEMBER] x86 Instructions With Side Effects)](#12/24/16 ([HARD TO REMEMBER] x86 Instructions With Side Effects))
 * [11/17/16 (Anti-Disassembly)](#11/17/16 (Anti-Disassembly))
 * [11/17/16 (Anti-Debugging)](#11/17/16 (Anti-Debugging))
@@ -13,8 +13,8 @@ I put anything I find interesting regarding reverse engineering in this journal.
 * [12/15/16 (Data Encoding)](#12/15/16 (Data Encoding))
 * [12/15/16 (Base64)](#12/15/16 (Base64))
 
-12/18/16 (General Knowledge)
-============================
+General Knowledge
+=================
 * A hash function is a mathematical process that takes in an arbitrary-sized input and produces a fixed-size result
 * First argument to __libc_start_main() is a pointer to main for ELF files
 * nm: displays symbols in binary 
