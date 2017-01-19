@@ -32,7 +32,7 @@ Table of Contents
 * (32 bits Windows exe) FS register points to the beginning of current thread's environment block (TEB). Offset zero in TEB is the head of a linked list of pointers to exception handler functions
 * Any function that calls another function is called a non-leaf function, and all other functions are leaf functions
 
-#### *12/24/16 ([HARD TO REMEMBER] x86 Instructions With Side Effects)*
+## *12/24/16 ([HARD TO REMEMBER] x86 Instructions With Side Effects)*
 * IMUL reg/mem: register is multiplied with AL, AX, or EAX and the result is stored in AX, DX:AX, or EDX:EAX
 * IDIV reg/mem: takes one parameter (divisor). Depending on the divisor’s size, div will use either AX, DX:AX, or EDX:EAX as the dividend, and the resulting quotient/remainder pair are stored in AL/AH, AX/DX, or EAX/EDX
 * STOS: writes the value AL/AX/EAX to EDI. Commonly used to initialize a buffer to a constant value
@@ -42,7 +42,7 @@ Table of Contents
 * REP prefix: repeats an instruction up to ECX times
 * MOVSB/MOVSW/MOVSD instructions move data with 1, 2, or 4 byte granularity between two addresses. They implicitly use EDI/ESI as the destination/source address, respectively. In addition, they also automatically update the source/destination address depending on the direction flag
 
-#### *11/17/16 (Anti-Disassembly)*
+## *11/17/16 (Anti-Disassembly)*
 * __Linear disassembly__: disassembling one instruction at a time linearly. Problem: code section of nearly all binaries will also contain data that isn’t instructions 
 * __Flow-oriented disassembly__: process false branch first and note to disassemble true branch in future. When it reaches a unconditional jump, it will add the dest to list of places to disassemble in future. It will then step back and disassemble from the list of places it noted previously. For call instruction, most will disassemble the bytes after the call first and then the called location. If there is conflict between the true and false branch when disassembling, disassembler will trust the one it disassembles first
 * Use inline functions to obscure function declaration
@@ -68,7 +68,7 @@ Table of Contents
   + One or more program sections will be both writable and executable (Segments Window)
   + Nonstandard section names such as UPXo or .shrink are used
 
-#### *11/17/16 (Anti-Debugging)*
+## *11/17/16 (Anti-Debugging)*
 * For Linux Only: This is an elegant technique to detect if a debugger or program tracer such as strace or ltrace is being used on the target program. The premise of this technique is that a ptrace[PTRACE_TRACEME] cannot be called in succession more than once for a process. All debuggers and program tracers use this call to setup debugging for a process
 * Self-Debugging (Window’s version of ptrace): main process spawns a child process that debugs the process that created the child process. This can be bypassed be setting the EPROCESS->DebugPort (the EPROCESS structure is a struct returned by the kernel mode function PsGetProcessId) field to 0
 * Windows API provides several functions that can be used by a program to determine if it is being debugged (e.g. isDebuggerPresent)
@@ -84,7 +84,7 @@ Table of Contents
 * __TLS Callbacks__: Most debuggers start at the program’s entry point as defined by the PE header. A TLS callback can be used to execute code before the entry point and therefore execute secretly in a debugger. TLS is a Windows storage class in which a data object is not an automatic stack variable, yet is local to each thread that runs the code. Basically, TLS allows each thread to maintain a different value for a variable declared using TLS. TLS callback functions were designed to initialize and clear TLS data objects
 * Clearing hardware breakpoints
 
-#### *12/5/16 (Breakpoints)*
+## *12/5/16 (Breakpoints)*
 * Software breakpoint: debugger read and store the first byte and then overwrite the first byte with 0xcc (int 3). When CPU hits the breakpoint, SIGTRAP signal is raised, process is stopped, and internal lookup occurs and the byte is flipped back
 * Hardware breakpoints are set at CPU level, in special registers called debug registers (DR0 through DR7)
 * Only DR0 - DR3 registers are reserved for breakpoint addresses
@@ -93,7 +93,7 @@ Table of Contents
 * When a debugger is setting a memory breakpoint, it is changing the permissions on a region, or page, of memory
 * Guard page: Any access to a guard page results in a one-time exception, and then the page returns to its original status. Memory breakpoint changes permission of the page to guard
 
-#### *12/12/16 (String Encoding)*
+## *12/12/16 (String Encoding)*
 * There are only 128 characters defined in ASCII and 95 of them are human-readable
 * ASCII only used 7 bits, but the extra bit is still not enough to encode all the other languages
 * Various encoding schemes were invented but none covered every languages until Unicode came along
@@ -102,7 +102,7 @@ Table of Contents
 * The primary cause of garbled text is: Somebody is trying to read a byte sequence using the wrong encoding
 * All characters available in the ASCII encoding only take up a single byte in UTF-8 and they're the exact same bytes as are used in ASCII. In other words, ASCII maps 1:1 unto UTF-8. Any character not in ASCII takes up two or more bytes in UTF-8
 
-#### *12/13/16 (C++ Reversing)*
+## *12/13/16 (C++ Reversing)*
 * Ecx is used to stored the this pointer. Sometimes esi
 * Class member functions are called with the usual function parameters in the stack and with ecx pointing to the class’s object 
 * Class’s object in assembly only contains the vfptr (pointer to virtual functions table) and variables. Member functions are not part of it
@@ -111,7 +111,7 @@ Table of Contents
 * Child class automatically has all functions and data from parent class
 * Execution for virtual function is determined at runtime. Function call is indirect (through a register)
 
-#### *12/14/16 (64-Bit)*
+## *12/14/16 (64-Bit)*
 * All addresses and pointers are 64 bits
 * All general-purpose registers have increased in size, tho 32-bit versions can still be accessed
 * Some general-purpose registers (RDI, RSI, RBP, and RSP) supports byte accesses
@@ -124,7 +124,7 @@ Table of Contents
 * Structured exception handling in x64 does not use the stack. In 32-bit code, the fs:[0] is used as a pointer to the current exception handler frame, which is stored on the stack so that each function can define its own exception handler
 * Easier in 64-bit code to differentiate between pointers and data values. The most common size for storing integers is 32 bits and pointers are always 64 bits
 
-#### *12/15/16 (Data Encoding)*
+## *12/15/16 (Data Encoding)*
 * All forms of content modification for the purpose of hiding intent
 * Caesar cipher: formed by shifting the letters of alphabet #’s characters to the left or right
 * Single-byte XOR encoding: modifies each byte of plaintext by performing a logical XOR operation with a static byte value
@@ -139,7 +139,7 @@ Table of Contents
   + Chained or loopback: Use content itself as part of the key. EX: the original key is applied at one side of the plaintext, and the encoded output character is used as the key for the next characte
 * If outputs are suspected of containing encoded data, then the encoding function will occur prior to the output. Conversely, decoding will occur after an input
 
-#### *12/15/16 (Base64)*
+## *12/15/16 (Base64)*
 * Used to represent binary data in ASCII string format
 * It converts binary data into a limited character set of 64 characters
 * Most common character set is MIME’s Base64, which uses A-Z, a-z, and 0-9 for the first 62 values and + / for the last two
@@ -147,12 +147,12 @@ Table of Contents
 * One padding character may be presented at the end of the encoded string (typically =). If padded, length of encoded string will be divisible by 4
 * One beautiful thing about Base64 is how easy it is to develop a custom substitution cipher since the only item that needs to be changed is the indexing string
 
-#### *12/16/16 (Stripped Binaries)*
+## *12/16/16 (Stripped Binaries)*
 * nm command to list all symbols in the binary
 * With non-stripped, gdb can identify local function names and knows the bounds of all functions so we can do: disas "function name"
 * With stripped binary, gdb can’t even identify main. Can identify entry point using the command: info file. Also, can’t do disas since gdb does not know the bounds of the functions so it does not know which address range should be disassembled. Solution: use examine(x) command on address pointed by pc register like: x/14i $pc
 
-#### *12/16/16 (LD_PRELOAD)*
+## *12/16/16 (LD_PRELOAD)*
 * When you start a dynamically linked program, it doesn’t have all the code for the functions it needs. So this is what happened: 
   + The program gets loaded into memory
   + The dynamic linker figures out which other libraries that program needs to run (.so files)
@@ -160,12 +160,12 @@ Table of Contents
   + It connects everything up 
 * LD_PRELOAD is an environment variable that says “whenever you look for a function name, look in me first”
 
-#### *12/17/16 (Random Number Generator)*
+## *12/17/16 (Random Number Generator)*
 * Randomness requires a source of entropy, which is a sequence of bits that is unpredictable. This source of entropy can be from OS observing its internal operations or ambient factors
 * This source of entropy is call the seed
 * Algorithms using OS's internal operations or ambient factors as seed are known as pseudorandom generators, because while their output isn't random, it nonetheless passes statistical tests of randomness. As long as you seed them with a legitimate source of entropy, they can generate fairly long sequences of random values without the sequence repeating
 
-#### *12/28/16 (Useful Python for RCE)*
+## *12/28/16 (Useful Python for RCE)*
 * chr: hex/int to ASCII
 * ord: ASCII to hex
 * Struct module: pack python objects as contiguous chunk of bytes or disassemble a chunk of bytes to python structures
