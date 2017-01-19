@@ -13,7 +13,8 @@ I put anything I find interesting regarding reverse engineering in this journal.
 * [12/15/16 (Data Encoding)](#12/15/16 (Data Encoding))
 * [12/15/16 (Base64)](#12/15/16 (Base64))
 
-#### *12/18/16 (General Knowledge)*
+12/18/16 (General Knowledge)
+============================
 * A hash function is a mathematical process that takes in an arbitrary-sized input and produces a fixed-size result
 * First argument to __libc_start_main() is a pointer to main for ELF files
 * nm: displays symbols in binary 
