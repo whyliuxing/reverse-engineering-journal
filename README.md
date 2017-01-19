@@ -1,7 +1,7 @@
 # Reverse-Engineering-Journal
 I put anything I find interesting regarding reverse engineering in this journal. The date beside each heading denotes the start date that I added the topic, but most of the time I will still be adding bullets to that heading days later. 
 
-##### 12/18/16 (General Knowledge)
+#### 12/18/16 (General Knowledge)
 * A hash function is a mathematical process that takes in an arbitrary-sized input and produces a fixed-size result
 * First argument to __libc_start_main() is a pointer to main for ELF files
 * nm: displays symbols in binary 
@@ -15,7 +15,7 @@ I put anything I find interesting regarding reverse engineering in this journal.
   a linked list of pointers to exception handler functions
 * debug registers 0 through 7 (DR0 - DR7) are used to control the use of hardware breakpoints. DR0 through DR3 are used to specify breakpoint addresses, while DR6 and DR7 are used to enable and disable specific hardware breakpoints
 
-##### 12/24/16 ([HARD TO REMEMBER] x86 Instructions With Side Effects)
+#### 12/24/16 ([HARD TO REMEMBER] x86 Instructions With Side Effects)
 * IMUL reg/mem: register is multiplied with AL, AX, or EAX and the result is stored in AX, DX:AX, or EDX:EAX
 * IDIV reg/mem: takes one parameter (divisor). Depending on the divisor’s size, div will use either AX, DX:AX, or EDX:EAX as the dividend, and the resulting quotient/remainder pair are stored in AL/AH, AX/DX, or EAX/EDX
 * STOS: writes the value AL/AX/EAX to EDI. Commonly used to initialize a buffer to a constant value
@@ -25,7 +25,7 @@ I put anything I find interesting regarding reverse engineering in this journal.
 * REP prefix: repeats an instruction up to ECX times
 * MOVSB/MOVSW/MOVSD instructions move data with 1, 2, or 4 byte granularity between two addresses. They implicitly use EDI/ESI as the destination/source address, respectively. In addition, they also automatically update the source/destination address depending on the direction flag
 
-##### 11/17/16 (Anti-Disassembly) 
+#### 11/17/16 (Anti-Disassembly) 
 * __Linear disassembly__: disassembling one instruction at a time linearly. Problem: code section of nearly all binaries will also contain data that isn’t instructions 
 * __Flow-oriented disassembly__: process false branch first and note to disassemble true branch in future. When it reaches a unconditional jump, it will add the dest to list of places to disassemble in future. It will then step back and disassemble from the list of places it noted previously. For call instruction, most will disassemble the bytes after the call first and then the called location. If there is conflict between the true and false branch when disassembling, disassembler will trust the one it disassembles first
 * Use inline functions to obscure function declaration
