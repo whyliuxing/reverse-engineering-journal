@@ -3,6 +3,15 @@ I put anything I find interesting regarding reverse engineering in this journal.
 
 ## Table of Contents 
 * [12/18/16 (General Knowledge)](#12/18/16 (General Knowledge))
+* [12/24/16 ([HARD TO REMEMBER] x86 Instructions With Side Effects)](#12/24/16 ([HARD TO REMEMBER] x86 Instructions With Side Effects))
+* [11/17/16 (Anti-Disassembly)](#11/17/16 (Anti-Disassembly))
+* [11/17/16 (Anti-Debugging)](#11/17/16 (Anti-Debugging))
+* [12/5/16 (Breakpoints)](#12/5/16 (Breakpoints))
+* [12/12/16 (String Encoding)](#12/12/16 (String Encoding))
+* [12/13/16 (C++ Reversing)](#12/13/16 (C++ Reversing))
+* [12/14/16 (64-Bit)](#12/14/16 (64-Bit))
+* [12/15/16 (Data Encoding)](#12/15/16 (Data Encoding))
+* [12/15/16 (Base64)](#12/15/16 (Base64))
 
 #### *12/18/16 (General Knowledge)*
 * A hash function is a mathematical process that takes in an arbitrary-sized input and produces a fixed-size result
