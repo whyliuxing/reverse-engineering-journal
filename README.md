@@ -2,7 +2,7 @@
 I put anything I find interesting regarding reverse engineering in this journal. The date beside each heading denotes the start date that I added the topic, but most of the time I will still be adding bullets to that heading days later. 
 
 ## Table of Contents 
-* [12/18/16 (General Knowledge)](#12/18/16 (General Knowledge))
+* [12/18/16 (General Knowledge)](#12/18/16-(General-Knowledge))
 * [12/24/16 ([HARD TO REMEMBER] x86 Instructions With Side Effects)](#12/24/16 ([HARD TO REMEMBER] x86 Instructions With Side Effects))
 * [11/17/16 (Anti-Disassembly)](#11/17/16 (Anti-Disassembly))
 * [11/17/16 (Anti-Debugging)](#11/17/16 (Anti-Debugging))
