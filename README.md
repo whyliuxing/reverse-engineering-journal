@@ -21,7 +21,6 @@ Table of Contents
 
 ## *12/18/16 General Knowledge*
 * A hash function is a mathematical process that takes in an arbitrary-sized input and produces a fixed-size result
-* First argument to __libc_start_main() is a pointer to main for ELF files
 * nm: displays symbols in binary 
 * ldd: print shared library dependencies
 * To look at instructions starting from pc for stripped binary in gdb: x/14i $pc
@@ -58,16 +57,9 @@ Table of Contents
 * __Thwarting stack-frame analysis__: technique to mess ida pro when deducing numbers of param and local variables. Make a conditional jump that always false but in true branch add absurd amount to esp
 * __Dynamically Computed Target Addresses__: an address to which execution will flow is computed at runtime. The intent is to hide control flow from static analysis
 * More complex control flow hiding: program uses multiple threads or child processes to compute control flow information and receive that information via interprocess communication (for child processes) or synchronization primitives (for multiple threads)
-* __Tampering/Removing Section Headers__: makes tools such as gdb and objdump useless since they rely on the section headers to locate symbol info. Segments are necessary for program execution, not sections. Section header table is for linking and debugging.  
-* __Imported Function Obfuscation (makes it difficult to determine which shared lib or lib func are used)__: have the program’s import table to have been properly initialized by the program itself. The program itself loads any additional lib it depends on, and once the lib are loaded, the program locates any required functions within those lib
-  + (Windows) use LoadLibrary function to load required lib by name and then perform function address lookups within each lib using the GetProcAddress func
-* Tip-offs that a binary is obfuscated:
-  + Very little code is highlighted in the navigation band
-  + Very few functions are listed in Functions window. Often only the start function
-  + Very few imported functions in the Imports window
-  + Very few legible strings appear in Strings window
-  + One or more program sections will be both writable and executable (Segments Window)
-  + Nonstandard section names such as UPXo or .shrink are used
+* __Tampering/Removing Section Headers (ELF)__: makes tools such as gdb and objdump useless since they rely on the section headers to locate symbol info. Segments are necessary for program execution, not sections. Section header table is for linking and debugging.  
+* __Imported Function Obfuscation (makes it difficult to determine which shared lib or lib func are used)__: have the program’s import table be initialized by the program itself. The program itself loads any additional lib it depends on, and once the lib are loaded, the program locates any required functions within those lib
+  + (Windows) use LoadLibrary function to load required lib by name and then perform function address lookups within each lib using GetProcAddress
 
 ## *11/17/16 (Anti-Debugging)*
 * For Linux Only: This is an elegant technique to detect if a debugger or program tracer such as strace or ltrace is being used on the target program. The premise of this technique is that a ptrace[PTRACE_TRACEME] cannot be called in succession more than once for a process. All debuggers and program tracers use this call to setup debugging for a process
@@ -174,3 +166,8 @@ Table of Contents
 * int.to_bytes(bytes, byteorder): return array of bytes representing an integer
 * hex() returns a string
 * bytes is an immutable sequence of bytes. bytearray is mutable
+
+## *1/20/17 (ELF Files)*
+* ELF file header starts at offset 0 and is the roadmap that describes the rest of the file. It marks the ELF type, architecture, execution entry point, and offsets to program headers and section headers
+* Program header table let the system knows how to create the process image
+* Section header table is not necessary for program execution. It is mainly for linking and debugging purposes
