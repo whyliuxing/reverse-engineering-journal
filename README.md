@@ -172,3 +172,4 @@ Table of Contents
 * ELF file header starts at offset 0 and is the roadmap that describes the rest of the file. It marks the ELF type, architecture, execution entry point, and offsets to program headers and section headers
 * Program header table let the system knows how to create the process image
 * Section header table is not necessary for program execution. It is mainly for linking and debugging purposes
+* Relocatable objects have no program headers since they are not meant to be loaded into memory directly
