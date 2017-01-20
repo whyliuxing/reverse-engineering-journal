@@ -174,6 +174,4 @@ Table of Contents
 * Section header table is not necessary for program execution. It is mainly for linking and debugging purposes. It is an array of ELF_32Shdr or ELF_64Shdr structures (Section Header)
 * Relocatable objects have no program headers since they are not meant to be loaded into memory directly
 
-<p align="center">
-  [Go To Top](#table-of-contents-)
-</p>
+[Go to Top](#table-of-contents-)
