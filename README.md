@@ -173,3 +173,5 @@ Table of Contents
 * Program header table let the system knows how to create the process image. It contains an array of structures, each describing a segment and a segment contains one or more sections
 * Section header table is not necessary for program execution. It is mainly for linking and debugging purposes. It is an array of ELF_32Shdr or ELF_64Shdr structures (Section Header)
 * Relocatable objects have no program headers since they are not meant to be loaded into memory directly
+
+<center>[Go to Top](#table-of-contents-)</center>
