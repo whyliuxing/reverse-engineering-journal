@@ -173,5 +173,12 @@ Table of Contents
 * Program header table let the system knows how to create the process image. It contains an array of structures, each describing a segment and a segment contains one or more sections
 * Section header table is not necessary for program execution. It is mainly for linking and debugging purposes. It is an array of ELF_32Shdr or ELF_64Shdr structures (Section Header)
 * Relocatable objects have no program headers since they are not meant to be loaded into memory directly
+* .got (Global Offset Table) section: a table of addresses located in the data section. It allows code to reference data that were not available during compilation (ex: extern "var"). That data will have a section in .got, which will then be filled in later during linking
+* .plt (Procedure Linkage Table) section: a part of the text section, consisting of external function entries. Each plt entry has a correcponding entry in .got.plt which contains the actual offset to the function. Resolving of external functions is done through lazy binding. It means that it doesn't resolve the address until the function is called. 
+* plt entry consists of: 
+  + A jump to an address specified in GOT
+  + argument to tell the resolver which function to resolve (only reach there during function's first invocation)
+  + call the resolver (resides at PLT entry 0)
+* .got.plt: contains entries that can be resolved lazily
 
 [Go to Top](#table-of-contents-)
