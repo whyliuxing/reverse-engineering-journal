@@ -21,7 +21,7 @@ Table of Contents
 * [ELF Files](#12017-elf-files)
 
 ## *12/18/16 General Knowledge*
-* A hash function is a mathematical process that takes in an arbitrary-sized input and produces a fixed-size result
+* A hash function is a mathematical process that takes in an arbitrary-sized input and produces a fixed-size output
 * nm: displays symbols in binary 
 * ldd: print shared library dependencies
 * To look at instructions starting from pc for stripped binary in gdb: x/14i $pc
@@ -56,7 +56,7 @@ Table of Contents
 * __Function pointer problem__: if a function call func using the same ptr multiple times, ida pro xref only record the first usage
 * __Return pointer abuse__: ret instruction is used to jump to function instead of returning from function. Disassembler doesn’t show any code cross-reference to the target being jumped to. Also, disassembler will prematurely terminate the function
 * __Thwarting stack-frame analysis__: technique to mess ida pro when deducing numbers of param and local variables. Make a conditional jump that always false but in true branch add absurd amount to esp
-* __Dynamically Computed Target Addresses__: an address to which execution will flow is computed at runtime. The intent is to hide control flow from static analysis
+* __Dynamically Computed Target Addresses__: an address to which execution will go to is computed at runtime. The intent is to hide control flow from static analysis
 * More complex control flow hiding: program uses multiple threads or child processes to compute control flow information and receive that information via interprocess communication (for child processes) or synchronization primitives (for multiple threads)
 * __Tampering/Removing Section Headers (ELF)__: makes tools such as gdb and objdump useless since they rely on the section headers to locate symbol info. Segments are necessary for program execution, not sections. Section header table is for linking and debugging.  
 * __Imported Function Obfuscation (makes it difficult to determine which shared lib or lib func are used)__: have the program’s import table be initialized by the program itself. The program itself loads any additional lib it depends on, and once the lib are loaded, the program locates any required functions within those lib
@@ -64,14 +64,14 @@ Table of Contents
 
 ## *11/17/16 (Anti-Debugging)*
 * For Linux Only: This is an elegant technique to detect if a debugger or program tracer such as strace or ltrace is being used on the target program. The premise of this technique is that a ptrace[PTRACE_TRACEME] cannot be called in succession more than once for a process. All debuggers and program tracers use this call to setup debugging for a process
-* Self-Debugging (Window’s version of ptrace): main process spawns a child process that debugs the process that created the child process. This can be bypassed be setting the EPROCESS->DebugPort (the EPROCESS structure is a struct returned by the kernel mode function PsGetProcessId) field to 0
+* Self-Debugging (Window’s version of ptrace): main process spawns a child process that debugs the process that created the child process, which prevents debugger from attaching to the same process. This can be bypassed be setting the EPROCESS->DebugPort (the EPROCESS structure is a struct returned by the kernel mode function PsGetProcessId) field to 0
 * Windows API provides several functions that can be used by a program to determine if it is being debugged (e.g. isDebuggerPresent)
 * Several flags within the PEB structure provide information about the presence of a debugger
 * Location of PEB can be referenced by the location fs:[30h]. The second item on the PEB struct is BYTE BeingDebugged
 * __ProcessHeap Flag__: within Reserved4 array in PEB, is ProcessHeap, which is set to location of process’s first heap allocated by loader. This first heap contains a header with fields that tell kernel whether the heap was created within a debugger, known as ForceFlags fields
 * __NTGlobalFlag__: Since processes run slightly differently when started with a debugger, they create memory heaps differently. The information that the system uses to determine how to create heap structures is stored at an undocumented location in the PEB at offset 0x68. If value at this location is 0x70, we know that we are running in debugger
-* __INT Scanning__: INT 3 (0xCC) is software interrupt used by debuggers to temporarily replace an instruction in a running program and to call the debug exception handler if the process is being traced (e.g. ptrace)- how debugger make software breakpoint. Have a process scan its own code for an INT 3 modification by searching the code for the oxCC opcode
-* __Setting up false breakpoints__: a breakpoint is created by overwriting the address with an int3 opcode (0xcc). To setup a false breakpoint then we simply insert an int3 into the code. This also raises a SIGTRAP, and thus if our code has a signal handler we can continue processing after the breakpoint
+* __INT Scanning__: Search the .text section for the 0xCC byte. If it exists, that means that a soft breakpoint has been set and the process is under a debugger
+* __Setting up false breakpoints__: a breakpoint is created by overwriting the first byte of instruction with an int3 opcode (0xcc). To setup a false breakpoint then we simply insert int3 into the code. This raises a SIGTRAP when int3 is executed. If our code has a signal handler for SIGTRAP, the handler will be executed before resuming to the instruction after int3. But if the code is under the debugger, the debugger will catch the SIGTRAP signal instead and might not pass the signal back to the program, resulting in the signal handler not being executed 
 * __Code Checksums__:  Instead of scanning for 0xCC, this check simply performs a cyclic redundancy check (CRC) or a MD5 checksum of the opcodes in the malware
 * __Timing Checks__:  record a timestamp, perform some operations, take another timestamp, and then compare the two timestamps. If there is a lag, you can assume the presence of a debugger
 * __rdtsc Instruction (0x0F31)__: this instruction returns the count of the number of ticks since the last system reboot as a 64-bit value placed into EDX:EAX. Simply execute this instruction twice and compare the difference between the two readings
@@ -79,7 +79,7 @@ Table of Contents
 * Clearing hardware breakpoints
 
 ## *12/5/16 (Breakpoints)*
-* Software breakpoint: debugger read and store the first byte and then overwrite the first byte with 0xcc (int 3). When CPU hits the breakpoint, SIGTRAP signal is raised, process is stopped, and internal lookup occurs and the byte is flipped back
+* Software breakpoint: debugger read and store the first byte of instruction and then overwrite that first byte with 0xcc (int 3). When CPU hits the breakpoint, SIGTRAP signal is raised, process is stopped, and internal lookup occurs and the byte is flipped back
 * Hardware breakpoints are set at CPU level, in special registers called debug registers (DR0 through DR7)
 * Only DR0 - DR3 registers are reserved for breakpoint addresses
 * Before the CPU attempts to execute an instruction, it first checks to see whether the address is currently enabled for a hardware breakpoint. If the address is stored in debug registers DR0–DR3 and the read, write, or execute conditions are met, an INT1 is fired and the CPU halts
@@ -100,7 +100,7 @@ Table of Contents
 * Ecx is used to stored the this pointer. Sometimes esi
 * Class member functions are called with the usual function parameters in the stack and with ecx pointing to the class’s object 
 * Class’s object in assembly only contains the vfptr (pointer to virtual functions table) and variables. Member functions are not part of it
-* Memory spaces for global objects are allocated at compile-time and placed in data segment of binary 
+* Memory spaces for global objects are allocated at compile-time and placed in data or bss section of binary 
 * Use Name Mangling to support Method Overloading (multiple functions with same name but accept different parameters) since in PE format function is only labeled with its name 
 * Child class automatically has all functions and data from parent class
 * Execution for virtual function is determined at runtime. Function call is indirect (through a register)
@@ -170,7 +170,7 @@ Table of Contents
 
 ## *1/20/17 (ELF Files)*
 * ELF file header starts at offset 0 and is the roadmap that describes the rest of the file. It marks the ELF type, architecture, execution entry point, and offsets to program headers and section headers
-* Program header table let the system knows how to create the process image. It contains an array of structures, each describing a segment and a segment contains one or more sections
+* Program header table let the system knows how to create the process image. It contains an array of structures, each describing a segment. A segment contains one or more sections
 * Section header table is not necessary for program execution. It is mainly for linking and debugging purposes. It is an array of ELF_32Shdr or ELF_64Shdr structures (Section Header)
 * Relocatable objects have no program headers since they are not meant to be loaded into memory directly
 * .got (Global Offset Table) section: a table of addresses located in the data section. It allows PIC code to reference data that were not available during compilation (ex: extern "var"). That data will have a section in .got, which will then be filled in later by the dynamic linker
