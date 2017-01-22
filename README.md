@@ -145,6 +145,7 @@ Table of Contents
 * There are 2 sections that contain symbols: .dynsym and .symtab. .dynsym contains dynamic/global symbols, those symbols are resolved at runtime. .symtab contains all the symbols. Since they are not necessary for runtime, they are not loaded into memory 
 * nm command to list all symbols in the binary from .symtab
 * Stripped binary == no .symtab symbol table
+* .dynsym symbol table cannot be stripped since it is needed for runtime, so imported library symbols remain in a stripped binary. But if a binary is compiled statically, it will have no symbol table at all if stripped
 * With non-stripped, gdb can identify local function names and knows the bounds of all functions so we can do: disas "function name"
 * With stripped binary, gdb can’t even identify main. Can identify entry point using the command: info file. Also, can’t do disas since gdb does not know the bounds of the functions so it does not know which address range should be disassembled. Solution: use examine(x) command on address pointed by pc register like: x/14i $pc
 
