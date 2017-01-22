@@ -142,7 +142,9 @@ Table of Contents
 * One beautiful thing about Base64 is how easy it is to develop a custom substitution cipher since the only item that needs to be changed is the indexing string
 
 ## *12/16/16 (Stripped Binaries)*
-* nm command to list all symbols in the binary
+* There are 2 sections that contain symbols: .dynsym and .symtab. .dynsym contains dynamic/global symbols, those symbols are resolved at runtime. .symtab contains all the symbols. Since they are not necessary for runtime, they are not loaded into memory 
+* nm command to list all symbols in the binary from .symtab
+* Stripped binary == no .symtab symbol table
 * With non-stripped, gdb can identify local function names and knows the bounds of all functions so we can do: disas "function name"
 * With stripped binary, gdb can’t even identify main. Can identify entry point using the command: info file. Also, can’t do disas since gdb does not know the bounds of the functions so it does not know which address range should be disassembled. Solution: use examine(x) command on address pointed by pc register like: x/14i $pc
 
