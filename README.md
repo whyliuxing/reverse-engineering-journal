@@ -71,12 +71,13 @@ Table of Contents
 * __ProcessHeap Flag__: within Reserved4 array in PEB, is ProcessHeap, which is set to location of process’s first heap allocated by loader. This first heap contains a header with fields that tell kernel whether the heap was created within a debugger, known as ForceFlags fields
 * __NTGlobalFlag__: Since processes run slightly differently when started with a debugger, they create memory heaps differently. The information that the system uses to determine how to create heap structures is stored at an undocumented location in the PEB at offset 0x68. If value at this location is 0x70, we know that we are running in debugger
 * __INT Scanning__: Search the .text section for the 0xCC byte. If it exists, that means that a soft breakpoint has been set and the process is under a debugger
-* __Setting up false breakpoints__: a breakpoint is created by overwriting the first byte of instruction with an int3 opcode (0xcc). To setup a false breakpoint then we simply insert int3 into the code. This raises a SIGTRAP when int3 is executed. If our code has a signal handler for SIGTRAP, the handler will be executed before resuming to the instruction after int3. But if the code is under the debugger, the debugger will catch the SIGTRAP signal instead and might not pass the signal back to the program, resulting in the signal handler not being executed 
+* __False Breakpoints and SIGTRAP Handler__: a breakpoint is created by overwriting the first byte of instruction with an int3 opcode (0xcc). To setup a false breakpoint then we simply insert int3 into the code. This raises a SIGTRAP when int3 is executed. If our code has a signal handler for SIGTRAP, the handler will be executed before resuming to the instruction after int3. But if the code is under the debugger, the debugger will catch the SIGTRAP signal instead and might not pass the signal back to the program, resulting in the signal handler not being executed 
 * __Code Checksums__:  Instead of scanning for 0xCC, this check simply performs a cyclic redundancy check (CRC) or a MD5 checksum of the opcodes in the malware
 * __Timing Checks__:  record a timestamp, perform some operations, take another timestamp, and then compare the two timestamps. If there is a lag, you can assume the presence of a debugger
 * __rdtsc Instruction (0x0F31)__: this instruction returns the count of the number of ticks since the last system reboot as a 64-bit value placed into EDX:EAX. Simply execute this instruction twice and compare the difference between the two readings
-* __TLS Callbacks__: Most debuggers start at the program’s entry point as defined by the PE header. A TLS callback can be used to execute code before the entry point and therefore execute secretly in a debugger. TLS is a Windows storage class in which a data object is not an automatic stack variable, yet is local to each thread that runs the code. Basically, TLS allows each thread to maintain a different value for a variable declared using TLS. TLS callback functions were designed to initialize and clear TLS data objects
+* __TLS Callbacks__: (Windows only) Most debuggers start at the program’s entry point as defined by the PE header. A TLS callback can be used to execute code before the entry point and therefore execute secretly in a debugger. TLS is a Windows storage class in which a data object is not an automatic stack variable, yet is local to each thread that runs the code. Basically, TLS allows each thread to maintain a different value for a variable declared using TLS. TLS callback functions were designed to initialize and clear TLS data objects
 * Clearing hardware breakpoints
+* __/proc/self/status File__: (Linux only) a dynamic file that exists for every process. It includes information on whether a process is being traced
 
 ## *12/5/16 (Breakpoints)*
 * Software breakpoint: debugger read and store the first byte of instruction and then overwrite that first byte with 0xcc (int 3). When CPU hits the breakpoint, SIGTRAP signal is raised, process is stopped, and internal lookup occurs and the byte is flipped back
@@ -183,5 +184,11 @@ Table of Contents
   + argument to tell the resolver which function to resolve (only reach there during function's first invocation)
   + call the resolver (resides at PLT entry 0)
 * .got.plt section: contains entries that can be resolved lazily
+
+## *2/5/2017 (Anti-Emulation)*
+* allows reverse engineer to bypass many anti-debugging techniques
+* __Detection through Syscall__: invoke various uncommon syscalls and check if it contains expected value. Since there are OS features not properly implemented, it means that the process is running under a debugger
+* __CPU Inconsistencies Detection__: try executing privileged instructions in user mode. If it succeeded, then it is under emulation
+* __Timing Delays__: execution under emulation will be slower than running under real CPU
 
 [Go to Top](#table-of-contents-)
