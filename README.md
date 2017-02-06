@@ -19,6 +19,7 @@ Table of Contents
 * [Random Number Generator](#121716-random-number-generator)
 * [Useful Python for RCE](#122816-useful-python-for-rce)
 * [ELF Files](#12017-elf-files)
+* [Anti-Emulation](#252017-anti-emulation)
 
 ## *12/18/16 General Knowledge*
 * A hash function is a mathematical process that takes in an arbitrary-sized input and produces a fixed-size output
