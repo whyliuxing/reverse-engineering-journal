@@ -22,6 +22,7 @@ Table of Contents
 * [Anti-Emulation](#252017-anti-emulation)
 
 ## *12/18/16 General Knowledge*
+* (Intel Specific) value stored in RAM is in little-endian but when moved to registers it is in big-endian  
 * A hash function is a mathematical process that takes in an arbitrary-sized input and produces a fixed-size output
 * nm: displays symbols in binary 
 * ldd: print shared library dependencies
