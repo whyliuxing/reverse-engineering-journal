@@ -31,7 +31,7 @@ Table of Contents
 * Set watchpoint in GDB: watch only break on write, rwatch break on read, awatch break on read/write
 * Thunk function: a samll subroutine that assists a call to another subroutine. Thunk function can be used to get current instruction address then use it to reference a variable in the data section since data section is at a known offset from the code section. Example: __i686.get_pc_thunk.cx  
 * ASLR is turned off by default in GDB. To turn it on: set disable-randomization off
-* (32 bits Windows exe) FS register points to the beginning of current thread's environment block (TEB). Offset zero in TEB is the head of a linked list of pointers to exception handler functions
+* (32 bits Windows exe) FS register points to the beginning of current thread's environment block (TEB). Offset zero in TEB is the head of a linked list of pointers to exception handler functions. Offset 30h is the PEB structure. Offset 2 in the PEB is the BeingDebugged field
 * Any function that calls another function is called a non-leaf function, and all other functions are leaf functions
 
 ## *12/24/16 ([HARD TO REMEMBER] x86 Instructions With Side Effects)*
