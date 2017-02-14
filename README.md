@@ -25,6 +25,10 @@ Table of Contents
 * (Intel Specific) value stored in RAM is in little-endian but when moved to registers it is in big-endian  
 * the 8 32-bit general-purpose registers(GPRs) for x86 architecture: eax, ebx, ecx, edx, edi, esi, ebp, and esp
 * For x64 architecture, there are 18 general-purpose registers(GPRs)
+* Calling Conventions(x86): 
+ * CDECL: arguments pushed on stack from right to left. Caller cleaned up stack after
+ * STDCALL: arguments pushed on stack from right to left. Callee cleaned up stack after
+ * FASTCALL: first two arguments passed in ecx and edx. If there are more, they are pushed onto the stack
 * A hash function is a mathematical process that takes in an arbitrary-sized input and produces a fixed-size output
 * To look at instructions starting from pc for stripped binary in gdb: x/14i $pc
 * Set hardware breakpoint in GDB: hbreak 
