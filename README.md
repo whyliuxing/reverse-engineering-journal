@@ -23,9 +23,9 @@ Table of Contents
 
 ## *12/18/16 General Knowledge*
 * (Intel Specific) value stored in RAM is in little-endian but when moved to registers it is in big-endian  
+* the 8 32-bit general-purpose registers(GPRs) for x86 architecture: eax, ebx, ecx, edx, edi, esi, ebp, and esp
+* For x64 architecture, there are 18 general-purpose registers(GPRs)
 * A hash function is a mathematical process that takes in an arbitrary-sized input and produces a fixed-size output
-* nm: displays symbols in binary 
-* ldd: print shared library dependencies
 * To look at instructions starting from pc for stripped binary in gdb: x/14i $pc
 * Set hardware breakpoint in GDB: hbreak 
 * Set watchpoint in GDB: watch only break on write, rwatch break on read, awatch break on read/write
