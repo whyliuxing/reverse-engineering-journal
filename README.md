@@ -39,8 +39,8 @@ Table of Contents
 * IDIV reg/mem: takes one parameter (divisor). Depending on the divisor’s size, div will use either AX, DX:AX, or EDX:EAX as the dividend, and the resulting quotient/remainder pair are stored in AL/AH, AX/DX, or EAX/EDX
 * STOS: writes the value AL/AX/EAX to EDI. Commonly used to initialize a buffer to a constant value
 * SCAS: compares AL/AX/EAX with data starting at the memory address EDI
-* CLD: clear direction flag
-* STD: set direction flag
+* LODS: reads 1, 2, or 4 byte value from esi and stores it in al, ax, or eax 
+* MUL: register is multiplied with AL, AX, or EAX and result is stored in AX, DX:AX, or EDX:EAX
 * REP prefix: repeats an instruction up to ECX times
 * MOVSB/MOVSW/MOVSD instructions move data with 1, 2, or 4 byte granularity between two addresses. They implicitly use EDI/ESI as the destination/source address, respectively. In addition, they also automatically update the source/destination address depending on the direction flag
 
