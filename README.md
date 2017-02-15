@@ -20,6 +20,7 @@ Table of Contents
 * [Useful Python for RCE](#122816-useful-python-for-rce)
 * [ELF Files](#12017-elf-files)
 * [Anti-Emulation](#252017-anti-emulation)
+* [GDB](#21517-gdb)
 
 ## *12/18/16 General Knowledge*
 * (Intel Specific) value stored in RAM is in little-endian but when moved to registers it is in big-endian  
