@@ -30,9 +30,6 @@ Table of Contents
  * STDCALL: arguments pushed on stack from right to left. Callee cleaned up stack after
  * FASTCALL: first two arguments passed in ecx and edx. If there are more, they are pushed onto the stack
 * A hash function is a mathematical process that takes in an arbitrary-sized input and produces a fixed-size output
-* To look at instructions starting from pc for stripped binary in gdb: x/14i $pc
-* Set hardware breakpoint in GDB: hbreak 
-* Set watchpoint in GDB: watch only break on write, rwatch break on read, awatch break on read/write
 * Thunk function: a small subroutine that assists a call to another subroutine. Thunk function can be used to get current instruction address then use it to reference a variable in the data section since data section is at a known offset from the code section. Example: __i686.get_pc_thunk.cx  
 * ASLR is turned off by default in GDB. To turn it on: set disable-randomization off
 * (32 bits Windows exe) FS segment register points to the beginning of current thread's environment block (TEB). Offset zero in TEB is the head of a linked list of pointers to exception handler functions on 32-bit system. Offset 30h is the PEB structure. Offset 2 in the PEB is the BeingDebugged field. In x64, PEB is located at offset 60h of the gs segment
@@ -197,5 +194,10 @@ Table of Contents
 * __Detection through Syscall__: invoke various uncommon syscalls and check if it contains expected value. Since there are OS features not properly implemented, it means that the process is running under a debugger
 * __CPU Inconsistencies Detection__: try executing privileged instructions in user mode. If it succeeded, then it is under emulation
 * __Timing Delays__: execution under emulation will be slower than running under real CPU
+
+## *2/15/17 (GDB)*
+* To look at instructions starting from pc for stripped binary in gdb: x/14i $pc
+* Set hardware breakpoint in GDB: hbreak 
+* Set watchpoint in GDB: watch only break on write, rwatch break on read, awatch break on read/write
 
 [Go to Top](#table-of-contents-)
