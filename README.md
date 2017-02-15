@@ -30,7 +30,7 @@ Table of Contents
  * CDECL: arguments pushed on stack from right to left. Caller cleaned up stack after
  * STDCALL: arguments pushed on stack from right to left. Callee cleaned up stack after
  * FASTCALL: first two arguments passed in ecx and edx. If there are more, they are pushed onto the stack
-* There is no way to tell the datatype of something stored in memory by just looking at the location of where it is stored. The datatype is inferred by the operations that is used on them. For example, if an instruction loads a value into eax and ja is being used to check if eax is greater than 0x10, then we know that the value is a unsigned int since ja is only used to compare unsigned numbers
+* There is no way to tell the datatype of something stored in memory by just looking at the location of where it is stored. The datatype is inferred by the operations that is used on it. For example, if an instruction loads a value into eax and ja is being used to check if eax is greater than 0x10, then we know that the value is an unsigned int since ja is only used to compare unsigned numbers
 * A hash function is a mathematical process that takes in an arbitrary-sized input and produces a fixed-size output
 * Thunk function: a small subroutine that assists a call to another subroutine. Thunk function can be used to get current instruction address then use it to reference a variable in the data section since data section is at a known offset from the code section. Example: __i686.get_pc_thunk.cx  
 * ASLR is turned off by default in GDB. To turn it on: set disable-randomization off
