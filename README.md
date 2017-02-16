@@ -30,7 +30,7 @@ Table of Contents
  * CDECL: arguments pushed on stack from right to left. Caller cleaned up stack after
  * STDCALL: arguments pushed on stack from right to left. Callee cleaned up stack after
  * FASTCALL: first two arguments passed in ecx and edx. If there are more, they are pushed onto the stack
-* There is no way to tell the datatype of something stored in memory by just looking at the location of where it is stored. The datatype is inferred by the operations that is used on it. For example, if an instruction loads a value into eax and ja is being used to check if eax is greater than 0x10, then we know that the value is an unsigned int since ja is only used to compare unsigned numbers
+* There is no way to tell the datatype of something stored in memory by just looking at the location of where it is stored. The datatype is implied by the operations that are used on it. For example, if an instruction loads a value into eax, comparison is taken place between eax and 0x10, and ja is used to jump to another location if eax is greater, then we know that the value is an unsigned int since ja is for unsigned numbers
 * A hash function is a mathematical process that takes in an arbitrary-sized input and produces a fixed-size output
 * Thunk function: a small subroutine that assists a call to another subroutine. Thunk function can be used to get current instruction address then use it to reference a variable in the data section since data section is at a known offset from the code section. Example: __i686.get_pc_thunk.cx  
 * ASLR is turned off by default in GDB. To turn it on: set disable-randomization off
@@ -45,21 +45,23 @@ Table of Contents
 * LODS: reads 1, 2, or 4 byte value from esi and stores it in al, ax, or eax 
 * REP prefix: repeats an instruction up to ECX times
 * MOVSB/MOVSW/MOVSD instructions move data with 1, 2, or 4 byte granularity between two addresses. They implicitly use EDI/ESI as the destination/source address, respectively. In addition, they also automatically update the source/destination address depending on the direction flag
+* CLD: clear direction flag. DS: 0
+* STD: set direction flag. DS: 1
 
 ## *11/17/16 (Anti-Disassembly)*
 * __Linear disassembly__: disassembling one instruction at a time linearly. Problem: code section of nearly all binaries will also contain data that isn’t instructions 
 * __Flow-oriented disassembly__: process false branch first and note to disassemble true branch in future. When it reaches a unconditional jump, it will add the dest to list of places to disassemble in future. It will then step back and disassemble from the list of places it noted previously. For call instruction, most will disassemble the bytes after the call first and then the called location. If there is conflict between the true and false branch when disassembling, disassembler will trust the one it disassembles first
 * Use inline functions to obscure function declaration
-* __Disassembly Desynchronization__: to cause disassembly analysis tools to produce an incorrect program listing. Works by taking advantage of the assumptions and limitations of disassemblers. Desynchronization had the greatest impact on the disassembly, but it was easily defeated by reformatting the disassembly to reflect the correct instruction flow
+* __Disassembly Desynchronization__: to cause disassembly analysis tools to produce an incorrect program listing. Works by taking advantage of the assumptions and limitations of disassemblers. For every assumption, there is a corresponding anti-disassembly technique. Desynchronization had the greatest impact on the disassembly, but it was easily defeated by reformatting the disassembly to reflect the correct instruction flow
   + __Jump instructions with the same target__: jz follows by jnz. Essentially an unconditional jump. The bytes following jnz instruction could be data but will be disassembled as code
   + __Jump instructions with a constant condition__: xor follows by jz. It will always jump so bytes following false branch could be data
   + __Impossible disassembly__: A byte is part of multiple instructions. No disassembler will represent a byte as part of two instructions, but the processor has no such limitation
 * __Opcode Obfuscation__: a more effective technique for preventing correct disassembly by encoding or encrypting the actual instructions
   + Encoding portions of a program has the dual effect of hindering static analysis because disassembly is not possible and of hindering debugging because placing breakpoints is difficult. Even if the start of each instructions is known, breakpoints cannot be placed until instructions have been decoded
   + Virtual obfuscation
-* __Function pointer problem__: if a function call func using the same ptr multiple times, ida pro xref only record the first usage
+* __Function pointer problem__: if a function is called indirectly through pointers, ida pro xref only record the first usage
 * __Return pointer abuse__: ret instruction is used to jump to function instead of returning from function. Disassembler doesn’t show any code cross-reference to the target being jumped to. Also, disassembler will prematurely terminate the function
-* __Thwarting stack-frame analysis__: technique to mess ida pro when deducing numbers of param and local variables. Make a conditional jump that always false but in true branch add absurd amount to esp
+* __Thwarting stack-frame analysis__: technique to mess with ida pro when deducing numbers of param and local variables. Make a conditional jump that always false but in true branch add absurd amount to esp
 * __Dynamically Computed Target Addresses__: an address to which execution will go to is computed at runtime. The intent is to hide control flow from static analysis
 * More complex control flow hiding: program uses multiple threads or child processes to compute control flow information and receive that information via interprocess communication (for child processes) or synchronization primitives (for multiple threads)
 * __Tampering/Removing Section Headers (ELF)__: makes tools such as gdb and objdump useless since they rely on the section headers to locate symbol info. Segments are necessary for program execution, not sections. Section header table is for linking and debugging.  
@@ -73,12 +75,12 @@ Table of Contents
 * Several flags within the PEB structure provide information about the presence of a debugger
 * Location of PEB can be referenced by the location fs:[30h]. The second item on the PEB struct is BYTE BeingDebugged. The API function, isDebuggerPresent, checks this field to determine if a debugger is present or not
 * __ProcessHeap Flag__: within Reserved4 array in PEB, is ProcessHeap, which is set to location of process’s first heap allocated by loader. This first heap contains a header with fields that tell kernel whether the heap was created within a debugger. The fields are Flags and ForceFlags. If the Flags field does not have the HEAP_GROWABLE(0x2) flag set, then the process is being debugged. Also, if ForceFlags != 0, then the process is being debugged
-* __NTGlobalFlag__: Since processes run slightly differently when started with a debugger, they create memory heaps differently. The information that the system uses to determine how to create heap structures is stored in the NTGlobalFlag field in the PEB at offset 0x68 in x32 and 0xbc in x64. If value at this location is 0x70 (FLG_HEAP_ENABLE_TAIL_CHECK(0x10) | FLG_HEAP_ENABLE_FREE_CHECK(0x20) | FLG_HEAP_VALIDATE_PARAMETERS(0x40)), we know that we are running in debugger
+* __NTGlobalFlag__: Since processes run slightly differently when started with a debugger, they create memory heaps differently. The information that the system uses to determine how to create heap structures is stored in the NTGlobalFlag field in the PEB at offset 0x68 in x86 and 0xbc in x64. If value at this location is 0x70 (FLG_HEAP_ENABLE_TAIL_CHECK(0x10) | FLG_HEAP_ENABLE_FREE_CHECK(0x20) | FLG_HEAP_VALIDATE_PARAMETERS(0x40)), we know that we are running in debugger
 * __INT Scanning__: Search the .text section for the 0xCC byte. If it exists, that means that a soft breakpoint has been set and the process is under a debugger 
+* __Code Checksums__:  Instead of scanning for 0xCC, this check simply performs a cyclic redundancy check (CRC) or a MD5 checksum of the opcodes in the malware
 * __Hardware Breakpoints__: Get a handle to current thread using GetCurrentThread(). Get registers of current thread using GetThreadContext(). Check if registers DR0-DR3 is set, if it is then there are hardware breakpoints set  
 * __False Breakpoints and SIGTRAP Handler__: (Linux) a breakpoint is created by overwriting the first byte of instruction with an int3 opcode (0xcc). To setup a false breakpoint then we simply insert int3 into the code. This raises a SIGTRAP when int3 is executed. If our code has a signal handler for SIGTRAP, the handler will be executed before resuming to the instruction after int3. But if the code is under the debugger, the debugger will catch the SIGTRAP signal instead and might not pass the signal back to the program, resulting in the signal handler not being executed 
 * __Trap Flag Check__: (Windows) Trap Flag is part of the EFLAGS register. IF TF is 1, CPU will generate Single Step exception(int 0x01h) after executing an instruction. Trap Flag can be manually set to cause next instruction to raise an exception. If the process is running under a debugger, the debugger will not pass the exception to the program so the exception handler will never be ran
-* __Code Checksums__:  Instead of scanning for 0xCC, this check simply performs a cyclic redundancy check (CRC) or a MD5 checksum of the opcodes in the malware
 * __Timing Checks__:  record a timestamp, perform some operations, take another timestamp, and then compare the two timestamps. If there is a lag, you can assume the presence of a debugger
 * __rdtsc Instruction (0x0F31)__: this instruction returns the count of the number of ticks since the last system reboot as a 64-bit value placed into EDX:EAX. Simply execute this instruction twice and compare the difference between the two readings
 * __TLS Callbacks__: (Windows only) Most debuggers start at the program’s entry point as defined by the PE header. A TLS callback can be used to execute code before the entry point and therefore execute secretly in a debugger. TLS is a Windows storage class in which a data object is not an automatic stack variable, yet is local to each thread that runs the code. Basically, TLS allows each thread to maintain a different value for a variable declared using TLS. TLS callback functions were designed to initialize and clear TLS data objects. To make it harder to find anti-debugging checks, anti-debugging checks can be placed TlsCallback
@@ -87,11 +89,11 @@ Table of Contents
 ## *12/5/16 (Breakpoints)*
 * Software breakpoint: debugger read and store the first byte of instruction and then overwrite that first byte with 0xcc (int 3). When CPU hits the breakpoint, SIGTRAP signal is raised, process is stopped, and internal lookup occurs and the byte is flipped back
 * Hardware breakpoints are set at CPU level, in special registers called debug registers (DR0 through DR7)
-* Only DR0 - DR3 registers are reserved for breakpoint addresses
-* Before the CPU attempts to execute an instruction, it first checks to see whether the address is currently enabled for a hardware breakpoint. If the address is stored in debug registers DR0–DR3 and the read, write, or execute conditions are met, an INT1 is fired and the CPU halts
-* Can check if someone sets a hardware breakpoint by using GetThreadContext() and checks if DR0-DR3 is set
+ * Only DR0 - DR3 registers are reserved for breakpoint addresses
+ * Before the CPU attempts to execute an instruction, it first checks to see whether the address is currently enabled for a hardware breakpoint. If the address is stored in debug registers DR0–DR3 and the read, write, or execute conditions are met, an INT1 is fired and the CPU halts
+ * Can check if someone sets a hardware breakpoint by using GetThreadContext() and checks if DR0-DR3 is set
 * When a debugger is setting a memory breakpoint, it is changing the permissions on a region, or page, of memory
-* Guard page: Any access to a guard page results in a one-time exception, and then the page returns to its original status. Memory breakpoint changes permission of the page to guard
+ * Guard page: Any access to a guard page results in a one-time exception, and then the page returns to its original status. Memory breakpoint changes permission of the page to guard
 
 ## *12/12/16 (String Encoding)*
 * There are only 128 characters defined in ASCII and 95 of them are human-readable
