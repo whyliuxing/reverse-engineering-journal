@@ -190,7 +190,7 @@ Table of Contents
   + A jump to an address specified in GOT
   + argument to tell the resolver which function to resolve (only reach there during function's first invocation)
   + call the resolver (resides at PLT entry 0)
-* .got.plt section: contains entries that can be resolved lazily
+* .got.plt section: contains dynamically-linked function entries that can be resolved lazily
 
 ## *2/5/2017 (Anti-Emulation)*
 * allows reverse engineer to bypass many anti-debugging techniques
