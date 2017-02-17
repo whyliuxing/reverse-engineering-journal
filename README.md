@@ -30,10 +30,9 @@ Table of Contents
  * CDECL: arguments pushed on stack from right to left. Caller cleaned up stack after
  * STDCALL: arguments pushed on stack from right to left. Callee cleaned up stack after
  * FASTCALL: first two arguments passed in ecx and edx. If there are more, they are pushed onto the stack
+* The one byte nop instruction is an alias mnemonic for the xchg eax, eax instruction
 * There is no way to tell the datatype of something stored in memory by just looking at the location of where it is stored. The datatype is implied by the operations that are used on it. For example, if an instruction loads a value into eax, comparison is taken place between eax and 0x10, and ja is used to jump to another location if eax is greater, then we know that the value is an unsigned int since ja is for unsigned numbers
-* A hash function is a mathematical process that takes in an arbitrary-sized input and produces a fixed-size output
 * Thunk function: a small subroutine that assists a call to another subroutine. Thunk function can be used to get current instruction address then use it to reference a variable in the data section since data section is at a known offset from the code section. Example: __i686.get_pc_thunk.cx  
-* ASLR is turned off by default in GDB. To turn it on: set disable-randomization off
 * (32 bits Windows exe) FS segment register points to the beginning of current thread's environment block (TEB). Offset zero in TEB is the head of a linked list of pointers to exception handler functions on 32-bit system. Offset 30h is the PEB structure. Offset 2 in the PEB is the BeingDebugged field. In x64, PEB is located at offset 60h of the gs segment
 * Any function that calls another function is called a non-leaf function, and all other functions are leaf functions
 
@@ -202,5 +201,6 @@ Table of Contents
 * To look at instructions starting from pc for stripped binary in gdb: x/14i $pc
 * Set hardware breakpoint in GDB: hbreak 
 * Set watchpoint in GDB: watch only break on write, rwatch break on read, awatch break on read/write
+* ASLR is turned off by default in GDB. To turn it on: set disable-randomization off
 
 [Go to Top](#table-of-contents-)
