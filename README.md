@@ -35,6 +35,7 @@ Table of Contents
 * Thunk function: a small subroutine that assists a call to another subroutine. Thunk function can be used to get current instruction address then use it to reference a variable in the data section since data section is at a known offset from the code section. Example: __i686.get_pc_thunk.cx  
 * (32 bits Windows exe) FS segment register points to the beginning of current Thread Environment Block (TEB), also know as Thread Information Block (TIB). Offset zero in TEB is the head of a linked list of pointers to exception handler functions on 32-bit system. Offset 30h is the PEB structure. Offset 2 in the PEB is the BeingDebugged field. In x64, PEB is located at offset 60h of the gs segment
 * Any function that calls another function is called a non-leaf function, and all other functions are leaf functions
+* Compress before you encrypt 
 
 ## *12/24/16 ([HARD TO REMEMBER] x86 Instructions With Side Effects)*
 * IMUL reg/mem: register is multiplied with AL, AX, or EAX and the result is stored in AX, DX:AX, or EDX:EAX
