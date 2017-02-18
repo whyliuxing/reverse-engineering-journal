@@ -47,6 +47,8 @@ Table of Contents
 * MOVSB/MOVSW/MOVSD instructions move data with 1, 2, or 4 byte granularity between two addresses. They implicitly use EDI/ESI as the destination/source address, respectively. In addition, they also automatically update the source/destination address depending on the direction flag
 * CLD: clear direction flag. DS: 0
 * STD: set direction flag. DS: 1
+* PUSHAD, POPAD: pushes/pops all 8 general-purpose registers 
+* PUSHFD, POPFD: pushes/pops EFLAGS register 
 
 ## *11/17/16 (Anti-Disassembly)*
 * __Linear disassembly__: disassembling one instruction at a time linearly. Problem: code section of nearly all binaries will also contain data that isn’t instructions 
