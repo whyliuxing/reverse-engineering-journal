@@ -201,6 +201,8 @@ Table of Contents
 * __Timing Delays__: execution under emulation will be slower than running under real CPU
 
 ## *2/15/17 (GDB)*
+* x command displays memory contents at a given address in the specified format 
+* p command displays value stored in a named variable
 * To look at instructions starting from pc for stripped binary in gdb: x/14i $pc
 * Set hardware breakpoint in GDB: hbreak 
 * Set watchpoint in GDB: watch only break on write, rwatch break on read, awatch break on read/write
