@@ -82,7 +82,7 @@ Table of Contents
 * __Code Checksums__:  Instead of scanning for 0xCC, this check simply performs a cyclic redundancy check (CRC) or a MD5 checksum of the opcodes in the malware
 * __Anti-Step-Over__: the rep or movs(b|w|d) instruction can be used to overwrite/remove software breakpoints that are set after it
 * __Hardware Breakpoints__: Get a handle to current thread using GetCurrentThread(). Get registers of current thread using GetThreadContext(). Check if registers DR0-DR3 is set, if it is then there are hardware breakpoints set  
-* __Interrupts__: Manually adding/setting interrupts to the code to help detect present of debuggers
+* __Interrupts__: Manually adding/setting interrupts to the code to help detect present of a debugger
  * __False Breakpoints and SIGTRAP Handler__: a breakpoint is created by overwriting the first byte of instruction with an int3 opcode (0xcc). To setup a false breakpoint then we simply insert int3 into the code. This raises a SIGTRAP when int3 is executed. If our code has a signal handler for SIGTRAP, the handler will be executed before resuming to the instruction after int3. But if the code is under the debugger, the debugger will catch the SIGTRAP signal instead and might not pass the signal back to the program, resulting in the signal handler not being executed 
  * __Two Byte Interrupt 3__: instead of 0xCC, it's 0xCD 0x03. Can also be used as false breakpoint
  * __Interrupt 0x2C__: raises a debug assertion exception. This exception is consumed by WinDbg 
