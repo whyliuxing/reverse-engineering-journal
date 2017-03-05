@@ -23,6 +23,7 @@ Table of Contents
 * [GDB](#21517-gdb)
 
 ## *General Knowledge (12/18/16)*
+=================================
 * (Intel Specific) value stored in RAM is in little-endian but when moved to registers it is in big-endian  
 * the 8 32-bit general-purpose registers(GPRs) for x86 architecture: eax, ebx, ecx, edx, edi, esi, ebp, and esp
 * For x64 architecture, there are 18 general-purpose registers(GPRs)
