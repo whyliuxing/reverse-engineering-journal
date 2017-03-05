@@ -4,7 +4,7 @@ I put anything I find interesting regarding reverse engineering in this journal.
 
 Table of Contents 
 =================
-* [General Knowledge](#121816-general-knowledge)
+* [General Knowledge](#general-knowledge-121816)
 * [[HARD TO REMEMBER] x86 Instructions With Side Effects](#122416-hard-to-remember-x86-instructions-with-side-effects)
 * [Anti-Disassembly](#111716-anti-disassembly)
 * [Anti-Debugging](#111716-anti-debugging)
@@ -23,7 +23,6 @@ Table of Contents
 * [GDB](#21517-gdb)
 
 ## *General Knowledge (12/18/16)*
-=================================
 * (Intel Specific) value stored in RAM is in little-endian but when moved to registers it is in big-endian  
 * the 8 32-bit general-purpose registers(GPRs) for x86 architecture: eax, ebx, ecx, edx, edi, esi, ebp, and esp
 * For x64 architecture, there are 18 general-purpose registers(GPRs)
