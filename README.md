@@ -221,14 +221,14 @@ Table of Contents
 
 ## *SEH: Structured Exception Handlers (3/5/2017)*
 * 32-bit Windows' mechanism for handling exceptions. SEH chain is a list of exception handlers within a thread 
-* each handler can choose to handle the exception or pass to the next one. If the exception made it to the last handler, it is an unhandled exception
-* fs segment register points to the Thread Environment Block (TEB). The first element of TEB is a pointer to the SEH chain
+* Each handler can choose to handle the exception or pass to the next one. If the exception made it to the last handler, it is an unhandled exception
+* FS segment register points to the Thread Environment Block (TEB). The first element of TEB is a pointer to the SEH chain
 * SEH chains is a linked list of data structures called EXCEPTION_REGISTRATION records 
 * struct _EXCEPTION_REGISTRATION {
   DWORD prev;
   DWORD handler;
   };
-* to add our own exception handler:
+* To add our own exception handler:
  * push handler
  * push fs:[0]
  * mov fs:[0], esp
