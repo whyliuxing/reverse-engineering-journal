@@ -21,7 +21,7 @@ Table of Contents
 * [ELF Files](#elf-files-12017)
 * [Anti-Emulation](#anti-emulation-252017)
 * [GDB](#gdb-21517)
-* [SEH](#seh-structured-exception-handlers-352017)
+* [SEH: Structured Exception Handlers](#seh-structured-exception-handlers-352017)
 
 ## *General Knowledge (12/18/16)*
 * (Intel Specific) value stored in RAM is in little-endian but when moved to registers it is in big-endian  
