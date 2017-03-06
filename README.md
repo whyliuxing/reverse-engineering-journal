@@ -21,6 +21,7 @@ Table of Contents
 * [ELF Files](#elf-files-12017)
 * [Anti-Emulation](#anti-emulation-252017)
 * [GDB](#gdb-21517)
+* [SEH](#seh-3517)
 
 ## *General Knowledge (12/18/16)*
 * (Intel Specific) value stored in RAM is in little-endian but when moved to registers it is in big-endian  
@@ -217,5 +218,15 @@ Table of Contents
 * Set watchpoint in GDB: watch only break on write, rwatch break on read, awatch break on read/write
 * ASLR is turned off by default in GDB. To turn it on: set disable-randomization off
 * Default display assembly in AT&T notation. To change it to the more readable Intel notation: set disassembly-flavor intel. To make this change permanent, write it in the .gdbinit file
+
+## *Structured Exception Handlers (SEH)*
+* 32-bit Windows' mechanism for handling exceptions. SEH chain is a list of exception handlers within a thread 
+* each handler can choose to handle the exception or pass to the next one. If the exception made it to the last handler, it is an unhandled exception
+* fs segment register points to the Thread Environment Block (TEB). The first element of TEB is a pointer to the SEH chain
+* SEH chains is a linked list of data structures called EXCEPTION_REGISTRATION records 
+* struct _EXCEPTION_REGISTRATION {
+ DWORD prev;
+ DWORD handler;
+};
 
 [Go to Top](#table-of-contents-)
