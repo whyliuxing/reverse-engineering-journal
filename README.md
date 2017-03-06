@@ -225,8 +225,8 @@ Table of Contents
 * fs segment register points to the Thread Environment Block (TEB). The first element of TEB is a pointer to the SEH chain
 * SEH chains is a linked list of data structures called EXCEPTION_REGISTRATION records 
 * struct _EXCEPTION_REGISTRATION {
- DWORD prev;
- DWORD handler;
-};
+  DWORD prev;
+  DWORD handler;
+  };
 
 [Go to Top](#table-of-contents-)
