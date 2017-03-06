@@ -219,7 +219,7 @@ Table of Contents
 * ASLR is turned off by default in GDB. To turn it on: set disable-randomization off
 * Default display assembly in AT&T notation. To change it to the more readable Intel notation: set disassembly-flavor intel. To make this change permanent, write it in the .gdbinit file
 
-## *Structured Exception Handlers (SEH)*
+## *SEH: Structured Exception Handlers (3/5/2017)*
 * 32-bit Windows' mechanism for handling exceptions. SEH chain is a list of exception handlers within a thread 
 * each handler can choose to handle the exception or pass to the next one. If the exception made it to the last handler, it is an unhandled exception
 * fs segment register points to the Thread Environment Block (TEB). The first element of TEB is a pointer to the SEH chain
@@ -228,5 +228,9 @@ Table of Contents
   DWORD prev;
   DWORD handler;
   };
+* to add our own exception handler:
+ * push handler
+ * push fs:[0]
+ * mov fs:[0], esp
 
 [Go to Top](#table-of-contents-)
