@@ -28,9 +28,9 @@ Table of Contents
 * the 8 32-bit general-purpose registers(GPRs) for x86 architecture: eax, ebx, ecx, edx, edi, esi, ebp, and esp
 * For x64 architecture, there are 18 general-purpose registers(GPRs)
 * Calling Conventions(x86): 
- * CDECL: arguments pushed on stack from right to left. Caller cleaned up stack after
- * STDCALL: arguments pushed on stack from right to left. Callee cleaned up stack after
- * FASTCALL: first two arguments passed in ecx and edx. If there are more, they are pushed onto the stack
+  + CDECL: arguments pushed on stack from right to left. Caller cleaned up stack after
+  + STDCALL: arguments pushed on stack from right to left. Callee cleaned up stack after
+  + FASTCALL: first two arguments passed in ecx and edx. If there are more, they are pushed onto the stack
 * The one byte nop instruction is an alias mnemonic for the xchg eax, eax instruction
 * There is no way to tell the datatype of something stored in memory by just looking at the location of where it is stored. The datatype is implied by the operations that are used on it. For example, if an instruction loads a value into eax, comparison is taken place between eax and 0x10, and ja is used to jump to another location if eax is greater, then we know that the value is an unsigned int since ja is for unsigned numbers
 * Thunk function: a small subroutine that assists a call to another subroutine. Thunk function can be used to get current instruction address then use it to reference a variable in the data section since data section is at a known offset from the code section. Example: __i686.get_pc_thunk.cx  
