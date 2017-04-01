@@ -5,7 +5,7 @@ I put anything I find interesting regarding reverse engineering in this journal.
 Table of Contents 
 =================
 * [General Knowledge](#general-knowledge-121816)
-* [HARD TO REMEMBER] x86 Instructions With Side Effects](#hard-to-remember-x86-instructions-with-side-effects-122416)
+* [[HARD TO REMEMBER] x86 Instructions With Side Effects](#hard-to-remember-x86-instructions-with-side-effects-122416)
 * [Anti-Disassembly](#anti-disassembly-111716)
 * [Anti-Debugging](#anti-debugging-111716)
 * [Breakpoints](#breakpoints-12516)
