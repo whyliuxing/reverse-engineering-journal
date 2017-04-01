@@ -5,7 +5,7 @@ I put anything I find interesting regarding reverse engineering in this journal.
 Table of Contents 
 =================
 * [General Knowledge](#general-knowledge-121816)
-* [[HARD TO REMEMBER] x86 Instructions With Side Effects](#hard-to-remember-x86-instructions-with-side-effects-122416)
+* [HARD TO REMEMBER] x86 Instructions With Side Effects](#hard-to-remember-x86-instructions-with-side-effects-122416)
 * [Anti-Disassembly](#anti-disassembly-111716)
 * [Anti-Debugging](#anti-debugging-111716)
 * [Breakpoints](#breakpoints-12516)
@@ -32,6 +32,7 @@ Table of Contents
   + STDCALL: arguments pushed on stack from right to left. Callee cleaned up stack after
   + FASTCALL: first two arguments passed in ecx and edx. If there are more, they are pushed onto the stack
 * The one byte nop instruction is an alias mnemonic for the xchg eax, eax instruction
+* When IDA loads a binary, it simulates a mapping of the binary in memory. The addresses shown in IDA are the virtual memory addresses and not the offset of the binary file on disk
 * There is no way to tell the datatype of something stored in memory by just looking at the location of where it is stored. The datatype is implied by the operations that are used on it. For example, if an instruction loads a value into eax, comparison is taken place between eax and 0x10, and ja is used to jump to another location if eax is greater, then we know that the value is an unsigned int since ja is for unsigned numbers
 * Thunk function: a small subroutine that assists a call to another subroutine. Thunk function can be used to get current instruction address then use it to reference a variable in the data section since data section is at a known offset from the code section. Example: __i686.get_pc_thunk.cx  
 * (32 bits Windows exe) FS segment register points to the beginning of current Thread Environment Block (TEB), also know as Thread Information Block (TIB). Offset zero in TEB is the head of a linked list of pointers to exception handler functions on 32-bit system. Offset 30h is the PEB structure. Offset 2 in the PEB is the BeingDebugged field. In x64, PEB is located at offset 60h of the gs segment
