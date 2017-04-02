@@ -236,13 +236,13 @@ Table of Contents
  
 ## *IDA Tips (4/1/2017)*
 * Import table shows you all the dynamically linked libraries' functions that the binary uses. Import table is important for a reverser to understand how the binary is interacting with the OS. To hide APIs call from displaying in the import table, a programmer can dynamically resolve the API 
- * How to find dynamically resolved APIs: run the binary in a sandbox and if any of the APIs it called is not in the import table then that API is dynamically resolved
+  + How to find dynamically resolved APIs: run the binary in a sandbox and if any of the APIs it called is not in the import table then that API is dynamically resolved
 * To show advanced toolbar: View -> Toolbars -> Advanced mode
 * To save memory snapshot from your debugger session: Debugger -> Take memory snapshot -> All segments
 * Useful shortcuts: 
- * u to undefine 
- * d to turn it to data 
- * c to turn it to code 
- * g to bring up the jump to address menu
+  + u to undefine 
+  + d to turn it to data 
+  + c to turn it to code 
+  + g to bring up the jump to address menu
 
 [Go to Top](#table-of-contents-)
