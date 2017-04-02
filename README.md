@@ -22,6 +22,7 @@ Table of Contents
 * [Anti-Emulation](#anti-emulation-252017)
 * [GDB](#gdb-21517)
 * [SEH: Structured Exception Handlers](#seh-structured-exception-handlers-352017)
+* [IDA Tips](#ida-tips-412017)
 
 ## *General Knowledge (12/18/16)*
 * (Intel Specific) value stored in RAM is in little-endian but when moved to registers it is in big-endian  
@@ -34,7 +35,6 @@ Table of Contents
 * The one byte nop instruction is an alias mnemonic for the xchg eax, eax instruction
 * When IDA loads a binary, it simulates a mapping of the binary in memory. The addresses shown in IDA are the virtual memory addresses and not the offset of the binary file on disk
 * There is no way to tell the datatype of something stored in memory by just looking at the location of where it is stored. The datatype is implied by the operations that are used on it. For example, if an instruction loads a value into eax, comparison is taken place between eax and 0x10, and ja is used to jump to another location if eax is greater, then we know that the value is an unsigned int since ja is for unsigned numbers
-* Thunk function: a small subroutine that assists a call to another subroutine. Thunk function can be used to get current instruction address then use it to reference a variable in the data section since data section is at a known offset from the code section. Example: __i686.get_pc_thunk.cx  
 * (32 bits Windows exe) FS segment register points to the beginning of current Thread Environment Block (TEB), also know as Thread Information Block (TIB). Offset zero in TEB is the head of a linked list of pointers to exception handler functions on 32-bit system. Offset 30h is the PEB structure. Offset 2 in the PEB is the BeingDebugged field. In x64, PEB is located at offset 60h of the gs segment
 * Any function that calls another function is called a non-leaf function, and all other functions are leaf functions
 * Compress before you encrypt 
@@ -233,5 +233,16 @@ Table of Contents
  * push handler
  * push fs:[0]
  * mov fs:[0], esp
+ 
+## *IDA Tips (4/1/2017)*
+* Import table shows you all the dynamically linked libraries' functions that the binary uses. Import table is important for a reverser to understand how the binary is interacting with the OS. To hide APIs call from displaying in the import table, a programmer can dynamically resolve the API 
+ * How to find dynamically resolved APIs: run the binary in a sandbox and if any of the APIs it called is not in the import table then that API is dynamically resolved
+* To show advanced toolbar: View -> Toolbars -> Advanced mode
+* To save memory snapshot from your debugger session: Debugger -> Take memory snapshot -> All segments
+* Useful shortcuts: 
+ * u to undefine 
+ * d to turn it to data 
+ * c to turn it to code 
+ * g to bring up the jump to address menu
 
 [Go to Top](#table-of-contents-)
