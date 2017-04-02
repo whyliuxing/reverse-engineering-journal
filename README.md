@@ -245,4 +245,4 @@ Table of Contents
   + c to turn it to code 
   + g to bring up the jump to address menu
 
-[Go to Top](#table-of-contents-)
+[Go to Top](#table-of-contents)
