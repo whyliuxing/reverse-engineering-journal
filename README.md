@@ -230,9 +230,9 @@ Table of Contents
   DWORD handler;
   };
 * To add our own exception handler:
- * push handler
- * push fs:[0]
- * mov fs:[0], esp
+  + push handler
+  + push fs:[0]
+  + mov fs:[0], esp
  
 ## *IDA Tips (4/1/2017)*
 * Import table shows you all the dynamically linked libraries' functions that the binary uses. Import table is important for a reverser to understand how the binary is interacting with the OS. To hide APIs call from displaying in the import table, a programmer can dynamically resolve the API 
