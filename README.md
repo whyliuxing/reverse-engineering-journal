@@ -270,6 +270,8 @@ Table of Contents
   + There are two versions of Kernel32 API calls if the call takes in a string: One that ends in A and one that ends in W. A for ASCII and W for wide string
   + In Kernel32 one has the option to call the API with ASCII or wide string. But if one calls it with ASCII, Windows will internally convert it to wide string and call the wide string version of the API
   + Windows API uses stdcall for its calling convention
+* Windows debug symbol information isn't stored inside the executable like Linux's ELF executable, where debug symbol information has its own section in the executable. Instead, it is stored in the program database (PDB) file
+  + To load the PDB File along with the executable (assuming they are in the same directory): File -> Load File -> PDB File
 * __Device Driver__: allows third-party developers to run code in the Windows kernel. Located in the kernel. Device drivers create/destroy device objects. User space application interacts with the driver by sending requests to a device object
 
 [Go to Top](#table-of-contents)
