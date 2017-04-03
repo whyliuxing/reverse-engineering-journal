@@ -250,7 +250,7 @@ Table of Contents
   + d to turn it to data 
   + c to turn it to code 
   + g to bring up the jump to address menu
-  + N to rename
+  + n to rename
 
 ## *Windows OS (4/1/2017)*
 * __Handles__: like pointers in that they refer to an object. It is an abstraction that hides a real memory address from the API user, allowing the system to reorganize physical memory transparently to the program
