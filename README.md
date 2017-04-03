@@ -27,9 +27,10 @@ Table of Contents
 
 ## *General Knowledge (12/18/16)*
 * (Intel Specific) value stored in RAM is in little-endian but when moved to registers it is in big-endian  
-* the 8 32-bit general-purpose registers(GPRs) for x86 architecture: eax, ebx, ecx, edx, edi, esi, ebp, and esp
-* For x64 architecture, there are 18 general-purpose registers(GPRs)
-* Calling Conventions(x86): 
+* The 8 32-bit general-purpose registers (GPRs) for x86 architecture: eax, ebx, ecx, edx, edi, esi, ebp, and esp. For x64 architecture, there are 18 general-purpose registers (GPRs). GPRs are used for temporary storage and can be directly accessed/changed in user code (e.g. mov eax, 1)  
+* The 5 32-bit memory index registers for x86 architecture: esi, edi, esp, ebp, eip. Most of them are also GPRs except esp and eip. They usually contain memory addresses. But obviously, if a memory index register is used as a GPR instead, it can contain any value 
+* Control registers: EFLAGS. EFLAGS is a 32-bit register. It contains values of 32 boolean flags that indicate results from executing the previous instruction. EFLAGS is used by JCC instruction to decide whether to jump or not. 
+* Calling Conventions (x86): 
   + CDECL: arguments pushed on stack from right to left. Caller cleaned up stack after
   + STDCALL: arguments pushed on stack from right to left. Callee cleaned up stack after
   + FASTCALL: first two arguments passed in ecx and edx. If there are more, they are pushed onto the stack
@@ -38,6 +39,7 @@ Table of Contents
 * (32 bits Windows exe) FS segment register points to the beginning of current Thread Environment Block (TEB), also know as Thread Information Block (TIB). Offset zero in TEB is the head of a linked list of pointers to exception handler functions on 32-bit system. Offset 30h is the PEB structure. Offset 2 in the PEB is the BeingDebugged field. In x64, PEB is located at offset 60h of the gs segment
 * Processes are container for execution. Threads are what the OS executes
 * Any function that calls another function is called a non-leaf function, and all other functions are leaf functions
+* EIP can only be changed through CALL, JMP, or RET
 * Compress before you encrypt 
 
 ## *[HARD TO REMEMBER] x86 Instructions With Side Effects (12/24/16)*
