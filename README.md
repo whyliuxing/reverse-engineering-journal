@@ -209,7 +209,8 @@ Table of Contents
   + argument to tell the resolver which function to resolve (only reach there during function's first invocation)
   + call the resolver (resides at PLT entry 0)
 * .got.plt section: contains dynamically-linked function entries that can be resolved lazily
-* When you compile with the -g option, the compiled binary will contain extra sections with name that starts with ".debug_". The most important one of the .debug section is .debug_info.  
+* If you compile with the -g option, the compiled binary will contain extra sections with names that start with .debug_. The most important one of the .debug section is .debug_info. It tells you the path of the source file, path of the compilation directory, version of C used, and the line numbers where variables are declared in source code. It will also maintain the parameter names for local functions
+* If you compile with the -s option, the compiled binary will not contain symbol table and relocation information. This means that the .symtab will be stripped away, which contains references to variable and local function names 
 
 ## *Anti-Emulation (2/5/2017)*
 * allows reverse engineer to bypass many anti-debugging techniques
