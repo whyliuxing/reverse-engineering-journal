@@ -76,6 +76,7 @@ Table of Contents
 * __Tampering/Removing Section Headers (ELF)__: makes tools such as gdb and objdump useless since they rely on the section headers to locate symbol info. Segments are necessary for program execution, not sections. Section header table is for linking and debugging.  
 * __Imported Function Obfuscation (makes it difficult to determine which shared lib or lib func are used)__: have the program’s import table be initialized by the program itself. The program itself loads any additional lib it depends on, and once the lib are loaded, the program locates any required functions within those lib
   + (Windows) use LoadLibrary function to load required lib by name and then perform function address lookups within each lib using GetProcAddress
+  + (Linux) use dlopen function to load the dynamic shared object and use dlsym function to find the address of a specific function within the shared object 
 
 ## *Anti-Debugging (11/17/16)*
 * For Linux Only: This is an elegant technique to detect if a debugger or program tracer such as strace or ltrace is being used on the target program. The premise of this technique is that a ptrace[PTRACE_TRACEME] cannot be called in succession more than once for a process. All debuggers and program tracers use this call to setup debugging for a process
