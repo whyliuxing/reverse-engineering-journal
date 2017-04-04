@@ -209,6 +209,7 @@ Table of Contents
   + argument to tell the resolver which function to resolve (only reach there during function's first invocation)
   + call the resolver (resides at PLT entry 0)
 * .got.plt section: contains dynamically-linked function entries that can be resolved lazily
+* When you compile with the -g option, the compiled binary will contain extra sections with name that starts with ".debug_". The most important one of the .debug section is .debug_info.  
 
 ## *Anti-Emulation (2/5/2017)*
 * allows reverse engineer to bypass many anti-debugging techniques
