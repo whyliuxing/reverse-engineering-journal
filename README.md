@@ -211,6 +211,9 @@ Table of Contents
 * .got.plt section: contains dynamically-linked function entries that can be resolved lazily
 * If you compile with the -g option, the compiled binary will contain extra sections with names that start with .debug_. The most important one of the .debug section is .debug_info. It tells you the path of the source file, path of the compilation directory, version of C used, and the line numbers where variables are declared in source code. It will also maintain the parameter names for local functions
 * If you compile with the -s option, the compiled binary will not contain symbol table and relocation information. This means that the .symtab will be stripped away, which contains references to variable and local function names. The dynsym section, containing references to unresolved dynamically linked functions, remains because it is needed for program execution
+* The -O3 option is the second highest optimization level. The optimizations that it applied will actually result in more bytes than compiled version of the unoptimized binary
+* The -funroll-loops option unroll the looping structure of any loops, making it harder for reverse engineer to analyze the compiled binary
+* dlsym and dlopen can be used to dynamically resolved function names. This way those library functions will not show up on the Import Table
 
 ## *Anti-Emulation (2/5/2017)*
 * allows reverse engineer to bypass many anti-debugging techniques
