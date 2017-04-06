@@ -31,7 +31,7 @@ Table of Contents
 * The 5 32-bit memory index registers for x86 architecture: esi, edi, esp, ebp, eip. Most of them are also GPRs except esp and eip. They usually contain memory addresses. But obviously, if a memory index register is used as a GPR instead, it can contain any value 
 * The 6 32-bit selector registers for x86 architecture: cs, ds, es, fs, gs, ss. A selector register indicates a specific block of memory from which one can read or write. The real memory address is looked up in an internal CPU table 
   + Selector registers usually points to OS specific information. For example, FS segment register points to the beginning of current Thread Environment Block (TEB), also know as Thread Information Block (TIB), on Windows. Offset zero in TEB is the head of a linked list of pointers to exception handler functions on 32-bit system. Offset 30h is the PEB structure. Offset 2 in the PEB is the BeingDebugged field. In x64, PEB is located at offset 60h of the gs segment
-* The 3 32-bit scratch registers for x86 architecture: eax, ecx, and edx. Values stored in registers are not preserved across function calls. It allows process to spend less time on saving registers that are most likely to be modified 
+* The 3 32-bit scratch registers for x86 architecture: eax, ecx, and edx. Values stored in scratch registers are not preserved across function calls. It allows process to spend less time on saving registers that are most likely to be modified 
 * Control register: EFLAGS. EFLAGS is a 32-bit register. It contains values of 32 boolean flags that indicate results from executing the previous instruction. EFLAGS is used by JCC instruction to decide whether to jump or not
 * Calling Conventions (x86): 
   + CDECL: arguments pushed on stack from right to left. Caller cleaned up stack after
@@ -41,6 +41,7 @@ Table of Contents
 * There is no way to tell the datatype of something stored in memory by just looking at the location of where it is stored. The datatype is implied by the operations that are used on it. For example, if an instruction loads a value into eax, comparison is taken place between eax and 0x10, and ja is used to jump to another location if eax is greater, then we know that the value is an unsigned int since ja is for unsigned numbers
 * Processes are container for execution. Threads are what the OS executes
 * Any function that calls another function is called a non-leaf function, and all other functions are leaf functions
+* Entry point of a binary does not correspond to main. A program's startup code (how main is called) depends on the compiler and the platform that the binary is compiled for
 * EIP can only be changed through CALL, JMP, or RET
 * Compress before you encrypt 
 
