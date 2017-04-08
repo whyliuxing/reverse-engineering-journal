@@ -235,6 +235,7 @@ Table of Contents
 * To look at instructions starting from pc for stripped binary in gdb: x/14i $pc
 * Set hardware breakpoint in GDB: hbreak 
 * Set watchpoint in GDB: watch only break on write, rwatch break on read, awatch break on read/write
+* Set temporary variable: set $"variable name" = "value"
 * ASLR is turned off by default in GDB. To turn it on: set disable-randomization off
 * Default display assembly in AT&T notation. To change it to the more readable Intel notation: set disassembly-flavor intel. To make this change permanent, write it in the .gdbinit file
 
