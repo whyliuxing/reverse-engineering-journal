@@ -130,12 +130,14 @@ Table of Contents
 
 ## *C++ Reversing (12/13/16)*
 * Ecx is used to stored the this pointer. Sometimes esi
+  + On Microsoft Visual C++ compiled binary, this is stored in ecx
+  + On g++ compiled binary, this is passed in as the first parameter of the member function as an address 
 * Class member functions are called with the usual function parameters in the stack and with ecx pointing to the class’s object 
 * Class’s object in assembly only contains the vfptr (pointer to virtual functions table) and variables. Member functions are not part of it
+  + Child class automatically has all functions and data from parent class
+  + Execution for virtual function is determined at runtime. Function call is indirect (through a register)
 * Memory spaces for global objects are allocated at compile-time and placed in data or bss section of binary 
 * Use Name Mangling to support Method Overloading (multiple functions with same name but accept different parameters) since in PE format function is only labeled with its name 
-* Child class automatically has all functions and data from parent class
-* Execution for virtual function is determined at runtime. Function call is indirect (through a register)
 
 ## *64-Bit (12/14/16)*
 * All addresses and pointers are 64 bits
