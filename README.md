@@ -137,8 +137,9 @@ Table of Contents
   + Child class automatically has all virtual functions and data from parent class
   + Even if the programmer did not explicit write the constructor for the class. If the class contains virtual functions, a call to the constructor will be made to fill in the vfptr to point to vtable. If the class inherit from another class, within the constructor there will have a call to the constructor of the parent class  
   + vtable of a class is only referenced directly within the class constructor and destructor
+  + Compiler places a pointer immediately prior to the class vtable. It points to a structure that contains information on the name of class that owns the vtable
 * Memory spaces for global objects are allocated at compile-time and placed in data or bss section of binary 
-* Use Name Mangling to support Method Overloading (multiple functions with same name but accept different parameters) since in PE format function is only labeled with its name 
+* Use Name Mangling to support Method Overloading (multiple functions with same name but accept different parameters) since in PE or ELF format function is only labeled with its name 
 
 ## *64-Bit (12/14/16)*
 * All addresses and pointers are 64 bits
