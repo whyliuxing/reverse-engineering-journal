@@ -37,6 +37,8 @@ Table of Contents
   + CDECL: arguments pushed on stack from right to left. Caller cleaned up stack after
   + STDCALL: arguments pushed on stack from right to left. Callee cleaned up stack after
   + FASTCALL: first two arguments passed in ecx and edx. If there are more, they are pushed onto the stack
+* the call instruction contains a 32-bit signed relative displacement that is added to the address immediately following the call instruction to calculate the call destination
+* the jump instruction, like call uses relative addressing, but with only an 8-bit signed relative displacement
 * The one byte nop instruction is an alias mnemonic for the xchg eax, eax instruction
 * There is no way to tell the datatype of something stored in memory by just looking at the location of where it is stored. The datatype is implied by the operations that are used on it. For example, if an instruction loads a value into eax, comparison is taken place between eax and 0x10, and ja is used to jump to another location if eax is greater, then we know that the value is an unsigned int since ja is for unsigned numbers
 * Processes are container for execution. Threads are what the OS executes
