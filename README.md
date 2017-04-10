@@ -132,8 +132,8 @@ Table of Contents
 * All characters available in the ASCII encoding only take up a single byte in UTF-8 and they're the exact same bytes as are used in ASCII. In other words, ASCII maps 1:1 unto UTF-8. Any character not in ASCII takes up two or more bytes in UTF-8
 
 ## *C++ Reversing (12/13/16)*
-* Ecx is used to stored the this pointer. Sometimes esi
-  + On Microsoft Visual C++ compiled binary, this is stored in ecx
+* C++ calling convention for this pointer is called thiscall: 
+  + On Microsoft Visual C++ compiled binary, this is stored in ecx. Sometimes esi 
   + On g++ compiled binary, this is passed in as the first parameter of the member function as an address 
 * Class member functions are called with the usual function parameters in the stack and with ecx pointing to the class’s object 
 * Class’s object in assembly only contains the vfptr (pointer to virtual functions table) and variables. Member functions are not part of it
