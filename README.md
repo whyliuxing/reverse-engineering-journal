@@ -228,6 +228,12 @@ Table of Contents
 * The -O3 option is the second highest optimization level. The optimizations that it applied will actually result in more bytes than compiled version of the unoptimized binary
 * The -funroll-loops option unroll the looping structure of any loops, making it harder for reverse engineer to analyze the compiled binary
 * dlsym and dlopen can be used to dynamically resolved function names. This way those library functions won't show up on the Import Table
+* Tools to analyze it: 
+  + display section headers: readelf -S
+  + display program headers and section to segment mapping: readelf -l
+  + display symbol tables: readelf --syms 
+  + trace library call: ltrace -f
+  + trace sys call: strace -f
 
 ## *Anti-Emulation (2/5/2017)*
 * allows reverse engineer to bypass many anti-debugging techniques
