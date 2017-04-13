@@ -60,6 +60,8 @@ Table of Contents
 * STD: set direction flag. DS: 1
 * PUSHAD, POPAD: pushes/pops all 8 general-purpose registers 
 * PUSHFD, POPFD: pushes/pops EFLAGS register 
+* MOVSX: moves a signed value into a register and sign-extends it 
+* MOVZX: moves an unsigned value into a register and zero-extends it
 
 ## *Anti-Disassembly (11/17/16)*
 * __Linear disassembly__: disassembling one instruction at a time linearly. Problem: code section of nearly all binaries will also contain data that isn’t instructions 
