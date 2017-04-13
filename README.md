@@ -317,5 +317,6 @@ Table of Contents
   + 4th parameter: esi 
   + 5th parameter: edi 
   + 6th parameter: ebp 
+* int 0x80 is an old way to make syscall. A more modern implementation is the SYSENTER instruction
 
 [Go to Top](#table-of-contents)
