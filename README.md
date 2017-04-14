@@ -25,6 +25,7 @@ Table of Contents
 * [IDA Tips](#ida-tips-412017)
 * [Windows OS](#windows-os-412017)
 * [Interrupts](#interrupts-4132017)
+* [ARM](#arm-4142017)
 
 ## *General Knowledge (12/18/16)*
 * (Intel Specific) value stored in RAM is in little-endian but when moved to registers it is in big-endian  
@@ -321,5 +322,18 @@ Table of Contents
   + 5th parameter: edi 
   + 6th parameter: ebp 
 * int 0x80 is an old way to make syscall. A more modern implementation is the SYSENTER instruction
+
+## *ARM (4/14/2017)*
+* ARMv7 uses 3 profiles (Application, Real-time, Microcontroller) and model name (Cortex). For example, ARMv7 Cortex-M is meant for microcontroller and support Thumb-2 execution only 
+* Thumb-1 is used in ARMv6 and earlier. Its instructions are always 2 bytes in size
+* Thumb-2 is used in ARMv7. Its instructions can be either 2 bytes or 4 bytes in size. 4 bytes Thumb instruction has a .W suffix
+* Native ARM instructions are always 4 bytes in size
+* Privileges separation are defined by 8 modes. In comparison to x86, User (USR) mode is like ring3 and Supervisor (SVC) mode is like ring0
+* Control register is the current program status register (CPSR), which is basically an extended EFLAGS register in x86
+* There are 16 32-bit general-purpose registers (R0 - R15), but only the first 12 registers are for general purpose usage
+  + R0 holds the return value from function call
+  + R13 is the stack pointer (SP)
+  + R14 is the link register (LR), which holds return address for function call
+  + R15 is the program counter (PC)
 
 [Go to Top](#table-of-contents)
