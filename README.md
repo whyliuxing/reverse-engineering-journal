@@ -335,5 +335,7 @@ Table of Contents
   + R13 is the stack pointer (SP)
   + R14 is the link register (LR), which holds return address for function call
   + R15 is the program counter (PC)
+* Only load/store instructions can access memory. All other instructions operate on registers 
+  + load/store instructions: LDR/STR, LDM/STM, and PUSH/POP
 
 [Go to Top](#table-of-contents)
