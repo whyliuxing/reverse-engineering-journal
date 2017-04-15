@@ -348,5 +348,6 @@ Table of Contents
   + Offset: base register is never modified 
   + Pre-indexed: base register is updated with the memory address used in the reference operation 
   + Post-indexed: base register is used as the address to reference from and then updated with the offset 
+* LDM/STM loads/stores multiple words (32-bits), starting from a base address. Form: LDM/STM<<mode>>
 
 [Go to Top](#table-of-contents)
