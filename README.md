@@ -258,7 +258,7 @@ Table of Contents
 * ASLR is turned off by default in GDB. To turn it on: set disable-randomization off
 * Default display assembly in AT&T notation. To change it to the more readable Intel notation: set disassembly-flavor intel. To make this change permanent, write it in the .gdbinit file
 * Set command can be used to set temporary variable or change value in register
-  + For example to set the zero flag in EFLAGS, set a temporary variable called ZF: set $ZF = 6. After that, update the bit in EFLAGS that corresponds to zero flag: set $eflags |= (1 << $ZF)
+  + For example to set the zero flag in EFLAGS, set a temporary variable: set $ZF = 6. Use that variable to set the bit in EFLAGS that corresponds to zero flag: set $eflags |= (1 << $ZF)
 
 ## *SEH: Structured Exception Handlers (3/5/2017)*
 * 32-bit Windows' mechanism for handling exceptions. SEH chain is a list of exception handlers within a thread 
