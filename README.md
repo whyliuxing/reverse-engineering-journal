@@ -328,7 +328,7 @@ Table of Contents
 ## *ARM (4/14/2017)*
 * ARMv7 uses 3 profiles (Application, Real-time, Microcontroller) and model name (Cortex). For example, ARMv7 Cortex-M is meant for microcontroller and support Thumb-2 execution only 
 * Thumb-1 is used in ARMv6 and earlier. Its instructions are always 2 bytes in size
-* Thumb-2 is used in ARMv7. Its instructions can be either 2 bytes or 4 bytes in size. 4 bytes Thumb instruction has a .W suffix
+* Thumb-2 is used in ARMv7. Its instructions can be either 2 bytes or 4 bytes in size. 4 bytes Thumb instruction has a .W suffix, otherwise it generates a 2 byte Thumb instruction
 * Native ARM instructions are always 4 bytes in size
 * Privileges separation are defined by 8 modes. In comparison to x86, User (USR) mode is like ring3 and Supervisor (SVC) mode is like ring0
 * Control register is the current program status register (CPSR), which is basically an extended EFLAGS register in x86
@@ -339,5 +339,14 @@ Table of Contents
   + R15 is the program counter (PC)
 * Only load/store instructions can access memory. All other instructions operate on registers 
   + load/store instructions: LDR/STR, LDM/STM, and PUSH/POP
+* There are 3 forms of LDR/STR instructions 
+  + LDR/STR Ra, [Rb, imm]
+  + LDR/STR Ra, [Rb, Rc]
+  + LDR/STR Ra, [Rb, Rc, barrel-shifter]. Barrel shifter is performed on Rc, the immediate 
+  + extra (pseudo-form): LDR Ra, ="address". This is not valid syntax, but is used by disassembler to make disassembly easier to read. Internally, what's actually executed is LDR Ra, [PC + immediate]
+* There are 3 addressing modes: offset, pre-indexed, post-indexed 
+  + Offset: base register is never modified 
+  + Pre-indexed: base register is updated with the memory address used in the reference operation 
+  + Post-indexed: base register is used as the address to reference from and then updated with the offset 
 
 [Go to Top](#table-of-contents)
