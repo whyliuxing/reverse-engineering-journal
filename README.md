@@ -348,12 +348,14 @@ Table of Contents
   + Offset: base register is never modified 
   + Pre-indexed: base register is updated with the memory address used in the reference operation 
   + Post-indexed: base register is used as the address to reference from and then updated with the offset 
-* LDM/STM loads/stores multiple words (32-bits), starting from a base address. Form: LDM/STM<-mode-> Rb[!], {registers}
+* LDM/STM loads/stores multiple words (32-bits), starting from a base address. Form: LDM/STM<-mode-> Rb[!], {register(s)}
 * There are 4 addressing modes for LDM/STM: 
   + IA (Increment After): Default mode. Stores data starting from base address. If there's writeback, base register is updated to 4 bytes above the last accessed location 
   + IB (Increment Before): Stores data 4 btyes above base address. It there's writeback, base register is updated to the last accessed location
   + DA (Decrement After): Stores data such that the last location is the base address. If there's writeback, base register is updated to 4 bytes below the lowest location 
   + DB (Decrement Before): Stores data such that the last location is 4 bytes below base address. If there's writeback, base register is updated to the address of the first location
   + The suffix after LDM/STM indicates the mode. STMFD/STMDB, STMFA/STMIB, STMED/STMDA, STMEA/STMIA
+* PUSH/POP's form: PUSH/POP {register(s)}
+* PUSH/POP and STMFD/LDMFD can be used as prologue and epilogue, such as saving registers and return address 
 
 [Go to Top](#table-of-contents)
