@@ -343,7 +343,7 @@ Table of Contents
   + LDR/STR Ra, [Rb, imm]
   + LDR/STR Ra, [Rb, Rc]
   + LDR/STR Ra, [Rb, Rc, barrel-shifter]. Barrel shifter is performed on Rc, the immediate 
-  + extra (pseudo-form): LDR Ra, ="address". This is not valid syntax, but is used by disassembler to make disassembly easier to read. Internally, what's actually executed is LDR Ra, [PC + immediate]
+  + extra (pseudo-form): LDR Ra, ="address". This is not valid syntax, but is used by disassembler to make disassembly easier to read. Internally, what's actually executed is LDR Ra, [PC + imm]
 * There are 3 addressing modes for LDR/STR: offset, pre-indexed, post-indexed 
   + Offset: base register is never modified 
   + Pre-indexed: base register is updated with the memory address used in the reference operation 
@@ -358,5 +358,10 @@ Table of Contents
   + Empty ascending: STMEA (STMIA), LDMEA (LDMDB)
 * PUSH/POP's form: PUSH/POP {register(s)}
 * PUSH/POP and STMFD/LDMFD can be used as prologue and epilogue, such as saving registers and return address 
+* Instructions for function invocation: B, BX, BL, and BLX
+  + B's syntax: B imm. imm is relative offset from R15, the program counter
+  + BX's syntax: BX <-register->. X means that it can switch between ARM and THUMB state. If the LSB of the destination is 1, it will execute in Thumb state. BX LR is commonly used to return from function 
+  + BL's syntax: BL imm. It stores return address, the next instruction, in LR before transferring control to destination
+  + BLX's syntax: BLX imm./<-register->. When BLX uses an offset, it always swap state
 
 [Go to Top](#table-of-contents)
