@@ -331,7 +331,7 @@ Table of Contents
 * Thumb-2 is used in ARMv7. Its instructions can be either 2 bytes or 4 bytes in size. 4 bytes Thumb instruction has a .W suffix, otherwise it generates a 2 byte Thumb instruction
 * Native ARM instructions are always 4 bytes in size
 * Privileges separation are defined by 8 modes. In comparison to x86, User (USR) mode is like ring3 and Supervisor (SVC) mode is like ring0
-* Control register is the current program status register (CPSR), which is basically an extended EFLAGS register in x86
+* Control register is the current program status register (CPSR), also known as application program status register (APSR), which is basically an extended EFLAGS register in x86
 * There are 16 32-bit general-purpose registers (R0 - R15), but only the first 12 registers are for general purpose usage
   + R0 holds the return value from function call
   + R13 is the stack pointer (SP)
@@ -364,6 +364,10 @@ Table of Contents
   + BL's syntax: BL imm. It stores return address, the next instruction, in LR before transferring control to destination
   + BLX's syntax: BLX imm./<-register->. When BLX uses an offset, it always swap state
 * Since instructions can only be 2 or 4 bytes in size, it's not possible to directly use a 32-bit constant as an operand. As a result, barrel shifter can be used to transform the immediate into a larger value 
-* For arithmetic operations, the "S" suffix indicates that arithmetic conditional flags should be set
+* For arithmetic operations, the "S" suffix indicates that conditional flags should be set. Whereas, comparison instructions (CBZ, CMP, TST, CMN, and TEQ) automatically update the flags
+* Instructions can be conditionally executed by adding conditional suffixes. That is how conditional branch instruction is implemented
+* Thumb instruction cannot be conditionally executed, with the exception of B instruction, without the IT instruction. 
+  + IT (If-then)'s syntax: ITxyz cc. cc is the conditional suffix for the 1st instruction after IT. xyz are for the 2nd, 3rd, and 4th instructions after IT. It can be either T or E. T means that the condition must match cc for it to be executed. E means that condition must be the opposite of cc for it to be executed
+* 
 
 [Go to Top](#table-of-contents)
