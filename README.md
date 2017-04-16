@@ -363,5 +363,7 @@ Table of Contents
   + BX's syntax: BX <-register->. X means that it can switch between ARM and THUMB state. If the LSB of the destination is 1, it will execute in Thumb state. BX LR is commonly used to return from function 
   + BL's syntax: BL imm. It stores return address, the next instruction, in LR before transferring control to destination
   + BLX's syntax: BLX imm./<-register->. When BLX uses an offset, it always swap state
+* Since instructions can only be 2 or 4 bytes in size, it's not possible to directly use a 32-bit constant as an operand. As a result, barrel shifter can be used to transform the immediate into a larger value 
+* For arithmetic operations, the "S" suffix indicates that arithmetic conditional flags should be set
 
 [Go to Top](#table-of-contents)
