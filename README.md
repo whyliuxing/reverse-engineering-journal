@@ -368,6 +368,5 @@ Table of Contents
 * Instructions can be conditionally executed by adding conditional suffixes. That is how conditional branch instruction is implemented
 * Thumb instruction cannot be conditionally executed, with the exception of B instruction, without the IT instruction. 
   + IT (If-then)'s syntax: ITxyz cc. cc is the conditional suffix for the 1st instruction after IT. xyz are for the 2nd, 3rd, and 4th instructions after IT. It can be either T or E. T means that the condition must match cc for it to be executed. E means that condition must be the opposite of cc for it to be executed
-* 
 
 [Go to Top](#table-of-contents)
