@@ -239,6 +239,7 @@ Table of Contents
   + display section headers: readelf -S
   + display program headers and section to segment mapping: readelf -l
   + display symbol tables: readelf --syms 
+  + display a section's content: objdump -s -j <-section name-> <-binary file->
   + trace library call: ltrace -f
   + trace sys call: strace -f
 
