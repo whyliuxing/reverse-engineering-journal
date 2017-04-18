@@ -219,6 +219,7 @@ Table of Contents
 * bytes is an immutable sequence of bytes. bytearray is mutable
 
 ## *ELF Files (1/20/17)*
+* Layout: https://en.wikipedia.org/wiki/Executable_and_Linkable_Format#/media/File:Elf-layout--en.svg
 * ELF file header starts at offset 0 and is the roadmap that describes the rest of the file. It marks the ELF type, architecture, execution entry point, and offsets to program headers and section headers
 * Program header table let the system knows how to create the process image. It contains an array of structures, each describing a segment. A segment contains one or more sections
 * Section header table is not necessary for program execution. It is mainly for linking and debugging purposes. It is an array of ELF_32Shdr or ELF_64Shdr structures (Section Header)
