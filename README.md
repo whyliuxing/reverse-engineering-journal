@@ -281,7 +281,7 @@ Table of Contents
  
 ## *IDA Tips (4/1/2017)*
 * __Import Address Table (IAT)__: shows you all the dynamically linked libraries' functions that the binary uses. Import Address Table is important for a reverser to understand how the binary is interacting with the OS. To hide APIs call from displaying in the import table, a programmer can dynamically resolve the API 
-  + How to find dynamically resolved APIs: run the binary in a sandbox (e.g. hybrid-analysis, retargetable decompiler) and if any of the APIs it called is not in the import table then that API is dynamically resolved
+  + How to find dynamically resolved APIs: run the binary in a sandbox (e.g. hybrid-analysis, retargetable decompiler) and if any of the APIs it called is not in the import table then that API is dynamically resolved. Once you find a dynamically resolved API, you can place a breakpoint on the API in IDA's debugger view (go to Module windows, find the shared library the API is under, click on the library and another window will open showing all the available APIs, find the API that you are interested in, and place a breakpoint on it) and then step back through the call stack to find where it's called in user code 
 * When IDA loads a binary, it simulates a mapping of the binary in memory. The addresses shown in IDA are the virtual memory addresses and not the offset of the binary file on disk
 * To show advanced toolbar: View -> Toolbars -> Advanced mode
 * To save memory snapshot from your debugger session: Debugger -> Take memory snapshot -> All segments
