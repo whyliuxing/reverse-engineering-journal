@@ -49,6 +49,7 @@ Table of Contents
 * Entry point of a binary does not correspond to main. A program's startup code (how main is called) depends on the compiler and the platform that the binary is compiled for
 * EIP can only be changed through CALL, JMP, or RET
 * Compress before you encrypt 
+* To hide strings from strings command, mix the construction of string with code. So instead of string being referenced from the .data section, it will be constructed in .text section. To do this, construct the string as an array of characters assigned to a local variable. This will result in code that moves each character onto the stack one at a time. To make the character harder to recognize, check out Data Encoding section from my journal
 
 ## *[HARD TO REMEMBER] x86 Instructions With Side Effects (12/24/16)*
 * IMUL reg/mem: register is multiplied with AL, AX, or EAX and the result is stored in AX, DX:AX, or EDX:EAX
