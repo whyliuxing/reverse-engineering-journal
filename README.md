@@ -364,7 +364,7 @@ Table of Contents
   + Empty descending: STMED (STMDA), LDMED (LDMIB)
   + Empty ascending: STMEA (STMIA), LDMEA (LDMDB)
 * PUSH/POP's form: PUSH/POP {register(s)}
-* PUSH/POP and STMFD/LDMFD can be used as prologue and epilogue, such as saving registers and return address 
+* PUSH/POP and STMFD/LDMFD are functionally the same, but PUSH/POP is used as prologue and epilogue in Thumb state while STMFD/LDMFD is used as prologue and epilogue in ARM state. 
 * Instructions for function invocation: B, BX, BL, and BLX
   + B's syntax: B imm. imm is relative offset from R15, the program counter
   + BX's syntax: BX <-register->. X means that it can switch between ARM and THUMB state. If the LSB of the destination is 1, it will execute in Thumb state. BX LR is commonly used to return from function 
