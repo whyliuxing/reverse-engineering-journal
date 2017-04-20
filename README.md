@@ -29,6 +29,9 @@ Table of Contents
 
 ## *General Knowledge (12/18/16)*
 * (Intel Specific) value stored in RAM is in little-endian but when moved to registers it is in big-endian  
+  + testing
+  * tseting
+    + another one 
 * The 8 32-bit general-purpose registers (GPRs) for x86 architecture: EAX, EBX, ECX, EDX, EDI, ESI, EBP, and ESP. For x64 architecture, there are 18 general-purpose registers (GPRs). GPRs are used for temporary storage and can be directly accessed/changed in user code (e.g. mov eax, 1)  
 * The 5 32-bit memory index registers for x86 architecture: ESI, EDI, ESP, EBP, EIP. Most of them are also GPRs except esp and eip. They usually contain memory addresses. But obviously, if a memory index register is used as a GPR instead, it can contain any value 
 * The 6 32-bit selector registers for x86 architecture: CS, DS, ES, FS, GS, SS. A selector register indicates a specific block of memory from which one can read or write. The real memory address is looked up in an internal CPU table 
