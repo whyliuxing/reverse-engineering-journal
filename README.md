@@ -13,7 +13,6 @@ I put anything I find interesting regarding reverse engineering in this journal.
 * [64-Bit](#64-bit-121416)
 * [Data Encoding](#data-encoding-121516)
 * [Stripped Binaries](#stripped-binaries-121616)
-* [Useful Python for RCE](#useful-python-for-rce-122816)
 * [ELF Files](#elf-files-12017)
 * [Anti-Emulation](#anti-emulation-252017)
 * [GDB](#gdb-21517)
@@ -196,15 +195,6 @@ I put anything I find interesting regarding reverse engineering in this journal.
 * .dynsym symbol table cannot be stripped since it is needed for runtime, so imported library symbols remain in a stripped binary. But if a binary is compiled statically, it will have no symbol table at all if stripped
 * With non-stripped, gdb can identify local function names and knows the bounds of all functions so we can do: disas "function name"
 * With stripped binary, gdb can’t even identify main. Can identify entry point using the command: info file. Also, can’t do disas since gdb does not know the bounds of the functions so it does not know which address range should be disassembled. Solution: use examine(x) command on address pointed by pc register like: x/14i $pc
-
-## *Useful Python for RCE (12/28/16)*
-* chr: hex/int to ASCII
-* ord: ASCII to hex
-* Struct module: pack python objects as contiguous chunk of bytes or disassemble a chunk of bytes to python structures
-* int.from_bytes(bytes, byteorder): return integer represented by the array of bytes
-* int.to_bytes(bytes, byteorder): return array of bytes representing an integer
-* hex() returns a string
-* bytes is an immutable sequence of bytes. bytearray is mutable
 
 ## *ELF Files (1/20/17)*
 ![ELF Layout - from wikipedia](https://upload.wikimedia.org/wikipedia/commons/7/77/Elf-layout--en.svg)
