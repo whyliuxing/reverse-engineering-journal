@@ -4,6 +4,8 @@ I put anything I find interesting regarding reverse engineering in this journal.
 
 ## *Table of Contents*
 * [General Knowledge](#general-knowledge-121816)
+* [IDA Tips](#ida-tips-412017)
+* [GDB](#gdb-21517)
 * [x86](#x86-4232017)
 * [[HARD TO REMEMBER] x86 Instructions With Side Effects](#hard-to-remember-x86-instructions-with-side-effects-122416)
 * [ARM](#arm-4142017)
@@ -15,10 +17,7 @@ I put anything I find interesting regarding reverse engineering in this journal.
 * [Data Encoding](#data-encoding-121516)
 * [C++ Reversing](#c-reversing-121316)
 * [64-Bit](#64-bit-121416)
-* [Stripped Binaries](#stripped-binaries-121616)
 * [ELF Files](#elf-files-12017)
-* [GDB](#gdb-21517)
-* [IDA Tips](#ida-tips-412017)
 * [Windows OS](#windows-os-412017)
 * [Interrupts](#interrupts-4132017)
 
@@ -28,6 +27,32 @@ I put anything I find interesting regarding reverse engineering in this journal.
 * Entry point of a binary does not correspond to main. A program's startup code (how main is called) depends on the compiler and the platform that the binary is compiled for
 * To hide strings from strings command, construct the string in code. So instead of string being referenced from the .data section, it will be constructed in .text section. To do this, initialize a string as an array of characters assigned to a local variable. This will result in code that moves each character onto the stack one at a time. To make the character harder to recognize, check out Data Encoding section in this journal
 * __Random Number Generator__: Randomness requires a source of entropy, which is a sequence of bits that is unpredictable. This source of entropy can be from OS observing its internal operations or ambient factors. The source of entropy is call the seed. Algorithms using OS's internal operations or ambient factors as seed are known as pseudorandom generators, because while their output isn't random, it nonetheless passes statistical tests of randomness. As long as you seed them with a legitimate source of entropy, they can generate fairly long sequences of random values without the sequence repeating 
+
+## *IDA Tips (4/1/2017)*
+* __Import Address Table (IAT)__: shows you all the dynamically linked libraries' functions that the binary uses. Import Address Table is important for a reverser to understand how the binary is interacting with the OS. To hide APIs call from displaying in the import table, a programmer can dynamically resolve the API 
+  + How to find dynamically resolved APIs: get the binary's function trace (e.g. hybrid-analysis (Windows sandbox), ltrace). If any of the APIs it called is not in the import table, then that API is dynamically resolved. Once you find a dynamically resolved API, you can place a breakpoint on the API in IDA's debugger view (go to Module windows, find the shared library the API is under, click on the library and another window will open showing all the available APIs, find the API that you are interested in, and place a breakpoint on it) and then step back through the call stack to find where it's called in user code after execution pauses at that breakpoint
+* When IDA loads a binary, it simulates a mapping of the binary in memory. The addresses shown in IDA are the virtual memory addresses and not the offset of the binary file on disk
+* To show advanced toolbar: View -> Toolbars -> Advanced mode
+* To save memory snapshot from your debugger session: Debugger -> Take memory snapshot -> All segments
+* Useful shortcuts: 
+  + u to undefine 
+  + d to turn it to data 
+  + c to turn it to code 
+  + g to bring up the jump to address menu
+  + n to rename
+  + x to show cross-references
+  
+## *GDB (2/15/17)*
+* x command displays memory contents at a given address in the specified format 
+* p command displays value stored in a named variable
+* To look at instructions starting from pc for stripped binary in gdb: x/14i $pc
+* Set hardware breakpoint in GDB: hbreak 
+* Set watchpoint in GDB: watch only break on write, rwatch break on read, awatch break on read/write
+* Set temporary variable: set $"variable name" = "value"
+* ASLR is turned off by default in GDB. To turn it on: set disable-randomization off
+* Default display assembly in AT&T notation. To change it to the more readable Intel notation: set disassembly-flavor intel. To make this change permanent, write it in the .gdbinit file
+* Set command can be used to set temporary variable or change value in register
+  + For example to set the zero flag in EFLAGS, set a temporary variable: set $ZF = 6. Use that variable to set the bit in EFLAGS that corresponds to zero flag: set $eflags |= (1 << $ZF)
 
 ## *x86 (4/23/2017)*
 * (Intel Specific) value stored in RAM is in little-endian but when moved to registers it is in big-endian  
@@ -241,14 +266,6 @@ I put anything I find interesting regarding reverse engineering in this journal.
 * Easier in 64-bit code to differentiate between pointers and data values. The most common size for storing integers is 32 bits and pointers are always 64 bits
 * RBP is treated like another GPR. As a result, local variables are referenced through RSP
 
-## *Stripped Binaries (12/16/16)*
-* There are 2 sections that contain symbols: .dynsym and .symtab. .dynsym contains dynamic/global symbols, those symbols are resolved at runtime. .symtab contains all the symbols. Since they are not necessary for runtime, they are not loaded into memory 
-* nm command to list all symbols in the binary from .symtab
-* Stripped binary == no .symtab symbol table
-* .dynsym symbol table cannot be stripped since it is needed for runtime, so imported library symbols remain in a stripped binary. But if a binary is compiled statically, it will have no symbol table at all if stripped
-* With non-stripped, gdb can identify local function names and knows the bounds of all functions so we can do: disas "function name"
-* With stripped binary, gdb can’t even identify main. Can identify entry point using the command: info file. Also, can’t do disas since gdb does not know the bounds of the functions so it does not know which address range should be disassembled. Solution: use examine(x) command on address pointed by pc register like: x/14i $pc
-
 ## *ELF Files (1/20/17)*
 ![ELF Layout - from wikipedia](https://upload.wikimedia.org/wikipedia/commons/7/77/Elf-layout--en.svg)
 * ELF file header starts at offset 0 and is the roadmap that describes the rest of the file. It marks the ELF type, architecture, execution entry point, and offsets to program headers and section headers
@@ -267,6 +284,12 @@ I put anything I find interesting regarding reverse engineering in this journal.
 * The -O3 option is the second highest optimization level. The optimizations that it applied will actually result in more bytes than compiled version of the unoptimized binary
 * The -funroll-loops option unroll the looping structure of any loops, making it harder for reverse engineer to analyze the compiled binary
 * dlsym and dlopen can be used to dynamically resolved function names. This way those library functions won't show up on the Import Table
+* __Stripped Binary__: there are 2 sections that contain symbols: .dynsym and .symtab. .dynsym contains dynamic/global symbols, those symbols are resolved at runtime. .symtab contains all the symbols
+  * nm command to list all symbols in the binary from .symtab
+  * Stripped binary == no .symtab symbol table
+  * .dynsym symbol table cannot be stripped since it is needed for runtime, so imported library symbols remain in a stripped binary. But if a binary is compiled statically, it will have no symbol table at all if stripped
+  * With non-stripped, gdb can identify local function names and knows the bounds of all functions so we can do: disas "function name"
+  * With stripped binary, gdb can’t even identify main. Can identify entry point using the command: info file. Also, can’t do disas since gdb does not know the bounds of the functions so it does not know which address range should be disassembled. Solution: use examine(x) command on address pointed by pc register like: x/14i $pc
 * Tools to analyze it: 
   + display section headers: readelf -S
   + display program headers and section to segment mapping: readelf -l
@@ -275,32 +298,6 @@ I put anything I find interesting regarding reverse engineering in this journal.
   + trace library call: ltrace -f
   + trace sys call: strace -f
   + decompile: retargetable decompiler
-
-## *GDB (2/15/17)*
-* x command displays memory contents at a given address in the specified format 
-* p command displays value stored in a named variable
-* To look at instructions starting from pc for stripped binary in gdb: x/14i $pc
-* Set hardware breakpoint in GDB: hbreak 
-* Set watchpoint in GDB: watch only break on write, rwatch break on read, awatch break on read/write
-* Set temporary variable: set $"variable name" = "value"
-* ASLR is turned off by default in GDB. To turn it on: set disable-randomization off
-* Default display assembly in AT&T notation. To change it to the more readable Intel notation: set disassembly-flavor intel. To make this change permanent, write it in the .gdbinit file
-* Set command can be used to set temporary variable or change value in register
-  + For example to set the zero flag in EFLAGS, set a temporary variable: set $ZF = 6. Use that variable to set the bit in EFLAGS that corresponds to zero flag: set $eflags |= (1 << $ZF)
-
-## *IDA Tips (4/1/2017)*
-* __Import Address Table (IAT)__: shows you all the dynamically linked libraries' functions that the binary uses. Import Address Table is important for a reverser to understand how the binary is interacting with the OS. To hide APIs call from displaying in the import table, a programmer can dynamically resolve the API 
-  + How to find dynamically resolved APIs: get the binary's function trace (e.g. hybrid-analysis (Windows sandbox), ltrace). If any of the APIs it called is not in the import table, then that API is dynamically resolved. Once you find a dynamically resolved API, you can place a breakpoint on the API in IDA's debugger view (go to Module windows, find the shared library the API is under, click on the library and another window will open showing all the available APIs, find the API that you are interested in, and place a breakpoint on it) and then step back through the call stack to find where it's called in user code after execution pauses at that breakpoint
-* When IDA loads a binary, it simulates a mapping of the binary in memory. The addresses shown in IDA are the virtual memory addresses and not the offset of the binary file on disk
-* To show advanced toolbar: View -> Toolbars -> Advanced mode
-* To save memory snapshot from your debugger session: Debugger -> Take memory snapshot -> All segments
-* Useful shortcuts: 
-  + u to undefine 
-  + d to turn it to data 
-  + c to turn it to code 
-  + g to bring up the jump to address menu
-  + n to rename
-  + x to show cross-references
 
 ## *Windows OS (4/1/2017)*
 * __SEH (Structured Exception Handler)__: 32-bit Windows' mechanism for handling exceptions
