@@ -13,7 +13,6 @@ I put anything I find interesting regarding reverse engineering in this journal.
 * [64-Bit](#64-bit-121416)
 * [Data Encoding](#data-encoding-121516)
 * [Stripped Binaries](#stripped-binaries-121616)
-* [LD_PRELOAD](#ld_preload-121616)
 * [Random Number Generator](#random-number-generator-121716)
 * [Useful Python for RCE](#useful-python-for-rce-122816)
 * [ELF Files](#elf-files-12017)
@@ -94,6 +93,7 @@ I put anything I find interesting regarding reverse engineering in this journal.
 
 ## *Anti-Debugging (11/17/16)*
 * Ptrace (Linux): ptrace cannot be called in succession more than once for a process. All debuggers and program tracers use ptrace call to setup debugging for a process, but the process will terminate prematurely if the code itself also contains the call to ptrace 
+  + This method can be bypassed by using LD_PRELOAD, which is an environment variable that is set to the path of a shared object. That shared object will be loaded first. As a result, if that shared object contains your own implementation of ptrace, then your own implementation of ptrace will be called instead when the call to ptrace is encountered 
 * Self-Debugging (Windows): Windows' version of ptrace. Main process spawns a child process that debugs the process that created it. This prevents debugger from attaching to the same process. It can be bypassed by setting the EPROCESS->DebugPort (the EPROCESS structure is a struct returned by the kernel mode function PsGetProcessId) field to 0
 * Windows API provides several functions that can be used by a program to determine if it is being debugged (e.g. isDebuggerPresent)
 * Several flags within the PEB structure provide information about the presence of a debugger
@@ -196,14 +196,6 @@ I put anything I find interesting regarding reverse engineering in this journal.
 * .dynsym symbol table cannot be stripped since it is needed for runtime, so imported library symbols remain in a stripped binary. But if a binary is compiled statically, it will have no symbol table at all if stripped
 * With non-stripped, gdb can identify local function names and knows the bounds of all functions so we can do: disas "function name"
 * With stripped binary, gdb can’t even identify main. Can identify entry point using the command: info file. Also, can’t do disas since gdb does not know the bounds of the functions so it does not know which address range should be disassembled. Solution: use examine(x) command on address pointed by pc register like: x/14i $pc
-
-## *LD_PRELOAD (12/16/16)*
-* When you start a dynamically linked program, it doesn’t have all the code for the functions it needs. So this is what happened: 
-  + The program gets loaded into memory
-  + The dynamic linker figures out which other libraries that program needs to run (.so files)
-  + It loads them into memory 
-  + It connects everything up 
-* LD_PRELOAD is an environment variable that says “whenever you look for a function name, look in me first”
 
 ## *Random Number Generator (12/17/16)*
 * Randomness requires a source of entropy, which is a sequence of bits that is unpredictable. This source of entropy can be from OS observing its internal operations or ambient factors
