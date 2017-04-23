@@ -4,23 +4,23 @@ I put anything I find interesting regarding reverse engineering in this journal.
 
 ## *Table of Contents*
 * [General Knowledge](#general-knowledge-121816)
-* [x86](#x86-42317)
+* [x86](#x86-4232017)
 * [[HARD TO REMEMBER] x86 Instructions With Side Effects](#hard-to-remember-x86-instructions-with-side-effects-122416)
+* [ARM](#arm-4142017)
 * [Anti-Disassembly](#anti-disassembly-111716)
 * [Anti-Debugging](#anti-debugging-111716)
+* [Anti-Emulation](#anti-emulation-252017)
 * [Breakpoints](#breakpoints-12516)
 * [String Encoding](#string-encoding-121216)
+* [Data Encoding](#data-encoding-121516)
 * [C++ Reversing](#c-reversing-121316)
 * [64-Bit](#64-bit-121416)
-* [Data Encoding](#data-encoding-121516)
 * [Stripped Binaries](#stripped-binaries-121616)
 * [ELF Files](#elf-files-12017)
-* [Anti-Emulation](#anti-emulation-252017)
 * [GDB](#gdb-21517)
 * [IDA Tips](#ida-tips-412017)
 * [Windows OS](#windows-os-412017)
 * [Interrupts](#interrupts-4132017)
-* [ARM](#arm-4142017)
 
 ## *General Knowledge (12/18/16)*
 * Processes are container for execution. Threads are what the OS executes
@@ -62,6 +62,50 @@ I put anything I find interesting regarding reverse engineering in this journal.
 * PUSHFD, POPFD: pushes/pops EFLAGS register 
 * MOVSX: moves a signed value into a register and sign-extends it 
 * MOVZX: moves an unsigned value into a register and zero-extends it
+
+## *ARM (4/14/2017)*
+* ARMv7 uses 3 profiles (Application, Real-time, Microcontroller) and model name (Cortex). For example, ARMv7 Cortex-M is meant for microcontroller and support Thumb-2 execution only 
+* Thumb-1 is used in ARMv6 and earlier. Its instructions are always 2 bytes in size
+* Thumb-2 is used in ARMv7. Its instructions can be either 2 bytes or 4 bytes in size. 4 bytes Thumb instruction has a .W suffix, otherwise it generates a 2 byte Thumb instruction
+* Native ARM instructions are always 4 bytes in size
+* Privileges separation are defined by 8 modes. In comparison to x86, User (USR) mode is like ring3 and Supervisor (SVC) mode is like ring0
+* Control register is the current program status register (CPSR), also known as application program status register (APSR), which is basically an extended EFLAGS register in x86
+* There are 16 32-bit general-purpose registers (R0 - R15), but only the first 12 registers are for general purpose usage
+  + R0 holds the return value from function call
+  + R13 is the stack pointer (SP)
+  + R14 is the link register (LR), which holds return address for function call
+  + R15 is the program counter (PC)
+* Only load/store instructions can access memory. All other instructions operate on registers 
+  + load/store instructions: LDR/STR, LDM/STM, and PUSH/POP
+* There are 3 forms of LDR/STR instructions 
+  + LDR/STR Ra, [Rb, imm]
+  + LDR/STR Ra, [Rb, Rc]
+  + LDR/STR Ra, [Rb, Rc, barrel-shifter]. Barrel shifter is performed on Rc, the immediate 
+  + extra (pseudo-form): LDR Ra, ="address". This is not valid syntax, but is used by disassembler to make disassembly easier to read. Internally, what's actually executed is LDR Ra, [PC + imm]
+* There are 3 addressing modes for LDR/STR: offset, pre-indexed, post-indexed 
+  + Offset: base register is never modified 
+  + Pre-indexed: base register is updated with the memory address used in the reference operation 
+  + Post-indexed: base register is used as the address to reference from and then updated with the offset 
+* LDM/STM loads/stores multiple words (32-bits), starting from a base address. Form: LDM/STM<-mode-> Rb[!], {register(s)}
+* LDM/STM can use several types of stack: 
+  + Descending or ascending: descending means that the stack grows downward, from higher address to lower address. Ascending means that the stack grows upward 
+  + Full or empty: full means that the stack pointer points to the last item in the stack. Empty means that the stack pointer points to the next free space
+  + Full descending: STMFD (STMDB), LDMFD (LDMIA)
+  + Full ascending: STMFA (STMIB), LDMFA (LDMDA)
+  + Empty descending: STMED (STMDA), LDMED (LDMIB)
+  + Empty ascending: STMEA (STMIA), LDMEA (LDMDB)
+* PUSH/POP's form: PUSH/POP {register(s)}
+* PUSH/POP and STMFD/LDMFD are functionally the same, but PUSH/POP is used as prologue and epilogue in Thumb state while STMFD/LDMFD is used as prologue and epilogue in ARM state. 
+* Instructions for function invocation: B, BX, BL, and BLX
+  + B's syntax: B imm. imm is relative offset from R15, the program counter
+  + BX's syntax: BX <-register->. X means that it can switch between ARM and THUMB state. If the LSB of the destination is 1, it will execute in Thumb state. BX LR is commonly used to return from function 
+  + BL's syntax: BL imm. It stores return address, the next instruction, in LR before transferring control to destination
+  + BLX's syntax: BLX imm./<-register->. When BLX uses an offset, it always swap state
+* Since instructions can only be 2 or 4 bytes in size, it's not possible to directly use a 32-bit constant as an operand. As a result, barrel shifter can be used to transform the immediate into a larger value 
+* For arithmetic operations, the "S" suffix indicates that conditional flags should be set. Whereas, comparison instructions (CBZ, CMP, TST, CMN, and TEQ) automatically update the flags
+* Instructions can be conditionally executed by adding conditional suffixes. That is how conditional branch instruction is implemented
+* Thumb instruction cannot be conditionally executed, with the exception of B instruction, without the IT instruction. 
+  + IT (If-then)'s syntax: ITxyz cc. cc is the conditional suffix for the 1st instruction after IT. xyz are for the 2nd, 3rd, and 4th instructions after IT. It can be either T or E. T means that the condition must match cc for it to be executed. E means that condition must be the opposite of cc for it to be executed
 
 ## *Anti-Disassembly (11/17/16)*
 * __Linear Disassembly__: disassembling one instruction at a time linearly. Problem: code section of nearly all binaries will also contain data that isn’t instructions 
@@ -121,6 +165,12 @@ I put anything I find interesting regarding reverse engineering in this journal.
 * __TLS Callbacks__: (Windows only) Most debuggers start at the program’s entry point as defined by the PE header. TlsCallback is traditionally used to initialze thread-specific data before a thread runs, so TlsCallback is called before the entry point and therefore can execute secretly in a debugger. To make it harder to find anti-debugging checks, anti-debugging checks can be placed in TlsCallback
 * __/proc/self/status File__: (Linux only) a dynamic file that exists for every process. It includes information on whether a process is being traced
 
+## *Anti-Emulation (2/5/2017)*
+* allows reverse engineer to bypass many anti-debugging techniques
+* __Detection through Syscall__: invoke various uncommon syscalls and check if it contains expected value. Since there are OS features not properly implemented, it means that the process is running under a debugger
+* __CPU Inconsistencies Detection__: try executing privileged instructions in user mode. If it succeeded, then it is under emulation
+* __Timing Delays__: execution under emulation will be slower than running under real CPU
+
 ## *Breakpoints (12/5/16)*
 * Software breakpoint: debugger read and store the first byte of instruction and then overwrite that first byte with 0xcc (int 3). When CPU hits the breakpoint, SIGTRAP signal is raised, process is stopped, and internal lookup occurs and the byte is flipped back
 * Hardware breakpoints are set at CPU level, in special registers called debug registers (DR0 through DR7)
@@ -138,6 +188,28 @@ I put anything I find interesting regarding reverse engineering in this journal.
 * Characters are referred to by their “Unicode code point”
 * The primary cause of garbled text is: Somebody is trying to read a byte sequence using the wrong encoding
 * All characters available in the ASCII encoding only take up a single byte in UTF-8 and they're the exact same bytes as are used in ASCII. In other words, ASCII maps 1:1 unto UTF-8. Any character not in ASCII takes up two or more bytes in UTF-8
+
+## *Data Encoding (12/15/16)*
+* All forms of content modification for the purpose of hiding intent
+* Caesar cipher: formed by shifting the letters of alphabet #’s characters to the left or right
+* Single-byte XOR encoding: modifies each byte of plaintext by performing a logical XOR operation with a static byte value
+* Problem with Single-byte XOR is that if there are many null bytes then key will be easy to figure out since XOR-ing nulls with the key reveals the key. Solutions: 
+  + Null-preserving single-byte XOR encoding: if plaintext is NULL or key itself, then it will not be encoded via XOR
+  + Blum Blum Shub pseudo-random number generator: Produces a key stream which will be xor-ed with the data. Generic form: Value = (Value * Value) % M. M is a constant and an initial V needs to be given. Actual key being xor-ed with the data is the lowest byte of current PRNG value
+* Identifying XOR loop: looks for a small loop that contains the XOR function (where it is xor-ing a register and a constant or a register with another register)
+* Other Simple Encoding Scheme:
+  + ADD, SUB
+  + ROL, ROR: Instructions rotate the bits within a byte right or left
+  + Multibyte: XOR key is multibyte
+  + Chained or loopback: Use content itself as part of the key. EX: the original key is applied at one side of the plaintext, and the encoded output character is used as the key for the next characte
+* If outputs are suspected of containing encoded data, then the encoding function will occur prior to the output. Conversely, decoding will occur after an input
+* Data encoding example: Base64
+  * Represents binary data in ASCII string format
+  * Converts binary data into character set of 64 characters
+  * Most common character set is MIME’s Base64, which uses A-Z, a-z, and 0-9 for the first 62 values and + / for the last two
+  * Bits are read in blocks of six. The number represented by the 6 bits is used as an index into a 64-byte long string
+  * One padding character may be presented at the end of the encoded string (typically =). If padded, length of encoded string will be divisible by 4
+  * Easy to develop a custom substitution cipher since the only item that needs to be changed is the indexing string
 
 ## *C++ Reversing (12/13/16)*
 * C++ calling convention for this pointer is called thiscall: 
@@ -168,28 +240,6 @@ I put anything I find interesting regarding reverse engineering in this journal.
 * Structured exception handling in x64 does not use the stack. In 32-bit code, the fs:[0] is used as a pointer to the current exception handler frame, which is stored on the stack so that each function can define its own exception handler
 * Easier in 64-bit code to differentiate between pointers and data values. The most common size for storing integers is 32 bits and pointers are always 64 bits
 * RBP is treated like another GPR. As a result, local variables are referenced through RSP
-
-## *Data Encoding (12/15/16)*
-* All forms of content modification for the purpose of hiding intent
-* Caesar cipher: formed by shifting the letters of alphabet #’s characters to the left or right
-* Single-byte XOR encoding: modifies each byte of plaintext by performing a logical XOR operation with a static byte value
-* Problem with Single-byte XOR is that if there are many null bytes then key will be easy to figure out since XOR-ing nulls with the key reveals the key. Solutions: 
-  + Null-preserving single-byte XOR encoding: if plaintext is NULL or key itself, then it will not be encoded via XOR
-  + Blum Blum Shub pseudo-random number generator: Produces a key stream which will be xor-ed with the data. Generic form: Value = (Value * Value) % M. M is a constant and an initial V needs to be given. Actual key being xor-ed with the data is the lowest byte of current PRNG value
-* Identifying XOR loop: looks for a small loop that contains the XOR function (where it is xor-ing a register and a constant or a register with another register)
-* Other Simple Encoding Scheme:
-  + ADD, SUB
-  + ROL, ROR: Instructions rotate the bits within a byte right or left
-  + Multibyte: XOR key is multibyte
-  + Chained or loopback: Use content itself as part of the key. EX: the original key is applied at one side of the plaintext, and the encoded output character is used as the key for the next characte
-* If outputs are suspected of containing encoded data, then the encoding function will occur prior to the output. Conversely, decoding will occur after an input
-* Data encoding example: Base64
-  * Represents binary data in ASCII string format
-  * Converts binary data into character set of 64 characters
-  * Most common character set is MIME’s Base64, which uses A-Z, a-z, and 0-9 for the first 62 values and + / for the last two
-  * Bits are read in blocks of six. The number represented by the 6 bits is used as an index into a 64-byte long string
-  * One padding character may be presented at the end of the encoded string (typically =). If padded, length of encoded string will be divisible by 4
-  * Easy to develop a custom substitution cipher since the only item that needs to be changed is the indexing string
 
 ## *Stripped Binaries (12/16/16)*
 * There are 2 sections that contain symbols: .dynsym and .symtab. .dynsym contains dynamic/global symbols, those symbols are resolved at runtime. .symtab contains all the symbols. Since they are not necessary for runtime, they are not loaded into memory 
@@ -225,12 +275,6 @@ I put anything I find interesting regarding reverse engineering in this journal.
   + trace library call: ltrace -f
   + trace sys call: strace -f
   + decompile: retargetable decompiler
-
-## *Anti-Emulation (2/5/2017)*
-* allows reverse engineer to bypass many anti-debugging techniques
-* __Detection through Syscall__: invoke various uncommon syscalls and check if it contains expected value. Since there are OS features not properly implemented, it means that the process is running under a debugger
-* __CPU Inconsistencies Detection__: try executing privileged instructions in user mode. If it succeeded, then it is under emulation
-* __Timing Delays__: execution under emulation will be slower than running under real CPU
 
 ## *GDB (2/15/17)*
 * x command displays memory contents at a given address in the specified format 
@@ -307,49 +351,5 @@ I put anything I find interesting regarding reverse engineering in this journal.
   + 5th parameter: edi 
   + 6th parameter: ebp 
 * int 0x80 is an old way to make syscall. A more modern implementation is the SYSENTER instruction
-
-## *ARM (4/14/2017)*
-* ARMv7 uses 3 profiles (Application, Real-time, Microcontroller) and model name (Cortex). For example, ARMv7 Cortex-M is meant for microcontroller and support Thumb-2 execution only 
-* Thumb-1 is used in ARMv6 and earlier. Its instructions are always 2 bytes in size
-* Thumb-2 is used in ARMv7. Its instructions can be either 2 bytes or 4 bytes in size. 4 bytes Thumb instruction has a .W suffix, otherwise it generates a 2 byte Thumb instruction
-* Native ARM instructions are always 4 bytes in size
-* Privileges separation are defined by 8 modes. In comparison to x86, User (USR) mode is like ring3 and Supervisor (SVC) mode is like ring0
-* Control register is the current program status register (CPSR), also known as application program status register (APSR), which is basically an extended EFLAGS register in x86
-* There are 16 32-bit general-purpose registers (R0 - R15), but only the first 12 registers are for general purpose usage
-  + R0 holds the return value from function call
-  + R13 is the stack pointer (SP)
-  + R14 is the link register (LR), which holds return address for function call
-  + R15 is the program counter (PC)
-* Only load/store instructions can access memory. All other instructions operate on registers 
-  + load/store instructions: LDR/STR, LDM/STM, and PUSH/POP
-* There are 3 forms of LDR/STR instructions 
-  + LDR/STR Ra, [Rb, imm]
-  + LDR/STR Ra, [Rb, Rc]
-  + LDR/STR Ra, [Rb, Rc, barrel-shifter]. Barrel shifter is performed on Rc, the immediate 
-  + extra (pseudo-form): LDR Ra, ="address". This is not valid syntax, but is used by disassembler to make disassembly easier to read. Internally, what's actually executed is LDR Ra, [PC + imm]
-* There are 3 addressing modes for LDR/STR: offset, pre-indexed, post-indexed 
-  + Offset: base register is never modified 
-  + Pre-indexed: base register is updated with the memory address used in the reference operation 
-  + Post-indexed: base register is used as the address to reference from and then updated with the offset 
-* LDM/STM loads/stores multiple words (32-bits), starting from a base address. Form: LDM/STM<-mode-> Rb[!], {register(s)}
-* LDM/STM can use several types of stack: 
-  + Descending or ascending: descending means that the stack grows downward, from higher address to lower address. Ascending means that the stack grows upward 
-  + Full or empty: full means that the stack pointer points to the last item in the stack. Empty means that the stack pointer points to the next free space
-  + Full descending: STMFD (STMDB), LDMFD (LDMIA)
-  + Full ascending: STMFA (STMIB), LDMFA (LDMDA)
-  + Empty descending: STMED (STMDA), LDMED (LDMIB)
-  + Empty ascending: STMEA (STMIA), LDMEA (LDMDB)
-* PUSH/POP's form: PUSH/POP {register(s)}
-* PUSH/POP and STMFD/LDMFD are functionally the same, but PUSH/POP is used as prologue and epilogue in Thumb state while STMFD/LDMFD is used as prologue and epilogue in ARM state. 
-* Instructions for function invocation: B, BX, BL, and BLX
-  + B's syntax: B imm. imm is relative offset from R15, the program counter
-  + BX's syntax: BX <-register->. X means that it can switch between ARM and THUMB state. If the LSB of the destination is 1, it will execute in Thumb state. BX LR is commonly used to return from function 
-  + BL's syntax: BL imm. It stores return address, the next instruction, in LR before transferring control to destination
-  + BLX's syntax: BLX imm./<-register->. When BLX uses an offset, it always swap state
-* Since instructions can only be 2 or 4 bytes in size, it's not possible to directly use a 32-bit constant as an operand. As a result, barrel shifter can be used to transform the immediate into a larger value 
-* For arithmetic operations, the "S" suffix indicates that conditional flags should be set. Whereas, comparison instructions (CBZ, CMP, TST, CMN, and TEQ) automatically update the flags
-* Instructions can be conditionally executed by adding conditional suffixes. That is how conditional branch instruction is implemented
-* Thumb instruction cannot be conditionally executed, with the exception of B instruction, without the IT instruction. 
-  + IT (If-then)'s syntax: ITxyz cc. cc is the conditional suffix for the 1st instruction after IT. xyz are for the 2nd, 3rd, and 4th instructions after IT. It can be either T or E. T means that the condition must match cc for it to be executed. E means that condition must be the opposite of cc for it to be executed
 
 [Go to Top](#table-of-contents)
