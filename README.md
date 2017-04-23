@@ -12,7 +12,6 @@ I put anything I find interesting regarding reverse engineering in this journal.
 * [C++ Reversing](#c-reversing-121316)
 * [64-Bit](#64-bit-121416)
 * [Data Encoding](#data-encoding-121516)
-* [Base64](#base64-121516)
 * [Stripped Binaries](#stripped-binaries-121616)
 * [LD_PRELOAD](#ld_preload-121616)
 * [Random Number Generator](#random-number-generator-121716)
@@ -95,22 +94,22 @@ I put anything I find interesting regarding reverse engineering in this journal.
   + (Linux) use dlopen function to load the dynamic shared object and use dlsym function to find the address of a specific function within the shared object 
 
 ## *Anti-Debugging (11/17/16)*
-* For Linux Only: ptrace cannot be called in succession more than once for a process. All debuggers and program tracers use ptrace call to setup debugging for a process, but the process will terminate prematurely if the code itself also contains the call to ptrace 
-* Self-Debugging (Window’s version of ptrace): main process spawns a child process that debugs the process that created it. This prevents debugger from attaching to the same process. It can be bypassed by setting the EPROCESS->DebugPort (the EPROCESS structure is a struct returned by the kernel mode function PsGetProcessId) field to 0
+* Ptrace (Linux): ptrace cannot be called in succession more than once for a process. All debuggers and program tracers use ptrace call to setup debugging for a process, but the process will terminate prematurely if the code itself also contains the call to ptrace 
+* Self-Debugging (Windows): Windows' version of ptrace. Main process spawns a child process that debugs the process that created it. This prevents debugger from attaching to the same process. It can be bypassed by setting the EPROCESS->DebugPort (the EPROCESS structure is a struct returned by the kernel mode function PsGetProcessId) field to 0
 * Windows API provides several functions that can be used by a program to determine if it is being debugged (e.g. isDebuggerPresent)
 * Several flags within the PEB structure provide information about the presence of a debugger
   * Location of PEB can be referenced by the location fs:[30h]. The second item on the PEB struct is BYTE BeingDebugged. The API function, isDebuggerPresent, checks this field to determine if a debugger is present or not
   * __Flags and ForceFlags__: within Reserved4 array in PEB, is ProcessHeap, which is set to location of process’s first heap allocated by loader. This first heap contains a header with fields that tell kernel whether the heap was created within a debugger. The fields are Flags and ForceFlags. If the Flags field does not have the HEAP_GROWABLE(0x2) flag set, then the process is being debugged. Also, if ForceFlags != 0, then the process is being debugged. The location of both Flags and ForceFlags in the heap depends on whether the machine is 32-bit or 64-bit and also the version of Window Operating System (e.g. Windows XP, Windows Vista)
   * __NTGlobalFlag__: Since processes run slightly differently when started by a debugger, they create memory heaps differently. The information that the system uses to determine how to create heap structures is stored in the NTGlobalFlag field in the PEB at offset 0x68 in x86 and 0xbc in x64. If value at this location is 0x70 (FLG_HEAP_ENABLE_TAIL_CHECK(0x10) | FLG_HEAP_ENABLE_FREE_CHECK(0x20) | FLG_HEAP_VALIDATE_PARAMETERS(0x40)), we know that we are running in debugger
 * __INT Scanning__: Search the .text section for the 0xCC byte. If it exists, that means that a software breakpoint has been set and the process is under a debugger 
-* __Code Checksums__:  Instead of scanning for 0xCC, this check simply performs a cyclic redundancy check (CRC) or a MD5 checksum of the opcodes in the malware
+* __Code Checksums__:  Instead of scanning for 0xCC, this check simply performs a cyclic redundancy check (CRC) or a MD5 checksum of the opcodes. This not only catches software breakpoints, but also code patches 
 * __Anti-Step-Over__: the rep or movs(b|w|d) instruction can be used to overwrite/remove software breakpoints that are set after it
-* __Hardware Breakpoints__: Get a handle to current thread using GetCurrentThread(). Get registers of current thread using GetThreadContext(). Check if registers DR0-DR3 is set, if it is then there are hardware breakpoints set  
+* __Hardware Breakpoints (Windows)__: Get a handle to current thread using GetCurrentThread(). Get registers of current thread using GetThreadContext(). Check if registers DR0-DR3 is set, if it is then there are hardware breakpoints set. On Linux, user code can't access hardware breakpoints so it's not possible to check for it  
 * __Interrupts__: Manually adding/setting interrupts to the code to help detect present of a debugger
   + __False Breakpoints and SIGTRAP Handler__: a breakpoint is created by overwriting the first byte of instruction with an int3 opcode (0xcc). To setup a false breakpoint then we simply insert int3 into the code. This raises a SIGTRAP when int3 is executed. If our code has a signal handler for SIGTRAP, the handler will be executed before resuming to the instruction after int3. But if the code is under the debugger, the debugger will catch the SIGTRAP signal instead and might not pass the signal back to the program, resulting in the signal handler not being executed 
   + __Two Byte Interrupt 3__: instead of 0xCC, it's 0xCD 0x03. Can also be used as false breakpoint
   + __Interrupt 0x2C__: raises a debug assertion exception. This exception is consumed by WinDbg 
-  + __Interrupt 0x2D__: issues an EXCEPTION_BREAKPOINT (0x80000003) exception if no debugger is attached. Also it might also led to a single-byte instruction being skipped depending on whether the debugger chooses the eip register value or the exception address as the address from which to resume 
+  + __Interrupt 0x2D__: issues an EXCEPTION_BREAKPOINT (0x80000003) exception if no debugger is attached. Also it might also led to a single-byte instruction being skipped depending on whether the debugger chooses the EIP register value or the exception address as the address from which to resume 
   + __Interrupt 0x41__: this interrupt cannot be executed succressfully in ring 3 because it has a DPL of zero. Executing this interrupt will result in an EXCEPTION_ACCESS_VIOLATION (0Xc0000005) exception. Some debugger will adjust its DPL to 3 so that the interrupt can be executed successfully in ring 3. This results in the exception handler to not be executed
   + __ICEBP (0xF1)__: generates a single step exception
   + __Trap Flag Check__: Trap Flag is part of the EFLAGS register. IF TF is 1, CPU will generate Single Step exception(int 0x01h) after executing an instruction. Trap Flag can be manually set to cause next instruction to raise an exception. If the process is running under a debugger, the debugger will not pass the exception to the program so the exception handler will never be ran
@@ -183,14 +182,13 @@ I put anything I find interesting regarding reverse engineering in this journal.
   + Multibyte: XOR key is multibyte
   + Chained or loopback: Use content itself as part of the key. EX: the original key is applied at one side of the plaintext, and the encoded output character is used as the key for the next characte
 * If outputs are suspected of containing encoded data, then the encoding function will occur prior to the output. Conversely, decoding will occur after an input
-
-## *Base64 (12/15/16)*
-* Used to represent binary data in ASCII string format
-* It converts binary data into a limited character set of 64 characters
-* Most common character set is MIME’s Base64, which uses A-Z, a-z, and 0-9 for the first 62 values and + / for the last two
-* Bits are read in blocks of six. The number represented by the 6 bits is used as an index into a 64-byte long string
-* One padding character may be presented at the end of the encoded string (typically =). If padded, length of encoded string will be divisible by 4
-* One beautiful thing about Base64 is how easy it is to develop a custom substitution cipher since the only item that needs to be changed is the indexing string
+* Data encoding example: Base64
+  * Represents binary data in ASCII string format
+  * Converts binary data into character set of 64 characters
+  * Most common character set is MIME’s Base64, which uses A-Z, a-z, and 0-9 for the first 62 values and + / for the last two
+  * Bits are read in blocks of six. The number represented by the 6 bits is used as an index into a 64-byte long string
+  * One padding character may be presented at the end of the encoded string (typically =). If padded, length of encoded string will be divisible by 4
+  * Easy to develop a custom substitution cipher since the only item that needs to be changed is the indexing string
 
 ## *Stripped Binaries (12/16/16)*
 * There are 2 sections that contain symbols: .dynsym and .symtab. .dynsym contains dynamic/global symbols, those symbols are resolved at runtime. .symtab contains all the symbols. Since they are not necessary for runtime, they are not loaded into memory 
@@ -267,20 +265,6 @@ I put anything I find interesting regarding reverse engineering in this journal.
 * Set command can be used to set temporary variable or change value in register
   + For example to set the zero flag in EFLAGS, set a temporary variable: set $ZF = 6. Use that variable to set the bit in EFLAGS that corresponds to zero flag: set $eflags |= (1 << $ZF)
 
-## *SEH: Structured Exception Handlers (3/5/2017)*
-* 32-bit Windows' mechanism for handling exceptions. SEH chain is a list of exception handlers within a thread 
-* Each handler can choose to handle the exception or pass to the next one. If the exception made it to the last handler, it is an unhandled exception
-* FS segment register points to the Thread Environment Block (TEB). The first element of TEB is a pointer to the SEH chain
-* SEH chains is a linked list of data structures called EXCEPTION_REGISTRATION records 
-* struct _EXCEPTION_REGISTRATION {
-  DWORD prev;
-  DWORD handler;
-  };
-* To add our own exception handler:
-  + push handler
-  + push fs:[0]
-  + mov fs:[0], esp
- 
 ## *IDA Tips (4/1/2017)*
 * __Import Address Table (IAT)__: shows you all the dynamically linked libraries' functions that the binary uses. Import Address Table is important for a reverser to understand how the binary is interacting with the OS. To hide APIs call from displaying in the import table, a programmer can dynamically resolve the API 
   + How to find dynamically resolved APIs: get the binary's function trace (e.g. hybrid-analysis (Windows sandbox), ltrace). If any of the APIs it called is not in the import table, then that API is dynamically resolved. Once you find a dynamically resolved API, you can place a breakpoint on the API in IDA's debugger view (go to Module windows, find the shared library the API is under, click on the library and another window will open showing all the available APIs, find the API that you are interested in, and place a breakpoint on it) and then step back through the call stack to find where it's called in user code after execution pauses at that breakpoint
@@ -296,6 +280,19 @@ I put anything I find interesting regarding reverse engineering in this journal.
   + x to show cross-references
 
 ## *Windows OS (4/1/2017)*
+* __SEH (Structured Exception Handler)__: 32-bit Windows' mechanism for handling exceptions
+  * SEH chain is a list of exception handlers within a thread 
+  * Each handler can choose to handle the exception or pass to the next one. If the exception made it to the last handler, it is an unhandled exception
+  * FS segment register points to the Thread Environment Block (TEB). The first element of TEB is a pointer to the SEH chain
+  * SEH chains is a linked list of data structures called EXCEPTION_REGISTRATION records 
+  * struct _EXCEPTION_REGISTRATION {
+  DWORD prev;
+  DWORD handler;
+  };
+  * To add our own exception handler:
+    + push handler
+    + push fs:[0]
+    + mov fs:[0], esp
 * __Handles__: like pointers in that they refer to an object. It is an abstraction that hides a real memory address from the API user, allowing the system to reorganize physical memory transparently to the program
 * __Windows Registry (hierarchical database of information)__: used to store OS and program configuration information. Nearly all Windows configuration information is stored in the registry, including networking, driver, startup, user account, and other information 
   + The registry is divided into five top-level sections called root keys
