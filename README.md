@@ -19,7 +19,6 @@ I put anything I find interesting regarding reverse engineering in this journal.
 * [ELF Files](#elf-files-12017)
 * [Anti-Emulation](#anti-emulation-252017)
 * [GDB](#gdb-21517)
-* [SEH: Structured Exception Handlers](#seh-structured-exception-handlers-352017)
 * [IDA Tips](#ida-tips-412017)
 * [Windows OS](#windows-os-412017)
 * [Interrupts](#interrupts-4132017)
