@@ -13,7 +13,6 @@ I put anything I find interesting regarding reverse engineering in this journal.
 * [64-Bit](#64-bit-121416)
 * [Data Encoding](#data-encoding-121516)
 * [Stripped Binaries](#stripped-binaries-121616)
-* [Random Number Generator](#random-number-generator-121716)
 * [Useful Python for RCE](#useful-python-for-rce-122816)
 * [ELF Files](#elf-files-12017)
 * [Anti-Emulation](#anti-emulation-252017)
@@ -45,6 +44,7 @@ I put anything I find interesting regarding reverse engineering in this journal.
 * Entry point of a binary does not correspond to main. A program's startup code (how main is called) depends on the compiler and the platform that the binary is compiled for
 * EIP can only be changed through CALL, JMP, or RET
 * To hide strings from strings command, construct the string in code. So instead of string being referenced from the .data section, it will be constructed in .text section. To do this, initialize a string as an array of characters assigned to a local variable. This will result in code that moves each character onto the stack one at a time. To make the character harder to recognize, check out Data Encoding section in this journal
+* __Random Number Generator__: Randomness requires a source of entropy, which is a sequence of bits that is unpredictable. This source of entropy can be from OS observing its internal operations or ambient factors. The source of entropy is call the seed. Algorithms using OS's internal operations or ambient factors as seed are known as pseudorandom generators, because while their output isn't random, it nonetheless passes statistical tests of randomness. As long as you seed them with a legitimate source of entropy, they can generate fairly long sequences of random values without the sequence repeating 
 
 ## *[HARD TO REMEMBER] x86 Instructions With Side Effects (12/24/16)*
 * IMUL reg/mem: register is multiplied with AL, AX, or EAX and the result is stored in AX, DX:AX, or EDX:EAX
@@ -196,11 +196,6 @@ I put anything I find interesting regarding reverse engineering in this journal.
 * .dynsym symbol table cannot be stripped since it is needed for runtime, so imported library symbols remain in a stripped binary. But if a binary is compiled statically, it will have no symbol table at all if stripped
 * With non-stripped, gdb can identify local function names and knows the bounds of all functions so we can do: disas "function name"
 * With stripped binary, gdb can’t even identify main. Can identify entry point using the command: info file. Also, can’t do disas since gdb does not know the bounds of the functions so it does not know which address range should be disassembled. Solution: use examine(x) command on address pointed by pc register like: x/14i $pc
-
-## *Random Number Generator (12/17/16)*
-* Randomness requires a source of entropy, which is a sequence of bits that is unpredictable. This source of entropy can be from OS observing its internal operations or ambient factors
-* This source of entropy is call the seed
-* Algorithms using OS's internal operations or ambient factors as seed are known as pseudorandom generators, because while their output isn't random, it nonetheless passes statistical tests of randomness. As long as you seed them with a legitimate source of entropy, they can generate fairly long sequences of random values without the sequence repeating
 
 ## *Useful Python for RCE (12/28/16)*
 * chr: hex/int to ASCII
