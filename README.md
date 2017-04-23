@@ -5,7 +5,7 @@ I put anything I find interesting regarding reverse engineering in this journal.
 ## *Table of Contents*
 * [General Knowledge](#general-knowledge-121816)
 * [IDA Tips](#ida-tips-412017)
-* [GDB](#gdb-21517)
+* [GDB Tips](#gdb-tips-21517)
 * [x86](#x86-4232017)
 * [[HARD TO REMEMBER] x86 Instructions With Side Effects](#hard-to-remember-x86-instructions-with-side-effects-122416)
 * [ARM](#arm-4142017)
@@ -42,7 +42,7 @@ I put anything I find interesting regarding reverse engineering in this journal.
   + n to rename
   + x to show cross-references
   
-## *GDB (2/15/17)*
+## *GDB Tips (2/15/17)*
 * x command displays memory contents at a given address in the specified format 
 * p command displays value stored in a named variable
 * To look at instructions starting from pc for stripped binary in gdb: x/14i $pc
