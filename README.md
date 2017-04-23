@@ -4,6 +4,7 @@ I put anything I find interesting regarding reverse engineering in this journal.
 
 ## *Table of Contents*
 * [General Knowledge](#general-knowledge-121816)
+* [x86](#x86-42317)
 * [[HARD TO REMEMBER] x86 Instructions With Side Effects](#hard-to-remember-x86-instructions-with-side-effects-122416)
 * [Anti-Disassembly](#anti-disassembly-111716)
 * [Anti-Debugging](#anti-debugging-111716)
@@ -22,6 +23,13 @@ I put anything I find interesting regarding reverse engineering in this journal.
 * [ARM](#arm-4142017)
 
 ## *General Knowledge (12/18/16)*
+* Processes are container for execution. Threads are what the OS executes
+* Any function that calls another function is called a non-leaf function, and all other functions are leaf functions
+* Entry point of a binary does not correspond to main. A program's startup code (how main is called) depends on the compiler and the platform that the binary is compiled for
+* To hide strings from strings command, construct the string in code. So instead of string being referenced from the .data section, it will be constructed in .text section. To do this, initialize a string as an array of characters assigned to a local variable. This will result in code that moves each character onto the stack one at a time. To make the character harder to recognize, check out Data Encoding section in this journal
+* __Random Number Generator__: Randomness requires a source of entropy, which is a sequence of bits that is unpredictable. This source of entropy can be from OS observing its internal operations or ambient factors. The source of entropy is call the seed. Algorithms using OS's internal operations or ambient factors as seed are known as pseudorandom generators, because while their output isn't random, it nonetheless passes statistical tests of randomness. As long as you seed them with a legitimate source of entropy, they can generate fairly long sequences of random values without the sequence repeating 
+
+## *x86 (4/23/2017)*
 * (Intel Specific) value stored in RAM is in little-endian but when moved to registers it is in big-endian  
 * The 8 32-bit general-purpose registers (GPRs) for x86 architecture: EAX, EBX, ECX, EDX, EDI, ESI, EBP, and ESP. For x64 architecture, there are 18 general-purpose registers (GPRs). GPRs are used for temporary storage and can be directly accessed/changed in user code (e.g. mov eax, 1)  
 * The 5 32-bit memory index registers for x86 architecture: ESI, EDI, ESP, EBP, EIP. Most of them are also GPRs. They usually contain memory addresses. But obviously, if a memory index register is used as a GPR instead, it can contain any value 
@@ -38,12 +46,7 @@ I put anything I find interesting regarding reverse engineering in this journal.
 * x86 instruction set does not provide EIP-relative data access the way it does for control-flow instructions. Thus to do EIP-relative data access, a general-purpose register must first be loaded with EIP
 * The one byte nop instruction is an alias mnemonic for the xchg eax, eax instruction
 * There is no way to tell the datatype of something stored in memory by just looking at the location of where it is stored. The datatype is implied by the operations that are used on it. For example, if an instruction loads a value into eax, comparison is taken place between eax and 0x10, and ja is used to jump to another location if eax is greater, then we know that the value is an unsigned int since ja is for unsigned numbers
-* Processes are container for execution. Threads are what the OS executes
-* Any function that calls another function is called a non-leaf function, and all other functions are leaf functions
-* Entry point of a binary does not correspond to main. A program's startup code (how main is called) depends on the compiler and the platform that the binary is compiled for
 * EIP can only be changed through CALL, JMP, or RET
-* To hide strings from strings command, construct the string in code. So instead of string being referenced from the .data section, it will be constructed in .text section. To do this, initialize a string as an array of characters assigned to a local variable. This will result in code that moves each character onto the stack one at a time. To make the character harder to recognize, check out Data Encoding section in this journal
-* __Random Number Generator__: Randomness requires a source of entropy, which is a sequence of bits that is unpredictable. This source of entropy can be from OS observing its internal operations or ambient factors. The source of entropy is call the seed. Algorithms using OS's internal operations or ambient factors as seed are known as pseudorandom generators, because while their output isn't random, it nonetheless passes statistical tests of randomness. As long as you seed them with a legitimate source of entropy, they can generate fairly long sequences of random values without the sequence repeating 
 
 ## *[HARD TO REMEMBER] x86 Instructions With Side Effects (12/24/16)*
 * IMUL reg/mem: register is multiplied with AL, AX, or EAX and the result is stored in AX, DX:AX, or EDX:EAX
