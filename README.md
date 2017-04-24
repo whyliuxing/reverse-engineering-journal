@@ -2,7 +2,7 @@
 I put anything I find interesting regarding reverse engineering in this journal. The date beside each heading denotes the start date that I added the topic, but most of the time I will still be adding information to that heading days later. 
 
 ## Table of Contents
-* #### [General Knowledge](#general-knowledge-121816)
+* <h4>[General Knowledge](#general-knowledge-121816)</h4>
 * #### [Tools](#tools)
   + ##### [IDA Tips](#ida-tips-412017)
   + ##### [GDB Tips](#gdb-tips-21517)
@@ -25,7 +25,7 @@ I put anything I find interesting regarding reverse engineering in this journal.
   + [String Encoding](#string-encoding-121216)
   + [Data Encoding](#data-encoding-121516)
 
-<center> <h2>General Knowledge (12/18/16)</h2> </center>
+<center> General Knowledge (12/18/16) </center>
 * Processes are containers for execution. Threads are what the OS executes
 * Any function that calls another function is called a non-leaf function, and all other functions are leaf functions
 * Entry point of a binary (beginning of .text section) is not main. A program's startup code (how main is called) depends on the compiler and the platform that the binary is compiled for
