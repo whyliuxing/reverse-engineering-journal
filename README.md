@@ -1,27 +1,34 @@
-# Reverse Engineering Journal
+# <p align='center'> Reverse Engineering Journal </p>
 I put anything I find interesting regarding reverse engineering in this journal. The date beside each heading denotes the start date that I added the topic, but most of the time I will still be adding information to that heading days later. 
 
 # <p align='center'> Table of Contents </p>
 * [General Knowledge](#-general-knowledge-121816-)
 * [Tools](#-tools-)
+---
   + [IDA Tips](#ida-tips-412017)
   + [GDB Tips](#gdb-tips-21517)
 * [Instruction Sets](#-instruction-sets-)
+---
   + [x86](#x86-4232017)
   + [x86-64](#x86-64-4242017)
   + [ARM](#arm-4142017)
 * [Languages](#-languages-)
+---
   + [C++ Reversing](#c-reversing-121316)
 * [File Formats](#-file-formats-)
+---
   + [ELF Files](#elf-files-12017)
 * [Operating System Concepts](#-operating-system-concepts-)
+---
   + [Windows OS](#windows-os-412017)
   + [Interrupts](#interrupts-4132017)
 * [Anti-Reversing](#-anti-reversing-)
+---
   + [Anti-Disassembly](#anti-disassembly-111716)
   + [Anti-Debugging](#anti-debugging-111716)
   + [Anti-Emulation](#anti-emulation-252017)
 * [Encodings](#-encoding-)
+---
   + [String Encoding](#string-encoding-121216)
   + [Data Encoding](#data-encoding-121516)
 
