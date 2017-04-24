@@ -13,7 +13,7 @@ I put anything I find interesting regarding reverse engineering in this journal.
   + [ARM](#arm-4142017)
 * [Languages](#c-reversing-121316)
   + [C++ Reversing](#c-reversing-121316)
-* [File Formats]
+* [File Formats](#elf-files-12017)
   + [ELF Files](#elf-files-12017)
 * [Anti-Reversing](#anti-disassembly-111716)
   + [Anti-Disassembly](#anti-disassembly-111716)
