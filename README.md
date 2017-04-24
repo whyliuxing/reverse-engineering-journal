@@ -1,11 +1,11 @@
 # Reverse Engineering Journal
 I put anything I find interesting regarding reverse engineering in this journal. The date beside each heading denotes the start date that I added the topic, but most of the time I will still be adding information to that heading days later. 
 
-## Table of Contents
-* <h4>[General Knowledge](#general-knowledge-121816)</h4>
-* #### [Tools](#tools)
-  + ##### [IDA Tips](#ida-tips-412017)
-  + ##### [GDB Tips](#gdb-tips-21517)
+## <p align='center'> Table of Contents </p>
+* [General Knowledge](#general-knowledge-121816)
+* [Tools](#tools)
+  + [IDA Tips](#ida-tips-412017)
+  + [GDB Tips](#gdb-tips-21517)
 * [Instruction Sets](#x86-4232017)
   + [x86](#x86-4232017)
   + [x86-64](#x86-64-4242017)
@@ -40,7 +40,7 @@ I put anything I find interesting regarding reverse engineering in this journal.
   * __Memory Breakpoint__: changes the permissions on a region, or page, of memory
     + Guard page: Any access to a guard page results in a one-time exception, and then the page returns to its original status. Memory breakpoint changes permission of the page to guard
 
-## Tools
+## <p align='center'> Tools </p>
 
 ### IDA Tips (4/1/2017)
 * __Import Address Table (IAT)__: shows you all the dynamically linked libraries' functions that the binary uses. Import Address Table is important for a reverser to understand how the binary is interacting with the OS. To hide APIs call from displaying in the Import Address Table, a programmer can dynamically resolve the API 
@@ -71,7 +71,7 @@ I put anything I find interesting regarding reverse engineering in this journal.
     
 ![EFLAGS Register - MIT course 6.858](http://css.csail.mit.edu/6.858/2013/readings/i386/fig2-8.gif)
 
-## Instruction Sets
+## <p align='center'> Instruction Sets </p>
 
 ### x86 (4/23/2017)
 * Value stored in RAM is in little-endian but when moved to registers it is in big-endian  
@@ -165,7 +165,9 @@ I put anything I find interesting regarding reverse engineering in this journal.
 * Instructions can be conditionally executed by adding conditional suffixes. That is how conditional branch instruction is implemented
 * Thumb instruction cannot be conditionally executed, with the exception of B instruction, without the IT instruction. 
   + IT (If-then)'s syntax: ITxyz cc. cc is the conditional suffix for the 1st instruction after IT. xyz are for the 2nd, 3rd, and 4th instructions after IT. It can be either T or E. T means that the condition must match cc for it to be executed. E means that condition must be the opposite of cc for it to be executed
-  
+
+## <p align='center'> Languages </p>
+
 ## *C++ Reversing (12/13/16)*
 * C++ calling convention for this pointer is called thiscall: 
   + On Microsoft Visual C++ compiled binary, this is stored in ecx. Sometimes esi 
@@ -179,6 +181,8 @@ I put anything I find interesting regarding reverse engineering in this journal.
   + Compiler places a pointer immediately prior to the class vtable. It points to a structure that contains information on the name of class that owns the vtable
 * Memory spaces for global objects are allocated at compile-time and placed in data or bss section of binary 
 * Use Name Mangling to support Method Overloading (multiple functions with same name but accept different parameters). Since in PE or ELF format, a function is only labeled with its name 
+
+## <p align='center'> File Formats </p>
 
 ## *ELF Files (1/20/17)*
 ![ELF Layout - from wikipedia](https://upload.wikimedia.org/wikipedia/commons/7/77/Elf-layout--en.svg)
@@ -212,6 +216,8 @@ I put anything I find interesting regarding reverse engineering in this journal.
   + trace library call: ltrace -f
   + trace sys call: strace -f
   + decompile: retargetable decompiler
+
+## <p align='center'> Operating System Concepts </p>
 
 ## *Windows OS (4/1/2017)*
 * __SEH (Structured Exception Handler)__: 32-bit Windows' mechanism for handling exceptions
@@ -262,6 +268,8 @@ I put anything I find interesting regarding reverse engineering in this journal.
   + 5th parameter: edi 
   + 6th parameter: ebp 
 * int 0x80 is an old way to make syscall. A more modern implementation is the SYSENTER instruction
+
+## <p align='center'> Anti-Reversing </p>
 
 ## *Anti-Disassembly (11/17/16)*
 * __Linear Disassembly__: disassembling one instruction at a time linearly. Problem: code section of nearly all binaries will also contain data that isn’t instructions 
@@ -326,6 +334,8 @@ I put anything I find interesting regarding reverse engineering in this journal.
 * __Detection through Syscall__: invoke various uncommon syscalls and check if it contains expected value. Since there are OS features not properly implemented, it means that the process is running under a debugger
 * __CPU Inconsistencies Detection__: try executing privileged instructions in user mode. If it succeeded, then it is under emulation
 * __Timing Delays__: execution under emulation will be slower than running under real CPU
+
+## <p align='center'> Encodings </p>
 
 ## *String Encoding (12/12/16)*
 * There are only 128 characters defined in ASCII and 95 of them are human-readable
