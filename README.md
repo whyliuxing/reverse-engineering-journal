@@ -4,31 +4,24 @@ I put anything I find interesting regarding reverse engineering in this journal.
 # <p align='center'> Table of Contents </p>
 * [General Knowledge](#-general-knowledge-121816-)
 * [Tools](#-tools-)
----
   + [IDA Tips](#ida-tips-412017)
   + [GDB Tips](#gdb-tips-21517)
 * [Instruction Sets](#-instruction-sets-)
----
   + [x86](#x86-4232017)
   + [x86-64](#x86-64-4242017)
   + [ARM](#arm-4142017)
 * [Languages](#-languages-)
----
   + [C++ Reversing](#c-reversing-121316)
 * [File Formats](#-file-formats-)
----
   + [ELF Files](#elf-files-12017)
 * [Operating System Concepts](#-operating-system-concepts-)
----
   + [Windows OS](#windows-os-412017)
   + [Interrupts](#interrupts-4132017)
 * [Anti-Reversing](#-anti-reversing-)
----
   + [Anti-Disassembly](#anti-disassembly-111716)
   + [Anti-Debugging](#anti-debugging-111716)
   + [Anti-Emulation](#anti-emulation-252017)
 * [Encodings](#-encoding-)
----
   + [String Encoding](#string-encoding-121216)
   + [Data Encoding](#data-encoding-121516)
 
@@ -49,7 +42,7 @@ I put anything I find interesting regarding reverse engineering in this journal.
 
 # <p align='center'> Tools </p>
 
-## *IDA Tips (4/1/2017)*
+## *<p align='center'> IDA Tips (4/1/2017) </p>*
 * __Import Address Table (IAT)__: shows you all the dynamically linked libraries' functions that the binary uses. Import Address Table is important for a reverser to understand how the binary is interacting with the OS. To hide APIs call from displaying in the Import Address Table, a programmer can dynamically resolve the API 
   + How to find dynamically resolved APIs: get the binary's function trace (e.g. hybrid-analysis (Windows sandbox), ltrace). If any of the APIs it called is not in the Import Address Table, then that API is dynamically resolved. Once you find a dynamically resolved API, you can place a breakpoint on the API in IDA's debugger view (go to Module Windows, find the shared library the API is under, click on the library and another window will open showing all the available APIs, find the API that you are interested in, and place a breakpoint on it) and then step back through the call stack to find where it's called in user code after execution pauses at that breakpoint
 * When IDA loads a binary, it simulates a mapping of the binary in memory. The addresses shown in IDA are the virtual memory addresses and not the offsets of binary file on disk
