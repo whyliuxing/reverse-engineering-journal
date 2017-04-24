@@ -9,7 +9,6 @@ I put anything I find interesting regarding reverse engineering in this journal.
   + [GDB Tips](#gdb-tips-21517)
 * [Instruction Sets](#x86-4232017)
   + [x86](#x86-4232017)
-  + [[HARD TO REMEMBER] x86 Instructions With Side Effects](#hard-to-remember-x86-instructions-with-side-effects-122416)
   + [ARM](#arm-4142017)
 * [Anti-Reversing](#anti-disassembly-111716)
   + [Anti-Disassembly](#anti-disassembly-111716)
@@ -79,21 +78,20 @@ I put anything I find interesting regarding reverse engineering in this journal.
 * The one byte NOP instruction is an alias mnemonic for the XCHG EAX, EAX instruction
 * There is no way to tell the datatype of something stored in memory by just looking at the location of where it is stored. The datatype is implied by the operations that are used on it. For example, if an instruction loads a value into EAX, comparison is taken place between EAX and 0x10, and JA is used to jump to another location if EAX is greater, then we know that the value is an unsigned int since JA is for unsigned numbers
 * EIP can only be changed through CALL, JMP, or RET
-
-## *[HARD TO REMEMBER] x86 Instructions With Side Effects (12/24/16)*
-* IMUL reg/mem: register is multiplied with AL, AX, or EAX and the result is stored in AX, DX:AX, or EDX:EAX
-* IDIV reg/mem: takes one parameter (divisor). Depending on the divisor’s size, div will use either AX, DX:AX, or EDX:EAX as the dividend, and the resulting quotient/remainder pair are stored in AL/AH, AX/DX, or EAX/EDX
-* STOS(B/W/D): writes the value AL/AX/EAX to EDI. Commonly used to initialize a buffer to a constant value
-* SCAS(B/W/D): compares AL/AX/EAX with data starting at the memory address EDI
-* LODS(B/W/D): reads 1, 2, or 4 byte value from esi and stores it in al, ax, or eax 
-* REP prefix: repeats an instruction up to ECX times
-* MOVS(B/W/D): moves data with 1, 2, or 4 byte granularity between two addresses. They implicitly use EDI/ESI as the destination/source address, respectively. In addition, they also automatically update the source/destination address depending on the direction flag
-* CLD: clear direction flag. DF: 0
-* STD: set direction flag. DF: 1. If DF is 1, addresses are decremented
-* PUSHAD, POPAD: pushes/pops all 8 general-purpose registers 
-* PUSHFD, POPFD: pushes/pops EFLAGS register 
-* MOVSX: moves a signed value into a register and sign-extends it 
-* MOVZX: moves an unsigned value into a register and zero-extends it
+* __[HARD TO REMEMBER] x86 Instructions With Side Effects (12/24/16)__
+  * IMUL reg/mem: register is multiplied with AL, AX, or EAX and the result is stored in AX, DX:AX, or EDX:EAX
+  * IDIV reg/mem: takes one parameter (divisor). Depending on the divisor’s size, div will use either AX, DX:AX, or EDX:EAX as the dividend, and the resulting quotient/remainder pair are stored in AL/AH, AX/DX, or EAX/EDX
+  * STOS(B/W/D): writes the value AL/AX/EAX to EDI. Commonly used to initialize a buffer to a constant value
+  * SCAS(B/W/D): compares AL/AX/EAX with data starting at the memory address EDI
+  * LODS(B/W/D): reads 1, 2, or 4 byte value from esi and stores it in al, ax, or eax 
+  * REP prefix: repeats an instruction up to ECX times
+  * MOVS(B/W/D): moves data with 1, 2, or 4 byte granularity between two addresses. They implicitly use EDI/ESI as the destination/source address, respectively. In addition, they also automatically update the source/destination address depending on the direction flag
+  * CLD: clear direction flag. DF: 0
+  * STD: set direction flag. DF: 1. If DF is 1, addresses are decremented
+  * PUSHAD, POPAD: pushes/pops all 8 general-purpose registers 
+  * PUSHFD, POPFD: pushes/pops EFLAGS register 
+  * MOVSX: moves a signed value into a register and sign-extends it 
+  * MOVZX: moves an unsigned value into a register and zero-extends it
 
 ## *ARM (4/14/2017)*
 * ARMv7 uses 3 profiles (Application, Real-time, Microcontroller) and model name (Cortex). For example, ARMv7 Cortex-M is meant for microcontroller and support Thumb-2 execution only 
