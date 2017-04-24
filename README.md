@@ -9,7 +9,7 @@ I put anything I find interesting regarding reverse engineering in this journal.
   + [GDB Tips](#gdb-tips-21517)
 * [Instruction Sets](#x86-4232017)
   + [x86](#x86-4232017)
-  + [x86-64](#dsfasfd)
+  + [x86-64](#x86-64-4242017)
   + [ARM](#arm-4142017)
 * [Anti-Reversing](#anti-disassembly-111716)
   + [Anti-Disassembly](#anti-disassembly-111716)
