@@ -11,6 +11,10 @@ I put anything I find interesting regarding reverse engineering in this journal.
   + [x86](#x86-4232017)
   + [x86-64](#x86-64-4242017)
   + [ARM](#arm-4142017)
+* [Languages](#c-reversing-121316)
+  + [C++ Reversing](#c-reversing-121316)
+* [File Formats]
+  + [ELF Files](#elf-files-12017)
 * [Anti-Reversing](#anti-disassembly-111716)
   + [Anti-Disassembly](#anti-disassembly-111716)
   + [Anti-Debugging](#anti-debugging-111716)
@@ -18,9 +22,6 @@ I put anything I find interesting regarding reverse engineering in this journal.
 * [Encodings](#string-encoding-121216)
   + [String Encoding](#string-encoding-121216)
   + [Data Encoding](#data-encoding-121516)
-* [Breakpoints](#breakpoints-12516)
-* [C++ Reversing](#c-reversing-121316)
-* [ELF Files](#elf-files-12017)
 * [Windows OS](#windows-os-412017)
 * [Interrupts](#interrupts-4132017)
 
@@ -30,6 +31,14 @@ I put anything I find interesting regarding reverse engineering in this journal.
 * Entry point of a binary (beginning of .text section) is not main. A program's startup code (how main is called) depends on the compiler and the platform that the binary is compiled for
 * To hide a string from strings command, construct the string in code. So instead of the string being referenced from the .data section, it will be constructed in the .text section. To do this, initialize a string as an array of characters assigned to a local variable. This will result in code that moves each character onto the stack one at a time. To make the character harder to recognize, check out Data Encoding section in this journal
 * __Random Number Generator__: Randomness requires a source of entropy, which is an unpredictable sequence of bits. This source of entropy is called the seed and can be from OS observing its internal operations or ambient factors. Algorithms using OS's internal operations or ambient factors as seed are known as pseudorandom generators, because while their output isn't random, it still passes statistical tests of randomness. So as long as you seed the algorithms with a legitimate source of entropy, they can generate fairly long sequences of random values without the sequence repeating 
+* __Software/Hardware/Memory Breakpoint__: 
+  * __Software Breakpoint__: debugger reads and stores the first byte of instruction and then overwrites that first byte with 0xCC (INT3). When CPU hits the breakpoint, OS kernel sends SIGTRAP signal to process, process execution is paused, and internal lookup occurs to flip the original byte back
+  * __Hardware Breakpoint__: set in special registers called debug registers (DR0 through DR7)
+    + Only DR0 - DR3 registers are reserved for breakpoint addresses
+    + Before CPU attempts to execute an instruction, it first checks whether the address is currently enabled for a hardware breakpoint. If the address is stored in debug registers DR0–DR3 and the read, write, or execute conditions are met, an INT1 is fired and the CPU halts
+    + Can check if someone sets a hardware breakpoint on Windows by using GetThreadContext() and checks if DR0-DR3 is set
+  * __Memory Breakpoint__: changes the permissions on a region, or page, of memory
+    + Guard page: Any access to a guard page results in a one-time exception, and then the page returns to its original status. Memory breakpoint changes permission of the page to guard
 
 ## *IDA Tips (4/1/2017)*
 * __Import Address Table (IAT)__: shows you all the dynamically linked libraries' functions that the binary uses. Import Address Table is important for a reverser to understand how the binary is interacting with the OS. To hide APIs call from displaying in the Import Address Table, a programmer can dynamically resolve the API 
@@ -152,6 +161,53 @@ I put anything I find interesting regarding reverse engineering in this journal.
 * Instructions can be conditionally executed by adding conditional suffixes. That is how conditional branch instruction is implemented
 * Thumb instruction cannot be conditionally executed, with the exception of B instruction, without the IT instruction. 
   + IT (If-then)'s syntax: ITxyz cc. cc is the conditional suffix for the 1st instruction after IT. xyz are for the 2nd, 3rd, and 4th instructions after IT. It can be either T or E. T means that the condition must match cc for it to be executed. E means that condition must be the opposite of cc for it to be executed
+  
+## *C++ Reversing (12/13/16)*
+* C++ calling convention for this pointer is called thiscall: 
+  + On Microsoft Visual C++ compiled binary, this is stored in ecx. Sometimes esi 
+  + On g++ compiled binary, this is passed in as the first parameter of the member function as an address 
+  + Class member functions are called with the usual function parameters in the stack and with ecx pointing to the class’s object 
+* Child classes inherit functions and data from parent classes
+* Class’s object in assembly only contains the vfptr (pointer to virtual functions table) and variables. Member functions are not part of it
+  + Child class automatically has all virtual functions and data from parent class
+  + Even if the programmer did not explicit write the constructor for the class. If the class contains virtual functions, a call to the constructor will be made to fill in the vfptr to point to vtable. If the class inherit from another class, within the constructor there will have a call to the constructor of the parent class  
+  + vtable of a class is only referenced directly within the class constructor and destructor
+  + Compiler places a pointer immediately prior to the class vtable. It points to a structure that contains information on the name of class that owns the vtable
+* Memory spaces for global objects are allocated at compile-time and placed in data or bss section of binary 
+* Use Name Mangling to support Method Overloading (multiple functions with same name but accept different parameters). Since in PE or ELF format, a function is only labeled with its name 
+
+## *ELF Files (1/20/17)*
+![ELF Layout - from wikipedia](https://upload.wikimedia.org/wikipedia/commons/7/77/Elf-layout--en.svg)
+* ELF file header starts at offset 0 and is the roadmap that describes the rest of the file. It marks the ELF type, architecture, execution entry point, and offsets to program headers and section headers
+* Program header table let the system knows how to create the process image. It contains an array of structures, each describing a segment. A segment contains one or more sections
+* Section header table is not necessary for program execution. It is mainly for linking and debugging purposes. It is an array of ELF_32Shdr or ELF_64Shdr structures (Section Header)
+* Relocatable objects have no program headers since they are not meant to be loaded into memory directly
+* .got (Global Offset Table) section: a table of addresses located in the data section. It allows PIC code to reference data that were not available during compilation (ex: extern "var"). That data will have a section in .got, which will then be filled in later by the dynamic linker
+* .plt (Procedure Linkage Table) section: a part of the text section, consisting of external function entries. Each plt entry has a correcponding entry in .got.plt which contains the actual offset to the function. Resolving of external functions is done through lazy binding. It means that it doesn't resolve the address until the function is called. 
+* plt entry consists of: 
+  + A jump to an address specified in GOT
+  + argument to tell the resolver which function to resolve (only reach there during function's first invocation)
+  + call the resolver (resides at PLT entry 0)
+* .got.plt section: contains dynamically-linked function entries that can be resolved lazily
+* If you compile with the -g option, the compiled binary will contain extra sections with names that start with .debug_. The most important one of the .debug section is .debug_info. It tells you the path of the source file, path of the compilation directory, version of C used, and the line numbers where variables are declared in source code. It will also maintain the parameter names for local functions
+* If you compile with the -s option, the compiled binary will not contain symbol table and relocation information. This means that the .symtab will be stripped away, which contains references to variable and local function names. The dynsym section, containing references to unresolved dynamically linked functions, remains because it is needed for program execution
+* The -O3 option is the second highest optimization level. The optimizations that it applied will actually result in more bytes than compiled version of the unoptimized binary
+* The -funroll-loops option unroll the looping structure of any loops, making it harder for reverse engineer to analyze the compiled binary
+* dlsym and dlopen can be used to dynamically resolved function names. This way those library functions won't show up on the Import Table
+* __Stripped Binary__: there are 2 sections that contain symbols: .dynsym and .symtab. .dynsym contains dynamic/global symbols, those symbols are resolved at runtime. .symtab contains all the symbols
+  * nm command to list all symbols in the binary from .symtab
+  * Stripped binary == no .symtab symbol table
+  * .dynsym symbol table cannot be stripped since it is needed for runtime, so imported library symbols remain in a stripped binary. But if a binary is compiled statically, it will have no symbol table at all if stripped
+  * With non-stripped, gdb can identify local function names and knows the bounds of all functions so we can do: disas "function name"
+  * With stripped binary, gdb can’t even identify main. Can identify entry point using the command: info file. Also, can’t do disas since gdb does not know the bounds of the functions so it does not know which address range should be disassembled. Solution: use examine(x) command on address pointed by pc register like: x/14i $pc
+* Tools to analyze it: 
+  + display section headers: readelf -S
+  + display program headers and section to segment mapping: readelf -l
+  + display symbol tables: readelf --syms 
+  + display a section's content: objdump -s -j <-section name-> <-binary file->
+  + trace library call: ltrace -f
+  + trace sys call: strace -f
+  + decompile: retargetable decompiler
 
 ## *Anti-Disassembly (11/17/16)*
 * __Linear Disassembly__: disassembling one instruction at a time linearly. Problem: code section of nearly all binaries will also contain data that isn’t instructions 
@@ -247,62 +303,6 @@ I put anything I find interesting regarding reverse engineering in this journal.
   * Bits are read in blocks of six. The number represented by the 6 bits is used as an index into a 64-byte long string
   * One padding character may be presented at the end of the encoded string (typically =). If padded, length of encoded string will be divisible by 4
   * Easy to develop a custom substitution cipher since the only item that needs to be changed is the indexing string
-  
-## *Breakpoints (12/5/16)*
-* Software breakpoint: debugger read and store the first byte of instruction and then overwrite that first byte with 0xcc (int 3). When CPU hits the breakpoint, SIGTRAP signal is raised, process is stopped, and internal lookup occurs and the byte is flipped back
-* Hardware breakpoints are set at CPU level, in special registers called debug registers (DR0 through DR7)
-  + Only DR0 - DR3 registers are reserved for breakpoint addresses
-  + Before the CPU attempts to execute an instruction, it first checks to see whether the address is currently enabled for a hardware breakpoint. If the address is stored in debug registers DR0–DR3 and the read, write, or execute conditions are met, an INT1 is fired and the CPU halts
-  + Can check if someone sets a hardware breakpoint by using GetThreadContext() and checks if DR0-DR3 is set
-* When a debugger is setting a memory breakpoint, it is changing the permissions on a region, or page, of memory
-  + Guard page: Any access to a guard page results in a one-time exception, and then the page returns to its original status. Memory breakpoint changes permission of the page to guard
-
-## *C++ Reversing (12/13/16)*
-* C++ calling convention for this pointer is called thiscall: 
-  + On Microsoft Visual C++ compiled binary, this is stored in ecx. Sometimes esi 
-  + On g++ compiled binary, this is passed in as the first parameter of the member function as an address 
-  + Class member functions are called with the usual function parameters in the stack and with ecx pointing to the class’s object 
-* Child classes inherit functions and data from parent classes
-* Class’s object in assembly only contains the vfptr (pointer to virtual functions table) and variables. Member functions are not part of it
-  + Child class automatically has all virtual functions and data from parent class
-  + Even if the programmer did not explicit write the constructor for the class. If the class contains virtual functions, a call to the constructor will be made to fill in the vfptr to point to vtable. If the class inherit from another class, within the constructor there will have a call to the constructor of the parent class  
-  + vtable of a class is only referenced directly within the class constructor and destructor
-  + Compiler places a pointer immediately prior to the class vtable. It points to a structure that contains information on the name of class that owns the vtable
-* Memory spaces for global objects are allocated at compile-time and placed in data or bss section of binary 
-* Use Name Mangling to support Method Overloading (multiple functions with same name but accept different parameters). Since in PE or ELF format, a function is only labeled with its name 
-
-## *ELF Files (1/20/17)*
-![ELF Layout - from wikipedia](https://upload.wikimedia.org/wikipedia/commons/7/77/Elf-layout--en.svg)
-* ELF file header starts at offset 0 and is the roadmap that describes the rest of the file. It marks the ELF type, architecture, execution entry point, and offsets to program headers and section headers
-* Program header table let the system knows how to create the process image. It contains an array of structures, each describing a segment. A segment contains one or more sections
-* Section header table is not necessary for program execution. It is mainly for linking and debugging purposes. It is an array of ELF_32Shdr or ELF_64Shdr structures (Section Header)
-* Relocatable objects have no program headers since they are not meant to be loaded into memory directly
-* .got (Global Offset Table) section: a table of addresses located in the data section. It allows PIC code to reference data that were not available during compilation (ex: extern "var"). That data will have a section in .got, which will then be filled in later by the dynamic linker
-* .plt (Procedure Linkage Table) section: a part of the text section, consisting of external function entries. Each plt entry has a correcponding entry in .got.plt which contains the actual offset to the function. Resolving of external functions is done through lazy binding. It means that it doesn't resolve the address until the function is called. 
-* plt entry consists of: 
-  + A jump to an address specified in GOT
-  + argument to tell the resolver which function to resolve (only reach there during function's first invocation)
-  + call the resolver (resides at PLT entry 0)
-* .got.plt section: contains dynamically-linked function entries that can be resolved lazily
-* If you compile with the -g option, the compiled binary will contain extra sections with names that start with .debug_. The most important one of the .debug section is .debug_info. It tells you the path of the source file, path of the compilation directory, version of C used, and the line numbers where variables are declared in source code. It will also maintain the parameter names for local functions
-* If you compile with the -s option, the compiled binary will not contain symbol table and relocation information. This means that the .symtab will be stripped away, which contains references to variable and local function names. The dynsym section, containing references to unresolved dynamically linked functions, remains because it is needed for program execution
-* The -O3 option is the second highest optimization level. The optimizations that it applied will actually result in more bytes than compiled version of the unoptimized binary
-* The -funroll-loops option unroll the looping structure of any loops, making it harder for reverse engineer to analyze the compiled binary
-* dlsym and dlopen can be used to dynamically resolved function names. This way those library functions won't show up on the Import Table
-* __Stripped Binary__: there are 2 sections that contain symbols: .dynsym and .symtab. .dynsym contains dynamic/global symbols, those symbols are resolved at runtime. .symtab contains all the symbols
-  * nm command to list all symbols in the binary from .symtab
-  * Stripped binary == no .symtab symbol table
-  * .dynsym symbol table cannot be stripped since it is needed for runtime, so imported library symbols remain in a stripped binary. But if a binary is compiled statically, it will have no symbol table at all if stripped
-  * With non-stripped, gdb can identify local function names and knows the bounds of all functions so we can do: disas "function name"
-  * With stripped binary, gdb can’t even identify main. Can identify entry point using the command: info file. Also, can’t do disas since gdb does not know the bounds of the functions so it does not know which address range should be disassembled. Solution: use examine(x) command on address pointed by pc register like: x/14i $pc
-* Tools to analyze it: 
-  + display section headers: readelf -S
-  + display program headers and section to segment mapping: readelf -l
-  + display symbol tables: readelf --syms 
-  + display a section's content: objdump -s -j <-section name-> <-binary file->
-  + trace library call: ltrace -f
-  + trace sys call: strace -f
-  + decompile: retargetable decompiler
 
 ## *Windows OS (4/1/2017)*
 * __SEH (Structured Exception Handler)__: 32-bit Windows' mechanism for handling exceptions
