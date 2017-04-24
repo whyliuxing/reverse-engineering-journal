@@ -22,18 +22,18 @@ I put anything I find interesting regarding reverse engineering in this journal.
 * [Interrupts](#interrupts-4132017)
 
 ## *General Knowledge (12/18/16)*
-* Processes are container for execution. Threads are what the OS executes
+* Processes are containers for execution. Threads are what the OS executes
 * Any function that calls another function is called a non-leaf function, and all other functions are leaf functions
-* Entry point of a binary is not main. A program's startup code (how main is called) depends on the compiler and the platform that the binary is compiled for
-* To hide strings from strings command, construct the string in code. So instead of string being referenced from the .data section, it will be constructed in .text section. To do this, initialize a string as an array of characters assigned to a local variable. This will result in code that moves each character onto the stack one at a time. To make the character harder to recognize, check out Data Encoding section in this journal
-* __Random Number Generator__: Randomness requires a source of entropy, which is an unpredictable sequence of bits. This source of entropy is called the seed and can be from OS observing its internal operations or ambient factors. Algorithms using OS's internal operations or ambient factors as seed are known as pseudorandom generators, because while their output isn't random, it still passes statistical tests of randomness. As long as you seed the algorithms with a legitimate source of entropy, they can generate fairly long sequences of random values without the sequence repeating 
+* Entry point of a binary (beginning of .text section) is not main. A program's startup code (how main is called) depends on the compiler and the platform that the binary is compiled for
+* To hide a string from strings command, construct the string in code. So instead of the string being referenced from the .data section, it will be constructed in the .text section. To do this, initialize a string as an array of characters assigned to a local variable. This will result in code that moves each character onto the stack one at a time. To make the character harder to recognize, check out Data Encoding section in this journal
+* __Random Number Generator__: Randomness requires a source of entropy, which is an unpredictable sequence of bits. This source of entropy is called the seed and can be from OS observing its internal operations or ambient factors. Algorithms using OS's internal operations or ambient factors as seed are known as pseudorandom generators, because while their output isn't random, it still passes statistical tests of randomness. So as long as you seed the algorithms with a legitimate source of entropy, they can generate fairly long sequences of random values without the sequence repeating 
 
 ## *IDA Tips (4/1/2017)*
-* __Import Address Table (IAT)__: shows you all the dynamically linked libraries' functions that the binary uses. Import Address Table is important for a reverser to understand how the binary is interacting with the OS. To hide APIs call from displaying in the import table, a programmer can dynamically resolve the API 
-  + How to find dynamically resolved APIs: get the binary's function trace (e.g. hybrid-analysis (Windows sandbox), ltrace). If any of the APIs it called is not in the import table, then that API is dynamically resolved. Once you find a dynamically resolved API, you can place a breakpoint on the API in IDA's debugger view (go to Module windows, find the shared library the API is under, click on the library and another window will open showing all the available APIs, find the API that you are interested in, and place a breakpoint on it) and then step back through the call stack to find where it's called in user code after execution pauses at that breakpoint
-* When IDA loads a binary, it simulates a mapping of the binary in memory. The addresses shown in IDA are the virtual memory addresses and not the offset of the binary file on disk
-* To show advanced toolbar: View -> Toolbars -> Advanced mode
-* To save memory snapshot from your debugger session: Debugger -> Take memory snapshot -> All segments
+* __Import Address Table (IAT)__: shows you all the dynamically linked libraries' functions that the binary uses. Import Address Table is important for a reverser to understand how the binary is interacting with the OS. To hide APIs call from displaying in the Import Address Table, a programmer can dynamically resolve the API 
+  + How to find dynamically resolved APIs: get the binary's function trace (e.g. hybrid-analysis (Windows sandbox), ltrace). If any of the APIs it called is not in the Import Address Table, then that API is dynamically resolved. Once you find a dynamically resolved API, you can place a breakpoint on the API in IDA's debugger view (go to Module Windows, find the shared library the API is under, click on the library and another window will open showing all the available APIs, find the API that you are interested in, and place a breakpoint on it) and then step back through the call stack to find where it's called in user code after execution pauses at that breakpoint
+* When IDA loads a binary, it simulates a mapping of the binary in memory. The addresses shown in IDA are the virtual memory addresses and not the offsets of binary file on disk
+* To show advanced toolbar: View -> Toolbars -> Advanced Mode
+* To save memory snapshot from your debugger session: Debugger -> Take Memory Snapshot -> All Segments
 * Useful shortcuts: 
   + u to undefine 
   + d to turn it to data 
@@ -43,17 +43,17 @@ I put anything I find interesting regarding reverse engineering in this journal.
   + x to show cross-references
   
 ## *GDB Tips (2/15/17)*
-* x command displays memory contents at a given address in the specified format 
-* p command displays value stored in a named variable
-* To look at instructions starting from pc for stripped binary in gdb: x/14i $pc
-* Set hardware breakpoint in GDB: hbreak 
-* Set watchpoint in GDB: watch only break on write, rwatch break on read, awatch break on read/write
-* Set temporary variable: set $"variable name" = "value"
 * ASLR is turned off by default in GDB. To turn it on: set disable-randomization off
-* Default display assembly in AT&T notation. To change it to the more readable Intel notation: set disassembly-flavor intel. To make this change permanent, write it in the .gdbinit file
-* Set command can be used to change the flags in EFLAGS. You just need to know the bit position of the flag you wanted to change 
-  + For example to set the zero flag, first set a temporary variable: set $ZF = 6 (bit position 6 in EFLAG is zero flag). Use that variable to set the zero flag bit: set $eflags |= (1 << $ZF)
-  + To figure out the bit position of a flag that you are interested in, check out this image below (MIT course 6.858):
+* Default display assembly in AT&T notation. To change it to the more readable and superior Intel notation: set disassembly-flavor intel. To make this change permanent, write it in the .gdbinit file
+* x command displays memory contents at a given address in the specified format
+  + Since disas command won't work on stripped binary, x command can come in handy to display instructions from current program counter: x/14i $pc
+* p command displays value stored in a named variable
+* Set hardware breakpoint in GDB: hbreak 
+* Set watchpoint (data breakpoint) in GDB: watch only break on write, rwatch break on read, awatch break on read/write
+* Set temporary variable: set $<-variable name-> = <-value->
+  * Set command can be used to change the flags in EFLAGS. You just need to know the bit position of the flag you wanted to change 
+    + For example to set the zero flag, first set a temporary variable: set $ZF = 6 (bit position 6 in EFLAG is zero flag). Use that variable to set the zero flag bit: set $eflags |= (1 << $ZF)
+    + To figure out the bit position of a flag that you are interested in, check out this image below (from MIT course 6.858):
 ![EFLAGS Register - MIT course 6.858](http://css.csail.mit.edu/6.858/2013/readings/i386/fig2-8.gif)
 
 ## *x86 (4/23/2017)*
