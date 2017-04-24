@@ -26,7 +26,7 @@ I put anything I find interesting regarding reverse engineering in this journal.
   + [String Encoding](#string-encoding-121216)
   + [Data Encoding](#data-encoding-121516)
 
-# .General-Knowledge
+# .general_knowledge
 
 ## *<p align='center'> int 0x7374617274 (12/18/2016) </p>*
 * Processes are containers for execution. Threads are what the OS executes
@@ -43,7 +43,7 @@ I put anything I find interesting regarding reverse engineering in this journal.
   * __Memory Breakpoint__: changes the permissions on a region, or page, of memory
     + Guard page: Any access to a guard page results in a one-time exception, and then the page returns to its original status. Memory breakpoint changes permission of the page to guard
 
-# <p align='center'> Tools </p>
+# .tools
 
 ## *<p align='center'> IDA Tips (4/1/2017) </p>*
 * __Import Address Table (IAT)__: shows you all the dynamically linked libraries' functions that the binary uses. Import Address Table is important for a reverser to understand how the binary is interacting with the OS. To hide APIs call from displaying in the Import Address Table, a programmer can dynamically resolve the API 
@@ -74,7 +74,7 @@ I put anything I find interesting regarding reverse engineering in this journal.
     
 ![EFLAGS Register - MIT course 6.858](http://css.csail.mit.edu/6.858/2013/readings/i386/fig2-8.gif)
 
-# <p align='center'> Instruction Sets </p>
+# .instruction_sets
 
 ## *<p align='center'> x86 (4/23/2017) </p>*
 * Value stored in RAM is in little-endian but when moved to registers it is in big-endian  
@@ -169,7 +169,7 @@ I put anything I find interesting regarding reverse engineering in this journal.
 * Thumb instruction cannot be conditionally executed, with the exception of B instruction, without the IT instruction. 
   + IT (If-then)'s syntax: ITxyz cc. cc is the conditional suffix for the 1st instruction after IT. xyz are for the 2nd, 3rd, and 4th instructions after IT. It can be either T or E. T means that the condition must match cc for it to be executed. E means that condition must be the opposite of cc for it to be executed
 
-# <p align='center'> Languages </p>
+# .languages
 
 ## *<p align='center'> C++ Reversing (12/13/16) </p>*
 * C++ calling convention for this pointer is called thiscall: 
@@ -185,7 +185,7 @@ I put anything I find interesting regarding reverse engineering in this journal.
 * Memory spaces for global objects are allocated at compile-time and placed in data or bss section of binary 
 * Use Name Mangling to support Method Overloading (multiple functions with same name but accept different parameters). Since in PE or ELF format, a function is only labeled with its name 
 
-# <p align='center'> File Formats </p>
+# .file_formats
 
 ## *<p align='center'> ELF Files (1/20/17) </p>*
 ![ELF Layout - from wikipedia](https://upload.wikimedia.org/wikipedia/commons/7/77/Elf-layout--en.svg)
@@ -220,7 +220,7 @@ I put anything I find interesting regarding reverse engineering in this journal.
   + trace sys call: strace -f
   + decompile: retargetable decompiler
 
-# <p align='center'> Operating System Concepts </p>
+# .operating_system_concepts
 
 ## *<p align='center'> Windows OS (4/1/2017) </p>*
 * __SEH (Structured Exception Handler)__: 32-bit Windows' mechanism for handling exceptions
@@ -272,7 +272,7 @@ I put anything I find interesting regarding reverse engineering in this journal.
   + 6th parameter: ebp 
 * int 0x80 is an old way to make syscall. A more modern implementation is the SYSENTER instruction
 
-# <p align='center'> Anti-Reversing </p>
+# .anti-reversing
 
 ## *<p align='center'> Anti-Disassembly (11/17/16) </p>*
 * __Linear Disassembly__: disassembling one instruction at a time linearly. Problem: code section of nearly all binaries will also contain data that isn’t instructions 
@@ -338,7 +338,7 @@ I put anything I find interesting regarding reverse engineering in this journal.
 * __CPU Inconsistencies Detection__: try executing privileged instructions in user mode. If it succeeded, then it is under emulation
 * __Timing Delays__: execution under emulation will be slower than running under real CPU
 
-# <p align='center'> Encodings </p>
+# .encodings
 
 ## *<p align='center'> String Encoding (12/12/16) </p>*
 * There are only 128 characters defined in ASCII and 95 of them are human-readable
