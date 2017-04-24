@@ -14,10 +14,10 @@ I put anything I find interesting regarding reverse engineering in this journal.
   + [Anti-Disassembly](#anti-disassembly-111716)
   + [Anti-Debugging](#anti-debugging-111716)
   + [Anti-Emulation](#anti-emulation-252017)
-* [Breakpoints](#breakpoints-12516)
 * [Encodings](#string-encoding-121216)
   + [String Encoding](#string-encoding-121216)
   + [Data Encoding](#data-encoding-121516)
+* [Breakpoints](#breakpoints-12516)
 * [C++ Reversing](#c-reversing-121316)
 * [64-Bit](#64-bit-121416)
 * [ELF Files](#elf-files-12017)
@@ -201,15 +201,6 @@ I put anything I find interesting regarding reverse engineering in this journal.
 * __CPU Inconsistencies Detection__: try executing privileged instructions in user mode. If it succeeded, then it is under emulation
 * __Timing Delays__: execution under emulation will be slower than running under real CPU
 
-## *Breakpoints (12/5/16)*
-* Software breakpoint: debugger read and store the first byte of instruction and then overwrite that first byte with 0xcc (int 3). When CPU hits the breakpoint, SIGTRAP signal is raised, process is stopped, and internal lookup occurs and the byte is flipped back
-* Hardware breakpoints are set at CPU level, in special registers called debug registers (DR0 through DR7)
-  + Only DR0 - DR3 registers are reserved for breakpoint addresses
-  + Before the CPU attempts to execute an instruction, it first checks to see whether the address is currently enabled for a hardware breakpoint. If the address is stored in debug registers DR0–DR3 and the read, write, or execute conditions are met, an INT1 is fired and the CPU halts
-  + Can check if someone sets a hardware breakpoint by using GetThreadContext() and checks if DR0-DR3 is set
-* When a debugger is setting a memory breakpoint, it is changing the permissions on a region, or page, of memory
-  + Guard page: Any access to a guard page results in a one-time exception, and then the page returns to its original status. Memory breakpoint changes permission of the page to guard
-
 ## *String Encoding (12/12/16)*
 * There are only 128 characters defined in ASCII and 95 of them are human-readable
 * ASCII only used 7 bits, but the extra bit is still not enough to encode all the other languages
@@ -240,6 +231,15 @@ I put anything I find interesting regarding reverse engineering in this journal.
   * Bits are read in blocks of six. The number represented by the 6 bits is used as an index into a 64-byte long string
   * One padding character may be presented at the end of the encoded string (typically =). If padded, length of encoded string will be divisible by 4
   * Easy to develop a custom substitution cipher since the only item that needs to be changed is the indexing string
+  
+## *Breakpoints (12/5/16)*
+* Software breakpoint: debugger read and store the first byte of instruction and then overwrite that first byte with 0xcc (int 3). When CPU hits the breakpoint, SIGTRAP signal is raised, process is stopped, and internal lookup occurs and the byte is flipped back
+* Hardware breakpoints are set at CPU level, in special registers called debug registers (DR0 through DR7)
+  + Only DR0 - DR3 registers are reserved for breakpoint addresses
+  + Before the CPU attempts to execute an instruction, it first checks to see whether the address is currently enabled for a hardware breakpoint. If the address is stored in debug registers DR0–DR3 and the read, write, or execute conditions are met, an INT1 is fired and the CPU halts
+  + Can check if someone sets a hardware breakpoint by using GetThreadContext() and checks if DR0-DR3 is set
+* When a debugger is setting a memory breakpoint, it is changing the permissions on a region, or page, of memory
+  + Guard page: Any access to a guard page results in a one-time exception, and then the page returns to its original status. Memory breakpoint changes permission of the page to guard
 
 ## *C++ Reversing (12/13/16)*
 * C++ calling convention for this pointer is called thiscall: 
