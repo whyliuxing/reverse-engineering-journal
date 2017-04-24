@@ -78,7 +78,7 @@ I put anything I find interesting regarding reverse engineering in this journal.
 * The one byte NOP instruction is an alias mnemonic for the XCHG EAX, EAX instruction
 * There is no way to tell the datatype of something stored in memory by just looking at the location of where it is stored. The datatype is implied by the operations that are used on it. For example, if an instruction loads a value into EAX, comparison is taken place between EAX and 0x10, and JA is used to jump to another location if EAX is greater, then we know that the value is an unsigned int since JA is for unsigned numbers
 * EIP can only be changed through CALL, JMP, or RET
-* __[HARD TO REMEMBER] x86 Instructions With Side Effects (12/24/16)__
+* __Hard To Remember x86 Instructions With Side Effects__:
   * IMUL reg/mem: register is multiplied with AL, AX, or EAX and the result is stored in AX, DX:AX, or EDX:EAX
   * IDIV reg/mem: takes one parameter (divisor). Depending on the divisor’s size, div will use either AX, DX:AX, or EDX:EAX as the dividend, and the resulting quotient/remainder pair are stored in AL/AH, AX/DX, or EAX/EDX
   * STOS(B/W/D): writes the value AL/AX/EAX to EDI. Commonly used to initialize a buffer to a constant value
