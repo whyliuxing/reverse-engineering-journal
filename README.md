@@ -42,7 +42,7 @@ I put anything I find interesting regarding reverse engineering in this journal.
 
 # <p align='center'> Tools </p>
 
-## IDA Tips (4/1/2017)
+## *IDA Tips (4/1/2017)*
 * __Import Address Table (IAT)__: shows you all the dynamically linked libraries' functions that the binary uses. Import Address Table is important for a reverser to understand how the binary is interacting with the OS. To hide APIs call from displaying in the Import Address Table, a programmer can dynamically resolve the API 
   + How to find dynamically resolved APIs: get the binary's function trace (e.g. hybrid-analysis (Windows sandbox), ltrace). If any of the APIs it called is not in the Import Address Table, then that API is dynamically resolved. Once you find a dynamically resolved API, you can place a breakpoint on the API in IDA's debugger view (go to Module Windows, find the shared library the API is under, click on the library and another window will open showing all the available APIs, find the API that you are interested in, and place a breakpoint on it) and then step back through the call stack to find where it's called in user code after execution pauses at that breakpoint
 * When IDA loads a binary, it simulates a mapping of the binary in memory. The addresses shown in IDA are the virtual memory addresses and not the offsets of binary file on disk
@@ -56,7 +56,7 @@ I put anything I find interesting regarding reverse engineering in this journal.
   + n to rename
   + x to show cross-references
   
-## GDB Tips (2/15/17)
+## *GDB Tips (2/15/17)*
 * ASLR is turned off by default in GDB. To turn it on: set disable-randomization off
 * Default display assembly in AT&T notation. To change it to the more readable and superior Intel notation: set disassembly-flavor intel. To make this change permanent, write it in the .gdbinit file
 * x command displays memory contents at a given address in the specified format
@@ -73,7 +73,7 @@ I put anything I find interesting regarding reverse engineering in this journal.
 
 # <p align='center'> Instruction Sets </p>
 
-## x86 (4/23/2017)
+## *x86 (4/23/2017)*
 * Value stored in RAM is in little-endian but when moved to registers it is in big-endian  
 * The 8 32-bit general-purpose registers (GPRs) for x86 architecture: EAX, EBX, ECX, EDX, EDI, ESI, EBP, and ESP. For x64 architecture, there are 18 general-purpose registers (GPRs). GPRs are used for temporary storage and can be directly accessed/changed in user code (e.g. mov eax, 1)  
 * The 5 32-bit memory index registers for x86 architecture: ESI, EDI, ESP, EBP, EIP. Most of them are also GPRs. They usually contain memory addresses. But obviously, if a memory index register is used as a GPR instead, it can contain any value 
@@ -106,7 +106,7 @@ I put anything I find interesting regarding reverse engineering in this journal.
   * MOVSX: moves a signed value into a register and sign-extends it 
   * MOVZX: moves an unsigned value into a register and zero-extends it
 
-## x86-64 (4/24/2017)
+## *x86-64 (4/24/2017)*
 * All addresses and pointers are 64 bits
 * All general-purpose registers have increased in size, tho 32-bit versions can still be accessed
 * Some general-purpose registers (RDI, RSI, RBP, and RSP) supports byte accesses
@@ -122,7 +122,7 @@ I put anything I find interesting regarding reverse engineering in this journal.
 * Easier in 64-bit code to differentiate between pointers and data values. The most common size for storing integers is 32 bits and pointers are always 64 bits
 * RBP is treated like another GPR. As a result, local variables are referenced through RSP
 
-## ARM (4/14/2017)
+## *ARM (4/14/2017)*
 * ARMv7 uses 3 profiles (Application, Real-time, Microcontroller) and model name (Cortex). For example, ARMv7 Cortex-M is meant for microcontroller and support Thumb-2 execution only 
 * Thumb-1 is used in ARMv6 and earlier. Its instructions are always 2 bytes in size
 * Thumb-2 is used in ARMv7. Its instructions can be either 2 bytes or 4 bytes in size. 4 bytes Thumb instruction has a .W suffix, otherwise it generates a 2 byte Thumb instruction
