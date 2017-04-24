@@ -55,9 +55,8 @@ I put anything I find interesting regarding reverse engineering in this journal.
   + g to bring up the jump to address menu
   + n to rename
   + x to show cross-references
----
+#
 ## *<p align='center'> GDB Tips (2/15/17) </p>*
----
 * ASLR is turned off by default in GDB. To turn it on: set disable-randomization off
 * Default display assembly in AT&T notation. To change it to the more readable and superior Intel notation: set disassembly-flavor intel. To make this change permanent, write it in the .gdbinit file
 * x command displays memory contents at a given address in the specified format
