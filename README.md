@@ -20,7 +20,6 @@ I put anything I find interesting regarding reverse engineering in this journal.
   + [Data Encoding](#data-encoding-121516)
 * [Breakpoints](#breakpoints-12516)
 * [C++ Reversing](#c-reversing-121316)
-* [64-Bit](#64-bit-121416)
 * [ELF Files](#elf-files-12017)
 * [Windows OS](#windows-os-412017)
 * [Interrupts](#interrupts-4132017)
