@@ -1,9 +1,9 @@
 # Reverse Engineering Journal
 I put anything I find interesting regarding reverse engineering in this journal. The date beside each heading denotes the start date that I added the topic, but most of the time I will still be adding information to that heading days later. 
 
-## *Table of Contents*
+## Table of Contents
 * [General Knowledge](#general-knowledge-121816)
-* [Tools](#ida-tips-412017)
+* [Tools](#tools)
   + [IDA Tips](#ida-tips-412017)
   + [GDB Tips](#gdb-tips-21517)
 * [Instruction Sets](#x86-4232017)
@@ -25,7 +25,7 @@ I put anything I find interesting regarding reverse engineering in this journal.
   + [String Encoding](#string-encoding-121216)
   + [Data Encoding](#data-encoding-121516)
 
-## *General Knowledge (12/18/16)*
+## General Knowledge (12/18/16)
 * Processes are containers for execution. Threads are what the OS executes
 * Any function that calls another function is called a non-leaf function, and all other functions are leaf functions
 * Entry point of a binary (beginning of .text section) is not main. A program's startup code (how main is called) depends on the compiler and the platform that the binary is compiled for
@@ -40,7 +40,9 @@ I put anything I find interesting regarding reverse engineering in this journal.
   * __Memory Breakpoint__: changes the permissions on a region, or page, of memory
     + Guard page: Any access to a guard page results in a one-time exception, and then the page returns to its original status. Memory breakpoint changes permission of the page to guard
 
-## *IDA Tips (4/1/2017)*
+## Tools
+
+### *IDA Tips (4/1/2017)*
 * __Import Address Table (IAT)__: shows you all the dynamically linked libraries' functions that the binary uses. Import Address Table is important for a reverser to understand how the binary is interacting with the OS. To hide APIs call from displaying in the Import Address Table, a programmer can dynamically resolve the API 
   + How to find dynamically resolved APIs: get the binary's function trace (e.g. hybrid-analysis (Windows sandbox), ltrace). If any of the APIs it called is not in the Import Address Table, then that API is dynamically resolved. Once you find a dynamically resolved API, you can place a breakpoint on the API in IDA's debugger view (go to Module Windows, find the shared library the API is under, click on the library and another window will open showing all the available APIs, find the API that you are interested in, and place a breakpoint on it) and then step back through the call stack to find where it's called in user code after execution pauses at that breakpoint
 * When IDA loads a binary, it simulates a mapping of the binary in memory. The addresses shown in IDA are the virtual memory addresses and not the offsets of binary file on disk
