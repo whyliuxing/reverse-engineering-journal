@@ -9,6 +9,7 @@ I put anything I find interesting regarding reverse engineering in this journal.
   + [GDB Tips](#gdb-tips-21517)
 * [Instruction Sets](#x86-4232017)
   + [x86](#x86-4232017)
+  + [x86-64](#dsfasfd)
   + [ARM](#arm-4142017)
 * [Anti-Reversing](#anti-disassembly-111716)
   + [Anti-Disassembly](#anti-disassembly-111716)
@@ -92,6 +93,22 @@ I put anything I find interesting regarding reverse engineering in this journal.
   * PUSHFD, POPFD: pushes/pops EFLAGS register 
   * MOVSX: moves a signed value into a register and sign-extends it 
   * MOVZX: moves an unsigned value into a register and zero-extends it
+
+## *x86-64 (4/24/2017)*
+* All addresses and pointers are 64 bits
+* All general-purpose registers have increased in size, tho 32-bit versions can still be accessed
+* Some general-purpose registers (RDI, RSI, RBP, and RSP) supports byte accesses
+* There are twice as many general-purpose registers. The new one are labeled R8 - R15
+* DWORD (32-bit) version can be accessed as R8D. WORD (16-bit) version are accessed with a W suffix like R8W. Byte version are accessed with an L suffix like R8L
+* Supports instruction pointer-relative addressing. Unlike x86, referencing data will not use absolute address but rather an offset from RIP
+* Calling conventions: Parameters are passed to registers. Additional one are stored on stack
+  + Windows: first 4 parameters are placed in RCX, RDX, R8, and R9
+  + Linux: first 6 parameters are placed in RDI, RDX, RCX, R8, and R9
+* In 32-bit code, stack space can be allocated and unallocated in middle of the function using push or pop. However, in 64-bit code, functions cannot allocate any space in the middle of the function
+* Nonleaf functions are sometimes called frame functions because they require a stack frame. All nonleaf functions are required to allocate 0x20 bytes of stack space when they call a function. This allows the function being called to save the register parameters (RCX, RDX, R8, and R9) in that space. If a function has any local stack variables, it will allocate space for them in addition to the 0x20 bytes
+* Structured exception handling in x64 does not use the stack. In 32-bit code, the fs:[0] is used as a pointer to the current exception handler frame, which is stored on the stack so that each function can define its own exception handler
+* Easier in 64-bit code to differentiate between pointers and data values. The most common size for storing integers is 32 bits and pointers are always 64 bits
+* RBP is treated like another GPR. As a result, local variables are referenced through RSP
 
 ## *ARM (4/14/2017)*
 * ARMv7 uses 3 profiles (Application, Real-time, Microcontroller) and model name (Cortex). For example, ARMv7 Cortex-M is meant for microcontroller and support Thumb-2 execution only 
@@ -254,22 +271,6 @@ I put anything I find interesting regarding reverse engineering in this journal.
   + Compiler places a pointer immediately prior to the class vtable. It points to a structure that contains information on the name of class that owns the vtable
 * Memory spaces for global objects are allocated at compile-time and placed in data or bss section of binary 
 * Use Name Mangling to support Method Overloading (multiple functions with same name but accept different parameters). Since in PE or ELF format, a function is only labeled with its name 
-
-## *64-Bit (12/14/16)*
-* All addresses and pointers are 64 bits
-* All general-purpose registers have increased in size, tho 32-bit versions can still be accessed
-* Some general-purpose registers (RDI, RSI, RBP, and RSP) supports byte accesses
-* There are twice as many general-purpose registers. The new one are labeled R8 - R15
-* DWORD (32-bit) version can be accessed as R8D. WORD (16-bit) version are accessed with a W suffix like R8W. Byte version are accessed with an L suffix like R8L
-* Supports instruction pointer-relative addressing. Unlike x86, referencing data will not use absolute address but rather an offset from RIP
-* Calling conventions: Parameters are passed to registers. Additional one are stored on stack
-  + Windows: first 4 parameters are placed in RCX, RDX, R8, and R9
-  + Linux: first 6 parameters are placed in RDI, RDX, RCX, R8, and R9
-* In 32-bit code, stack space can be allocated and unallocated in middle of the function using push or pop. However, in 64-bit code, functions cannot allocate any space in the middle of the function
-* Nonleaf functions are sometimes called frame functions because they require a stack frame. All nonleaf functions are required to allocate 0x20 bytes of stack space when they call a function. This allows the function being called to save the register parameters (RCX, RDX, R8, and R9) in that space. If a function has any local stack variables, it will allocate space for them in addition to the 0x20 bytes
-* Structured exception handling in x64 does not use the stack. In 32-bit code, the fs:[0] is used as a pointer to the current exception handler frame, which is stored on the stack so that each function can define its own exception handler
-* Easier in 64-bit code to differentiate between pointers and data values. The most common size for storing integers is 32 bits and pointers are always 64 bits
-* RBP is treated like another GPR. As a result, local variables are referenced through RSP
 
 ## *ELF Files (1/20/17)*
 ![ELF Layout - from wikipedia](https://upload.wikimedia.org/wikipedia/commons/7/77/Elf-layout--en.svg)
