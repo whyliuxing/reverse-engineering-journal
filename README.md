@@ -53,11 +53,11 @@ I put anything I find interesting regarding reverse engineering in this journal.
 * Default display assembly in AT&T notation. To change it to the more readable Intel notation: set disassembly-flavor intel. To make this change permanent, write it in the .gdbinit file
 * Set command can be used to change the flags in EFLAGS. You just need to know the bit position of the flag you wanted to change 
   + For example to set the zero flag, first set a temporary variable: set $ZF = 6 (bit position 6 in EFLAG is zero flag). Use that variable to set the zero flag bit: set $eflags |= (1 << $ZF)
-  + To figure out the bit position of a flag that you are interested in, check out the image below:
+  + To figure out the bit position of a flag that you are interested in, check out this image below (MIT course 6.858):
 ![EFLAGS Register - MIT course 6.858](http://css.csail.mit.edu/6.858/2013/readings/i386/fig2-8.gif)
 
 ## *x86 (4/23/2017)*
-* (Intel Specific) value stored in RAM is in little-endian but when moved to registers it is in big-endian  
+* Value stored in RAM is in little-endian but when moved to registers it is in big-endian  
 * The 8 32-bit general-purpose registers (GPRs) for x86 architecture: EAX, EBX, ECX, EDX, EDI, ESI, EBP, and ESP. For x64 architecture, there are 18 general-purpose registers (GPRs). GPRs are used for temporary storage and can be directly accessed/changed in user code (e.g. mov eax, 1)  
 * The 5 32-bit memory index registers for x86 architecture: ESI, EDI, ESP, EBP, EIP. Most of them are also GPRs. They usually contain memory addresses. But obviously, if a memory index register is used as a GPR instead, it can contain any value 
 * The 6 32-bit selector registers for x86 architecture: CS, DS, ES, FS, GS, SS. A selector register indicates a specific block of memory from which one can read or write. The real memory address is looked up in an internal CPU table 
@@ -71,8 +71,8 @@ I put anything I find interesting regarding reverse engineering in this journal.
 * The call instruction contains a 32-bit signed relative displacement that is added to the address immediately following the call instruction to calculate the call destination
 * The jump instruction, like call instruction uses relative addressing, but with only an 8-bit signed relative displacement
 * x86 instruction set does not provide EIP-relative data access the way it does for control-flow instructions. Thus to do EIP-relative data access, a general-purpose register must first be loaded with EIP
-* The one byte nop instruction is an alias mnemonic for the xchg eax, eax instruction
-* There is no way to tell the datatype of something stored in memory by just looking at the location of where it is stored. The datatype is implied by the operations that are used on it. For example, if an instruction loads a value into eax, comparison is taken place between eax and 0x10, and ja is used to jump to another location if eax is greater, then we know that the value is an unsigned int since ja is for unsigned numbers
+* The one byte NOP instruction is an alias mnemonic for the XCHG EAX, EAX instruction
+* There is no way to tell the datatype of something stored in memory by just looking at the location of where it is stored. The datatype is implied by the operations that are used on it. For example, if an instruction loads a value into EAX, comparison is taken place between EAX and 0x10, and JA is used to jump to another location if EAX is greater, then we know that the value is an unsigned int since JA is for unsigned numbers
 * EIP can only be changed through CALL, JMP, or RET
 
 ## *[HARD TO REMEMBER] x86 Instructions With Side Effects (12/24/16)*
