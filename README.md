@@ -25,7 +25,7 @@ I put anything I find interesting regarding reverse engineering in this journal.
   + [String Encoding](#string-encoding-121216)
   + [Data Encoding](#data-encoding-121516)
 
-<p align='center'> ## General Knowledge (12/18/16) </p>
+## <p align='center'> General Knowledge (12/18/16) </p>
 * Processes are containers for execution. Threads are what the OS executes
 * Any function that calls another function is called a non-leaf function, and all other functions are leaf functions
 * Entry point of a binary (beginning of .text section) is not main. A program's startup code (how main is called) depends on the compiler and the platform that the binary is compiled for
