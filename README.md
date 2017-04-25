@@ -67,9 +67,10 @@ I put anything I find interesting regarding reverse engineering in this journal.
 * __Hooks__: user-defined command such as when command ? is ran, user-defined command 'hook-?' will be executed (if it exists)
   + When reversing, it could be useful to hook on breakpoints by using hook-stop 
   + How to define a hook: 
-    * define hook-?
-    * ...commands...
-    * end
+    * (gdb) define hook-?
+    * >...commands...
+    * >end
+    * (gdb)
 * i command displays information on the item specified to the right of it
   + i proc mappings: show mapped address spaces 
   + i b: show all breakpoints 
