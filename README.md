@@ -2,31 +2,31 @@
 I put anything I find interesting regarding reverse engineering in this journal. The date beside each heading denotes the start date that I added the topic, but most of the time I will still be adding information to that heading days later. 
 
 # <p align='center'> Table of Contents </p>
-* [General Knowledge](#-general-knowledge-121816-)
-  + [int 0x7374617274](#int-start-121816)
-* [Tools](#-tools-)
-  + [IDA Tips](#ida-tips-412017)
-  + [GDB Tips](#gdb-tips-21517)
+* [General Knowledge](#general-knowledge)
+  + [int 0x7374617274](#-int-start-121816-)
+* [Tools](#tools)
+  + [IDA Tips](#-ida-tips-412017-)
+  + [GDB Tips](#-gdb-tips-21517-)
 * [Instruction Sets](#-instruction-sets-)
-  + [x86](#x86-4232017)
-  + [x86-64](#x86-64-4242017)
-  + [ARM](#arm-4142017)
+  + [x86](#-x86-4232017-)
+  + [x86-64](#-x86-64-4242017-)
+  + [ARM](#-arm-4142017-)
 * [Languages](#-languages-)
-  + [C++ Reversing](#c-reversing-121316)
+  + [C++ Reversing](#-c-reversing-121316-)
 * [File Formats](#-file-formats-)
-  + [ELF Files](#elf-files-12017)
+  + [ELF Files](#-elf-files-12017-)
 * [Operating System Concepts](#-operating-system-concepts-)
-  + [Windows OS](#windows-os-412017)
-  + [Interrupts](#interrupts-4132017)
+  + [Windows OS](#-windows-os-412017-)
+  + [Interrupts](#-interrupts-4132017-)
 * [Anti-Reversing](#-anti-reversing-)
-  + [Anti-Disassembly](#anti-disassembly-111716)
-  + [Anti-Debugging](#anti-debugging-111716)
-  + [Anti-Emulation](#anti-emulation-252017)
+  + [Anti-Disassembly](#-anti-disassembly-111716-)
+  + [Anti-Debugging](#-anti-debugging-111716-)
+  + [Anti-Emulation](#-anti-emulation-252017-)
 * [Encodings](#-encoding-)
-  + [String Encoding](#string-encoding-121216)
-  + [Data Encoding](#data-encoding-121516)
+  + [String Encoding](#-string-encoding-121216-)
+  + [Data Encoding](#-data-encoding-121516-)
 
-# .general_knowledge
+# .general-knowledge
 
 ## *<p align='center'> int 0x7374617274 (12/18/2016) </p>*
 * Processes are containers for execution. Threads are what the OS executes
@@ -74,7 +74,7 @@ I put anything I find interesting regarding reverse engineering in this journal.
     
 ![EFLAGS Register - MIT course 6.858](http://css.csail.mit.edu/6.858/2013/readings/i386/fig2-8.gif)
 
-# .instruction_sets
+# .instruction-sets
 
 ## *<p align='center'> x86 (4/23/2017) </p>*
 * Value stored in RAM is in little-endian but when moved to registers it is in big-endian  
@@ -185,7 +185,7 @@ I put anything I find interesting regarding reverse engineering in this journal.
 * Memory spaces for global objects are allocated at compile-time and placed in data or bss section of binary 
 * Use Name Mangling to support Method Overloading (multiple functions with same name but accept different parameters). Since in PE or ELF format, a function is only labeled with its name 
 
-# .file_formats
+# .file-formats
 
 ## *<p align='center'> ELF Files (1/20/17) </p>*
 ![ELF Layout - from wikipedia](https://upload.wikimedia.org/wikipedia/commons/7/77/Elf-layout--en.svg)
@@ -220,7 +220,7 @@ I put anything I find interesting regarding reverse engineering in this journal.
   + trace sys call: strace -f
   + decompile: retargetable decompiler
 
-# .operating_system_concepts
+# .operating-system-concepts
 
 ## *<p align='center'> Windows OS (4/1/2017) </p>*
 * __SEH (Structured Exception Handler)__: 32-bit Windows' mechanism for handling exceptions
