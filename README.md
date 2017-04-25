@@ -1,7 +1,8 @@
 # <p align='center'> Reverse Engineering Journal </p>
 I put anything I find interesting regarding reverse engineering in this journal. The date beside each heading denotes the start date that I added the topic, but most of the time I will still be adding information to that heading days later. 
 
-# <p align='center'> table-of-contents </p>
+# table-of-contents
+
 * [General Knowledge](#general-knowledge)
   + [int 0x7374617274](#-int-0x7374617274-121816-)
 * [Tools](#tools)
@@ -188,6 +189,7 @@ I put anything I find interesting regarding reverse engineering in this journal.
   + Compiler places a pointer immediately prior to the class vtable. It points to a structure that contains information on the name of class that owns the vtable
 * Memory spaces for global objects are allocated at compile-time and placed in data or bss section of binary 
 * Use Name Mangling to support Method Overloading (multiple functions with same name but accept different parameters). Since in PE or ELF format, a function is only labeled with its name 
+---
 
 # .file-formats
 
@@ -223,6 +225,7 @@ I put anything I find interesting regarding reverse engineering in this journal.
   + trace library call: ltrace -f
   + trace sys call: strace -f
   + decompile: retargetable decompiler
+---
 
 # .operating-system-concepts
 
@@ -275,6 +278,7 @@ I put anything I find interesting regarding reverse engineering in this journal.
   + 5th parameter: edi 
   + 6th parameter: ebp 
 * int 0x80 is an old way to make syscall. A more modern implementation is the SYSENTER instruction
+---
 
 # .anti-reversing
 
@@ -341,6 +345,7 @@ I put anything I find interesting regarding reverse engineering in this journal.
 * __Detection through Syscall__: invoke various uncommon syscalls and check if it contains expected value. Since there are OS features not properly implemented, it means that the process is running under a debugger
 * __CPU Inconsistencies Detection__: try executing privileged instructions in user mode. If it succeeded, then it is under emulation
 * __Timing Delays__: execution under emulation will be slower than running under real CPU
+---
 
 # .encodings
 
