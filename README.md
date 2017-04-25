@@ -1,7 +1,7 @@
 # <p align='center'> Reverse Engineering Journal </p>
 I put anything I find interesting regarding reverse engineering in this journal. The date beside each heading denotes the start date that I added the topic, but most of the time I will still be adding information to that heading days later. 
 
-# <p align='center'> Table of Contents </p>
+# <p align='center'> table-of-contents </p>
 * [General Knowledge](#general-knowledge)
   + [int 0x7374617274](#-int-0x7374617274-121816-)
 * [Tools](#tools)
@@ -42,6 +42,7 @@ I put anything I find interesting regarding reverse engineering in this journal.
     + Can check if someone sets a hardware breakpoint on Windows by using GetThreadContext() and checks if DR0-DR3 is set
   * __Memory Breakpoint__: changes the permissions on a region, or page, of memory
     + Guard page: Any access to a guard page results in a one-time exception, and then the page returns to its original status. Memory breakpoint changes permission of the page to guard
+---
 
 # .tools
 
@@ -73,6 +74,7 @@ I put anything I find interesting regarding reverse engineering in this journal.
     + To figure out the bit position of a flag that you are interested in, check out this image below (from MIT course 6.858):
     
 ![EFLAGS Register - MIT course 6.858](http://css.csail.mit.edu/6.858/2013/readings/i386/fig2-8.gif)
+---
 
 # .instruction-sets
 
@@ -168,6 +170,7 @@ I put anything I find interesting regarding reverse engineering in this journal.
 * Instructions can be conditionally executed by adding conditional suffixes. That is how conditional branch instruction is implemented
 * Thumb instruction cannot be conditionally executed, with the exception of B instruction, without the IT instruction. 
   + IT (If-then)'s syntax: ITxyz cc. cc is the conditional suffix for the 1st instruction after IT. xyz are for the 2nd, 3rd, and 4th instructions after IT. It can be either T or E. T means that the condition must match cc for it to be executed. E means that condition must be the opposite of cc for it to be executed
+---
 
 # .languages
 
