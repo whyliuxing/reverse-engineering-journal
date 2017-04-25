@@ -64,7 +64,7 @@ I put anything I find interesting regarding reverse engineering in this journal.
 ## *<p align='center'> GDB Tips (2/15/17) </p>*
 * ASLR is turned off by default in GDB. To turn it on: set disable-randomization off
 * Default display assembly in AT&T notation. To change it to the more readable and superior Intel notation: set disassembly-flavor intel. To make this change permanent, write it in the .gdbinit file
-* __Hooks__: user-defined command such as when command ? is ran, user-defined command 'hook-?' will be executed (if it exists)
+* __Hooks__: user-defined command. When command ? is ran, user-defined command 'hook-?' will be executed (if it exists)
   + When reversing, it could be useful to hook on breakpoints by using hook-stop 
   + How to define a hook: 
     * (gdb) define hook-?
