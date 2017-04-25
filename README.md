@@ -4,7 +4,7 @@ I put anything I find interesting regarding reverse engineering in this journal.
 # table-of-contents
 
 * [General Knowledge](#general-knowledge)
-  + [int 0x7374617274](#-int-0x7374617274-121816-)
+  + [int 0x7374617274](#-int-0x7374617274-12182016-)
 * [Tools](#tools)
   + [IDA Tips](#-ida-tips-412017-)
   + [GDB Tips](#-gdb-tips-21517-)
