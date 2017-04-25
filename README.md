@@ -1,29 +1,29 @@
 # <p align='center'> Reverse Engineering Journal </p>
 I put anything I find interesting regarding reverse engineering in this journal. The date beside each heading denotes the start date that I added the topic, but most of the time I will still be adding information to that heading days later. 
 
-# table-of-contents
+# .table-of-contents
 
-* [General Knowledge](#general-knowledge)
+* [.general-knowledge](#general-knowledge)
   + [int 0x7374617274](#-int-0x7374617274-12182016-)
-* [Tools](#tools)
+* [.tools](#tools)
   + [IDA Tips](#-ida-tips-412017-)
   + [GDB Tips](#-gdb-tips-21517-)
-* [Instruction Sets](#instruction-sets)
+* [.instruction-sets](#instruction-sets)
   + [x86](#-x86-4232017-)
   + [x86-64](#-x86-64-4242017-)
   + [ARM](#-arm-4142017-)
-* [Languages](#languages)
+* [.languages](#languages)
   + [C++ Reversing](#-c-reversing-121316-)
-* [File Formats](#file-formats)
+* [.file-formats](#file-formats)
   + [ELF Files](#-elf-files-12017-)
-* [Operating System Concepts](#operating-system-concepts)
+* [.operating-system-concepts](#operating-system-concepts)
   + [Windows OS](#-windows-os-412017-)
   + [Interrupts](#-interrupts-4132017-)
-* [Anti-Reversing](#anti-reversing)
+* [.anti-reversing](#anti-reversing)
   + [Anti-Disassembly](#-anti-disassembly-111716-)
   + [Anti-Debugging](#-anti-debugging-111716-)
   + [Anti-Emulation](#-anti-emulation-252017-)
-* [Encodings](#encoding)
+* [.encodings](#encoding)
   + [String Encoding](#-string-encoding-121216-)
   + [Data Encoding](#-data-encoding-121516-)
 
