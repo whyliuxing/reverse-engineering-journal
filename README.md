@@ -64,6 +64,10 @@ I put anything I find interesting regarding reverse engineering in this journal.
 ## *<p align='center'> GDB Tips (2/15/17) </p>*
 * ASLR is turned off by default in GDB. To turn it on: set disable-randomization off
 * Default display assembly in AT&T notation. To change it to the more readable and superior Intel notation: set disassembly-flavor intel. To make this change permanent, write it in the .gdbinit file
+* i command displays information on the item specified to the right of it
+  + i proc mappings: show mapped address spaces 
+  + i b: show all breakpoints 
+  + i r: show the values in registers at that point of execution
 * x command displays memory contents at a given address in the specified format
   + Since disas command won't work on stripped binary, x command can come in handy to display instructions from current program counter: x/14i $pc
 * p command displays value stored in a named variable
