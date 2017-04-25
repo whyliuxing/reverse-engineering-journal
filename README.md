@@ -74,6 +74,7 @@ I put anything I find interesting regarding reverse engineering in this journal.
     + To figure out the bit position of a flag that you are interested in, check out this image below (from MIT course 6.858):
     
 ![EFLAGS Register - MIT course 6.858](http://css.csail.mit.edu/6.858/2013/readings/i386/fig2-8.gif)
+
 ---
 
 # .instruction-sets
