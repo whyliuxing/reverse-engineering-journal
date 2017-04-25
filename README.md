@@ -68,8 +68,8 @@ I put anything I find interesting regarding reverse engineering in this journal.
   + When reversing, it could be useful to hook on breakpoints by using hook-stop 
   + How to define a hook: 
     * (gdb) define hook-?
-    * >...commands...
-    * >end
+    * <div>>...commands...</div>
+    * <div>>end</div>
     * (gdb)
 * i command displays information on the item specified to the right of it
   + i proc mappings: show mapped address spaces 
