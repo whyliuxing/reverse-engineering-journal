@@ -266,6 +266,10 @@ I put anything I find interesting regarding reverse engineering in this journal.
 * DLL files look almost exactly like EXE files. For example, it also uses PE file format. The only real difference is that DLL has more exports than imports
   + Main DLL function is DllMain. It has no label and is not an export in the DLL but is specified in the PE header as the file's entry point
 * Before Windows OS switches between threads, all values in the CPU are saved in a structure called the thread context. The OS then loads the thread context of the new thread into the CPU and executes the new thread
+* __Pool Memory__: memory allocated by kernel-mode code
+  + __Paged Pool__: memory that can be paged out
+  + __Non-Paged Pool__: memory that can never be paged out
+* __Memory Descriptor Lists (MDL)__: a data structure that describes the mapping between a process's virtual address to a set of physical pages. Each MDL entry describes one contiguous buffer that can be locked (can't be reused by another process) and mapped to a process's virtual address space 
 * __Kernal32dll__: interface that provides APIs to interact with Windows OS
 * __Ntdll__: interface to kernel. Lowest userland API
   + Native applications are applications that issue calls directly to the Natice API(Ntdll)
@@ -297,6 +301,8 @@ I put anything I find interesting regarding reverse engineering in this journal.
 * When an interrupt or exception occurs, the processor uses the interrupt number as index into the Interrupt Descriptor Table (IDT), where each entry is a 8 byte KIDTENTRY structure. Each KIDTENTRY structure contains the address of a specific interrupt handler. Base of IDT is stored in the IDT register, which can be accessed through the SIDT instruction
 * Interrupt is the communication between CPU and the kernel. The kernel can also notify the running process that an interrupt event has been fired by sending a signal to the process
   + For example, when a breakpoint is hit (INT3), the process will receive the SIGTRAP signal. The signal can then be handled in user code by user-defined signal handler 
+* __Interrupt Requests Level (IRQL)__: an interrupt is associated with an IRQL, which indicates its priority
+  + IRQL is per-processor. The local interrupt controller (LAPIC) in the processor controls task priority register (TPR) and read-only processor priority register (PPR). Code running in certain PPR level will only fire interrupts that have priority higher than PPR
 ---
 
 # .anti-reversing
