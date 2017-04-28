@@ -72,6 +72,7 @@ I put anything I find interesting regarding reverse engineering in this journal.
     * <div>>...commands...</div>
     * <div>>end</div>
     * (gdb)
+* maint info sections: shows where sections are mapped to in virtual address space
 * i command displays information on the item specified to the right of it
   + i proc mappings: show mapped address spaces 
   + i b: show all breakpoints 
