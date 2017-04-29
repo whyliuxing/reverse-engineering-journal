@@ -127,12 +127,11 @@ I put anything I find interesting regarding reverse engineering in this journal.
   * MOVZX: moves an unsigned value into a register and zero-extends it
 #
 ## *<p align='center'> x86-64 (4/24/2017) </p>*
-![Register Size - from cs.lmu.edu/~ray/notes/nasmtutorial](cs.lmu.edu/~ray/images/rdx.png)
-* All addresses and pointers are 64 bits, but virtual addresses must be in canonical form. Modern processors only support 48-bit for address space rather than the full 64-bit that is available. As a result, bit 47 and bits 48-63 must match otherwise an exception will be raised 
-* All general-purpose registers have increased to 64-bit, although 32-bit versions can still be accessed
-* Some general-purpose registers (RDI, RSI, RBP, and RSP) supports byte accesses
-* DWORD (32-bit) version can be accessed as R8D. WORD (16-bit) version are accessed with a W suffix like R8W. Byte version are accessed with an L suffix like R8L
-* There are 16 XMM registers, each 16 bytes long 
+* All addresses and pointers are 64-bit, but virtual addresses must be in canonical form. Modern processors only support 48-bit for address space rather than the full 64-bit that is available. As a result, bit 47 and bits 48-63 must match otherwise an exception will be raised 
+* 16 general-purpose registers each 64-bits (RAX, RCX, RDX, RBX, RSP, RBP, RSI, RDI, R8, R9, R10, R11, R12, R13, R14, R15)
+  + DWORD (32-bit) version can be accessed with a D suffix, WORD (16-bit) with a W suffix, BYTE (8-bit) with a B suffix for registers R8 to R15
+  + For registers with alternate names like x86 (e.g. RAX, RCX), size access for register is same as x86. For example, 32-bit version of RAX is EAX and the 16-bit version is DX 
+* 16 XMM registers, each 16 bytes long 
 * Supports instruction pointer-relative addressing. Unlike x86, referencing data will not use absolute address but rather an offset from RIP
 * Calling conventions: Parameters are passed to registers. Additional one are stored on stack
   + Windows: first 4 parameters are placed in RCX, RDX, R8, and R9
