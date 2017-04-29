@@ -85,7 +85,7 @@ I put anything I find interesting regarding reverse engineering in this journal.
 * Set temporary variable: set $<-variable name-> = <-value->
   * Set command can be used to change the flags in EFLAGS. You just need to know the bit position of the flag you wanted to change 
     + For example to set the zero flag, first set a temporary variable: set $ZF = 6 (bit position 6 in EFLAG is zero flag). Use that variable to set the zero flag bit: set $eflags |= (1 << $ZF)
-    + To figure out the bit position of a flag that you are interested in, check out this image below (from MIT course 6.858):
+    + To figure out the bit position of a flag that you are interested in, check out this image below:
     
 ![EFLAGS Register - MIT course 6.858](http://css.csail.mit.edu/6.858/2013/readings/i386/fig2-8.gif)
 
@@ -95,7 +95,7 @@ I put anything I find interesting regarding reverse engineering in this journal.
 
 ## *<p align='center'> x86 (4/23/2017) </p>*
 * Value stored in RAM is in little-endian but when moved to registers it is in big-endian  
-* The 8 32-bit general-purpose registers (GPRs) for x86 architecture: EAX, EBX, ECX, EDX, EDI, ESI, EBP, and ESP. For x64 architecture, there are 18 general-purpose registers (GPRs). GPRs are used for temporary storage and can be directly accessed/changed in user code (e.g. mov eax, 1)  
+* The 8 32-bit general-purpose registers (GPRs) for x86 architecture: EAX, EBX, ECX, EDX, EDI, ESI, EBP, and ESP. GPRs are used for temporary storage and can be directly accessed/changed in user code (e.g. mov eax, 1)  
 * The 5 32-bit memory index registers for x86 architecture: ESI, EDI, ESP, EBP, EIP. Most of them are also GPRs. They usually contain memory addresses. But obviously, if a memory index register is used as a GPR instead, it can contain any value 
 * The 6 32-bit selector registers for x86 architecture: CS, DS, ES, FS, GS, SS. A selector register indicates a specific block of memory from which one can read or write. The real memory address is looked up in an internal CPU table 
   + Selector registers usually points to OS specific information. For example, FS segment register points to the beginning of current Thread Environment Block (TEB), also know as Thread Information Block (TIB), on Windows. Offset zero in TEB is the head of a linked list of pointers to exception handler functions on 32-bit system. Offset 30h is the PEB structure. Offset 2 in the PEB is the BeingDebugged field. In x64, PEB is located at offset 60h of the gs segment register
@@ -127,11 +127,12 @@ I put anything I find interesting regarding reverse engineering in this journal.
   * MOVZX: moves an unsigned value into a register and zero-extends it
 #
 ## *<p align='center'> x86-64 (4/24/2017) </p>*
+![Register Size - from cs.lmu.edu/~ray/notes/nasmtutorial](http://cs.lmu.edu/~ray/images/rdx.png)
 * All addresses and pointers are 64 bits, but virtual addresses must be in canonical form. Modern processors only support 48-bit for address space rather than the full 64-bit that is available. As a result, bit 47 and bits 48-63 must match otherwise an exception will be raised 
-* All general-purpose registers have increased in size, tho 32-bit versions can still be accessed
+* All general-purpose registers have increased to 64-bit, although 32-bit versions can still be accessed
 * Some general-purpose registers (RDI, RSI, RBP, and RSP) supports byte accesses
-* There are twice as many general-purpose registers. The new one are labeled R8 - R15
 * DWORD (32-bit) version can be accessed as R8D. WORD (16-bit) version are accessed with a W suffix like R8W. Byte version are accessed with an L suffix like R8L
+* There are 16 XMM registers, each 16 bytes long 
 * Supports instruction pointer-relative addressing. Unlike x86, referencing data will not use absolute address but rather an offset from RIP
 * Calling conventions: Parameters are passed to registers. Additional one are stored on stack
   + Windows: first 4 parameters are placed in RCX, RDX, R8, and R9
