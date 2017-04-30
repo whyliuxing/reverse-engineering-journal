@@ -140,7 +140,7 @@ I put anything I find interesting regarding reverse engineering in this journal.
 * Supports instruction pointer-relative addressing. Unlike x86, referencing data will not use absolute address but rather an offset from RIP
 * Calling conventions: Parameters are passed to registers. Additional one are stored on stack
   + Windows: first 4 parameters are placed in RCX, RDX, R8, and R9
-  + Linux: first 6 parameters are placed in RDI, RDX, RCX, R8, and R9
+  + Linux: first 6 parameters are placed in RDI, RSI, RDX, RCX, R8, and R9
 * In 32-bit code, stack space can be allocated and unallocated in middle of the function using push or pop. However, in 64-bit code, functions cannot allocate any space in the middle of the function
 * Nonleaf functions are sometimes called frame functions because they require a stack frame. All nonleaf functions are required to allocate 0x20 bytes of stack space when they call a function. This allows the function being called to save the register parameters (RCX, RDX, R8, and R9) in that space. If a function has any local stack variables, it will allocate space for them in addition to the 0x20 bytes
 * Structured exception handling in x64 does not use the stack. In 32-bit code, the fs:[0] is used as a pointer to the current exception handler frame, which is stored on the stack so that each function can define its own exception handler
