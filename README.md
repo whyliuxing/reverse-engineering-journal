@@ -111,7 +111,10 @@ I put anything I find interesting regarding reverse engineering in this journal.
 * The one byte NOP instruction is an alias mnemonic for the XCHG EAX, EAX instruction
 * There is no way to tell the datatype of something stored in memory by just looking at the location of where it is stored. The datatype is implied by the operations that are used on it. For example, if an instruction loads a value into EAX, comparison is taken place between EAX and 0x10, and JA is used to jump to another location if EAX is greater, then we know that the value is an unsigned int since JA is for unsigned numbers
 * EIP can only be changed through CALL, JMP, or RET
-* __Floating Point Arithmetic__: 
+* __Floating Point Arithmetic__: Floating point operations are performed using the FPU Register Stack, or the "x87 Stack." FPU is divided into 8 registers, st0 to st7. Typical FPU operations will pop item(s) off the stack, perform on it/them, and push the result back to the stack
+  + FLD instruction is for loading values onto the FPU Register Stack
+  + FST instruction is for storing values from ST0 into memory 
+  + FPU Register Stack can be accessed only by FPU instructions
 * __Hard To Remember x86 Instructions With Side Effects__:
   * IMUL reg/mem: register is multiplied with AL, AX, or EAX and the result is stored in AX, DX:AX, or EDX:EAX
   * IDIV reg/mem: takes one parameter (divisor). Depending on the divisor’s size, div will use either AX, DX:AX, or EDX:EAX as the dividend, and the resulting quotient/remainder pair are stored in AL/AH, AX/DX, or EAX/EDX
@@ -132,7 +135,8 @@ I put anything I find interesting regarding reverse engineering in this journal.
 * 16 general-purpose registers each 64-bits (RAX, RCX, RDX, RBX, RSP, RBP, RSI, RDI, R8, R9, R10, R11, R12, R13, R14, R15)
   + DWORD (32-bit) version can be accessed with a D suffix, WORD (16-bit) with a W suffix, BYTE (8-bit) with a B suffix for registers R8 to R15
   + For registers with alternate names like x86 (e.g. RAX, RCX), size access for register is same as x86. For example, 32-bit version of RAX is EAX and the 16-bit version is DX 
-* 16 XMM registers, each 128-bit long. XMM registers are for SIMD instruction set, which is an extension to the x86-86 architecture. SIMD is for performing the same instruction on multiple data at once
+* 16 XMM registers, each 128-bit long. XMM registers are for SIMD instruction set, which is an extension to the x86-86 architecture. SIMD is for performing the same instruction on multiple data at once and/or for floating point operations 
+  + Floating point operations were once done using stack-based instruction set that accesses the FPU Register Stack. But now, it can be done using SIMD instruction set 
 * Supports instruction pointer-relative addressing. Unlike x86, referencing data will not use absolute address but rather an offset from RIP
 * Calling conventions: Parameters are passed to registers. Additional one are stored on stack
   + Windows: first 4 parameters are placed in RCX, RDX, R8, and R9
