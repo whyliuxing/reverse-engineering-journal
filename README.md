@@ -314,17 +314,18 @@ I put anything I find interesting regarding reverse engineering in this journal.
 # .anti-reversing
 
 ## *<p align='center'> Anti-Disassembly (11/17/16) </p>*
-* __Disassembly Technique__ 
+* __Disassembly Technique__: 
   * __Linear Disassembly__: disassembling one instruction at a time linearly. Problem: code section of nearly all binaries will also contain data that isn’t instructions 
   * __Flow-Oriented Disassembly__: for conditional branch, it will process false branch first and note to disassemble true branch later. For unconditional branch, it will add destination to the end of list of places to disassemble in future and then disassemble from that list. For call instruction, most will disassemble the bytes after the call first and then the called location. If there is conflict between the true and false branch when disassembling, disassembler will trust the one it disassembles first
 * Use inline functions to obscure function declaration
 * __Disassembly Desynchronization__: to cause disassembly tools to produce an incorrect program listing. Works by taking advantage of the assumptions/limitations of disassemblers. For every assumption it makes (e.g. process false branch first), there is a corresponding anti-disassembly technique. Desynchronization has the greatest impact on the disassembly, but it is easily defeated by reformatting the disassembly to reflect the correct instruction flow
-  + __Jump Instructions With The Same Target__: jz follows by jnz. Essentially an unconditional jump. The bytes following jnz instruction could be data but will be disassembled as code
-  + __Jump Instructions With A Constant Condition__: xor follows by jz. It will always jump so bytes following false branch could be data
+  * __Opaque Predicates__: conditional construct that looks like conditional code but actually always evaluates to either true or false 
+    + __Jump Instructions With The Same Target__: jz follows by jnz. Essentially an unconditional jump. The bytes following jnz instruction could be data but will be disassembled as code
+    + __Jump Instructions With A Constant Condition__: xor follows by jz. It will always jump so bytes following false branch could be data
   + __Impossible Disassembly__: A byte is part of multiple instructions. Disassembler cannot represent a byte as part of two instructions. Either can the processor, but it doesn't have to because it just needs to execute the instructions 
 * __Opcode Obfuscation__: a more effective technique for preventing correct disassembly by encoding or encrypting the actual instructions
   + Encoding portions of a program can hinder static analysis because disassembly is not possible and hinder debugging because placing breakpoints is difficult. For example, even if the start of an instructions is known, breakpoint cannot be placed until the instruction have been decoded
-  + Virtual obfuscation
+  + __Virtual Obfuscation__: parts of the program are compiled to the bytecode that corresponds to the instruction set of an undocumented interpreter (usually one that the obfuscator wrote him or herself). The interpreter will be a part of the protected program such that during runtime, the interpreter will translate those bytecode into machine code that corresponds to the original architecture (e.g. x86)  
 * __Function Pointer Problem__: if a function is called indirectly through pointers, IDA xref will only record the first usage
 * __Return Pointer Abuse__: RET is used to jump to function instead of returning from function. Disassembler won’t show any code cross-reference to the target being jumped to. Also, disassembler will prematurely terminate the function since RET is supposed to be used for returning from function
 * __Thwarting Stack-Frame Analysis__: technique to mess with IDA when deducing numbers of parameters and local variables. For example, the code makes a conditional jump that's always false but in true branch add absurd amount to esp. If the disassembler choose to believe the true branch, the numbers of local variables will be incorrect
