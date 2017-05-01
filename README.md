@@ -238,7 +238,7 @@ I put anything I find interesting regarding reverse engineering in this journal.
 * Tools to analyze it: 
   + display section headers: readelf -S
   + display program headers and section to segment mapping: readelf -l
-  + display symbol tables: readelf --syms 
+  + display symbol tables: readelf --syms or objdump -t
   + display a section's content: objdump -s -j <-section name-> <-binary file->
   + trace library call: ltrace -f
   + trace sys call: strace -f
