@@ -317,14 +317,14 @@ I put anything I find interesting regarding reverse engineering in this journal.
 * __Disassembly Technique__: 
   * __Linear Disassembly__: disassembling one instruction at a time linearly. Problem: code section of nearly all binaries will also contain data that isn’t instructions 
   * __Flow-Oriented Disassembly__: for conditional branch, it will process false branch first and note to disassemble true branch later. For unconditional branch, it will add destination to the end of list of places to disassemble in future and then disassemble from that list. For call instruction, most will disassemble the bytes after the call first and then the called location. If there is conflict between the true and false branch when disassembling, disassembler will trust the one it disassembles first
-* __Control-Based Obfuscation__: Obfuscation techniques based on control flow constructs 
+* __Obfuscation Techniques__: Program transformation techniques that output a program that is semantically equivalent to the original program but is more difficult to analyze  
   * __Functions In/Out-Lining__: Performs operations that create inline and outline functions randomly and through multiple passes to obfuscate the call graph  
-    * __Inline Functions__:
-    * __Outline Functions__:
-* __Disassembly Desynchronization__: to cause disassembly tools to produce an incorrect program listing. Works by taking advantage of the assumptions/limitations of disassemblers. For every assumption it makes (e.g. process false branch first), there is a corresponding anti-disassembly technique. Desynchronization has the greatest impact on the disassembly, but it is easily defeated by reformatting the disassembly to reflect the correct instruction flow
-  * __Opaque Predicates__: conditional construct that looks like conditional code but actually always evaluates to either true or false 
-    + __Jump Instructions With The Same Target__: jz follows by jnz. Essentially an unconditional jump. The bytes following jnz instruction could be data but will be disassembled as code
-    + __Jump Instructions With A Constant Condition__: xor follows by jz. It will always jump so bytes following false branch could be data
+    * __Inline Functions__: A function that is merged into the body of its caller 
+    * __Outline Functions__: Inverse of Inline function where a subportion of a function is extracted to create another function. The subportion of this function is then replaced with a CALL instruction that calls the new function 
+  * __Disassembly Desynchronization__: to cause disassembly tools to produce an incorrect program listing. Works by taking advantage of the assumptions/limitations of disassemblers. For every assumption it makes (e.g. process false branch first), there is a corresponding anti-disassembly technique. Desynchronization has the greatest impact on the disassembly, but it is easily defeated by reformatting the disassembly to reflect the correct instruction flow
+    * __Opaque Predicates__: conditional construct that looks like conditional code but actually always evaluates to either true or false 
+      + __Jump Instructions With The Same Target__: jz follows by jnz. Essentially an unconditional jump. The bytes following jnz instruction could be data but will be disassembled as code
+      + __Jump Instructions With A Constant Condition__: xor follows by jz. It will always jump so bytes following false branch could be data
   + __Impossible Disassembly__: A byte is part of multiple instructions. Disassembler cannot represent a byte as part of two instructions. Either can the processor, but it doesn't have to because it just needs to execute the instructions 
 * __Opcode Obfuscation__: a more effective technique for preventing correct disassembly by encoding or encrypting the actual instructions
   + Encoding portions of a program can hinder static analysis because disassembly is not possible and hinder debugging because placing breakpoints is difficult. For example, even if the start of an instructions is known, breakpoint cannot be placed until the instruction have been decoded
