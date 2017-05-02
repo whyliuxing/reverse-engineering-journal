@@ -338,7 +338,10 @@ I put anything I find interesting regarding reverse engineering in this journal.
   * __Constant Unfolding__: Replaces constant with unnecessary computations that will output the same constant
   * __Arithmetic Substitution via Identities__: Replaces a mathematical statement with one that is more complicated but semantically the same
   * __Pattern-Based Obfuscation__: Transform a sequence of instructions into another sequence of instructions that is more complicated but semantically the same 
-  * __Control-Flow Graph Flattening: 
+  * __Control-Flow Graph Flattening__: Obfuscates control flow by replacing a group of control structures with a dispatcher. Each basic block updates the dispatcher's context so it knows which basic block to execute next
+  * __Imported Function Obfuscation (makes it difficult to determine which shared libraries or library functions are used)__: have the program’s import table be initialized by the program itself. The program itself loads any additional libraries it depends on, and once the libraries are loaded, the program locates any required functions within those libraries
+    + (Windows) use LoadLibrary function to load required libraries by name and then perform function address lookups within each library using GetProcAddress
+    + (Linux) use dlopen function to load the dynamic shared object and use dlsym function to find the address of a specific function within the shared object 
 * __Parser Differential Attack__: Makes modifications to the ELF file such that it will still execute fine, but if you try to load it into a disassembler/debugger, the disassembler/debugger will not work properly
   * __Tampering/Removing Section Headers (Linux)__: Makes tools such as gdb and objdump useless since they rely on the section headers to locate information regarding the various sections. Segments are necessary for program execution, not sections. Section headers table is for linking and debugging
     + "The biggest fuck up that (most) analysis tools are doing is that they are using the section headers table of the ELF file to get information about the binary...[because] sections contain more detailed information" - Andre Pawlowski
@@ -350,9 +353,6 @@ I put anything I find interesting regarding reverse engineering in this journal.
   * __ELF Header Modification__: inserting false information into ELF Header to discourage analysis
     + Simply zero-ing out information regarding section headers table in the ELF Header (e_shoff, e_shentsize, e_shnum, e_shstrndx) can make tools such as readelf and Radare2 unable to display sections even though Section Headers Table still exists within the binary
     + The 6th byte of the ELF Header is EI_DATA, residing within e_ident array, which makes up the first 16 bytes of the ELF Header. EI_DATA specifies the data encoding of the processor-specific data in the file (unknown, little-endian, big-endian). Modifying EI_DATA after compilation will not affect program execution, but will make tools such as readelf, gdb, and radare2 to not work properly since they use this value to interpret the binary
-* __Imported Function Obfuscation (makes it difficult to determine which shared libraries or library functions are used)__: have the program’s import table be initialized by the program itself. The program itself loads any additional libraries it depends on, and once the libraries are loaded, the program locates any required functions within those libraries
-  + (Windows) use LoadLibrary function to load required libraries by name and then perform function address lookups within each library using GetProcAddress
-  + (Linux) use dlopen function to load the dynamic shared object and use dlsym function to find the address of a specific function within the shared object 
 #
 ## *<p align='center'> Anti-Debugging (11/17/16) </p>*
 * __Ptrace (Linux)__: ptrace cannot be called in succession more than once for a process. All debuggers and program tracers use ptrace call to setup debugging for a process, but the process will terminate prematurely if the code itself also contains the call to ptrace 
