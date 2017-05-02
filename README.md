@@ -334,7 +334,8 @@ I put anything I find interesting regarding reverse engineering in this journal.
   * __Return Pointer Abuse__: RET is used to jump to function instead of returning from function. Disassembler won’t show any code cross-reference to the target being jumped to. Also, disassembler will prematurely terminate the function since RET is supposed to be used for returning from function
   * __Thwarting Stack-Frame Analysis__: Technique to mess with IDA when deducing numbers of parameters and local variables. For example, the code makes a conditional jump that's always false but in true branch add absurd amount to esp. If the disassembler choose to believe the true branch, the numbers of local variables will be incorrect
   * __Dynamically Computed Target Addresses__: An address to which execution will go to is computed at runtime. This will hinder static analysis
-  * __Dead Code/Junk Code Insertion__: Inserts useless code that doesn't affect a program's functionalities or useless code that never get executed 
+  * __Dead Code Insertion__: Inserts useless code that doesn't affect a program's functionalities
+  * __Junk Code Insertion__: Inserts code that never get executed 
   * __Constant Unfolding__: Replaces constant with unnecessary computations that will output the same constant
   * __Arithmetic Substitution via Identities__: Replaces a mathematical statement with one that is more complicated but semantically the same
   * __Pattern-Based Obfuscation__: Transform a sequence of instructions into another sequence of instructions that is more complicated but semantically the same 
