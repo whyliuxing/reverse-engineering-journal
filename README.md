@@ -87,7 +87,7 @@ I put anything I find interesting regarding reverse engineering in this journal.
     + For example to set the zero flag, first set a temporary variable: set $ZF = 6 (bit position 6 in EFLAG is zero flag). Use that variable to set the zero flag bit: set $eflags |= (1 << $ZF)
     + To figure out the bit position of a flag that you are interested in, check out this image below:
     
-![EFLAGS Register - MIT course 6.858](http://css.csail.mit.edu/6.858/2013/readings/i386/fig2-8.gif)
+<p align='center'> ![EFLAGS Register - MIT course 6.858](http://css.csail.mit.edu/6.858/2013/readings/i386/fig2-8.gif) </p>
 
 ---
 
@@ -214,6 +214,7 @@ I put anything I find interesting regarding reverse engineering in this journal.
 ## *<p align='center'> ELF Files (1/20/17) </p>*
 
 <p align='center'> <img src="https://upload.wikimedia.org/wikipedia/commons/7/77/Elf-layout--en.svg" height="400"> </p>
+<!-- this image is from wikipedia -->
 
 * ELF file header starts at offset 0 and is the roadmap that describes the rest of the file. It marks the ELF type, architecture, execution entry point, and offsets to program headers and section headers
 * Program header table let the system knows how to create the process image. It contains an array of structures, each describing a segment. A segment contains one or more sections
