@@ -133,6 +133,7 @@ I put anything I find interesting regarding reverse engineering in this journal.
   * PUSHFD, POPFD: pushes/pops EFLAGS register 
   * MOVSX: moves a signed value into a register and sign-extends it 
   * MOVZX: moves an unsigned value into a register and zero-extends it
+  * CMOVcc: conditional execution on the move operation. If the condition code's (cc) corresponding flag is set in EFLAGS, the mov instruction will be performed. Otherwises, it's just like a NOP instruction 
 #
 ## *<p align='center'> x86-64 (4/24/2017) </p>*
 * All addresses and pointers are 64-bit, but virtual addresses must be in canonical form. Modern processors only support 48-bit for address space rather than the full 64-bit that is available. As a result, bit 47 and bits 48-63 must match otherwise an exception will be raised 
