@@ -212,7 +212,9 @@ I put anything I find interesting regarding reverse engineering in this journal.
 # .file-formats
 
 ## *<p align='center'> ELF Files (1/20/17) </p>*
-* <p align='center'> <img src="https://upload.wikimedia.org/wikipedia/commons/7/77/Elf-layout--en.svg" height="400"> </p>
+
+<p align='center'> <img src="https://upload.wikimedia.org/wikipedia/commons/7/77/Elf-layout--en.svg" height="400"> </p>
+
 * ELF file header starts at offset 0 and is the roadmap that describes the rest of the file. It marks the ELF type, architecture, execution entry point, and offsets to program headers and section headers
 * Program header table let the system knows how to create the process image. It contains an array of structures, each describing a segment. A segment contains one or more sections
 * Section header table is not necessary for program execution. It is mainly for linking and debugging purposes. It is an array of ELF_32Shdr or ELF_64Shdr structures (Section Header)
