@@ -47,6 +47,10 @@ I put anything I find interesting regarding reverse engineering in this journal.
     + Can check if someone sets a hardware breakpoint on Windows by using GetThreadContext() and checks if DR0-DR3 is set
   * __Memory Breakpoint__: changes the permissions on a region, or page, of memory
     + Guard page: Any access to a guard page results in a one-time exception, and then the page returns to its original status. Memory breakpoint changes permission of the page to guard
+* __Virtual Address(VA) to File Offset Translation__: file_offset = VA - image_base - section_base_VA + section_file_offset
+  * VA - image_base = RVA. VA relative to the base of the image 
+  * RVA - section_base_VA = offset from base of the section
+  * offset_from_section_base + section_file_offset = file offset on disk  
 ---
 
 # .tools
