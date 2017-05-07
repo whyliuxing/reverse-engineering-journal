@@ -8,7 +8,7 @@ I put anything I find interesting regarding reverse engineering in this journal.
 * [.tools](#tools)
   + [IDA Tips](#-ida-tips-412017-)
   + [GDB Tips](#-gdb-tips-21517-)
-  + [WinDBG Tips](#-windbg-562017-)
+  + [WinDBG Tips](#-windbg-tips-5617-)
 * [.instruction-sets](#instruction-sets)
   + [x86](#-x86-4232017-)
   + [x86-64](#-x86-64-4242017-)
