@@ -15,7 +15,6 @@ I put anything I find interesting regarding reverse engineering in this journal.
   + [ARM](#-arm-4142017-)
 * [.languages](#languages)
   + [C++ Reversing](#-c-reversing-121316-)
-  + [Python Reversing](#-python)
 * [.file-formats](#file-formats)
   + [ELF Files](#-elf-files-12017-)
   + [PE Files](#-pe-files)
@@ -99,7 +98,10 @@ I put anything I find interesting regarding reverse engineering in this journal.
 
 #
 ## *<p align='center'> WinDBG Tips (5/6/17) </p>*
-* 
+* Use lmf to find the binary's image base and !dh to read the image's header information for the entry point
+  * lmf: get loaded modules 
+  * !dh x: get module x image's header information
+* poi(<-addr->): displays data pointed to by addr   
 ---
 
 # .instruction-sets
